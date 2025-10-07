@@ -1,0 +1,56 @@
+#include "../../includes/cub3d.h"
+
+static int	is_player_char(char c)
+{
+	if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
+		return (1);
+	return (0);
+}
+
+static int	check_duplicate_player(t_map *map)
+{
+	if (map->player_x != -1)
+	{
+		printf("Error: Multiple player positions found\n");
+		return (0);
+	}
+	return (1);
+}
+
+static void	set_player_position(t_map *map, int x, int y, char dir)
+{
+	map->player_x = x;
+	map->player_y = y;
+	map->player_dir = dir;
+}
+
+static void	search_row(t_map *map, int y)
+{
+	int	x;
+
+	x = 0;
+	while (map->grid[y] && map->grid[y][x])
+	{
+		if (is_player_char(map->grid[y][x]))
+		{
+			if (check_duplicate_player(map))
+				set_player_position(map, x, y, map->grid[y][x]);
+		}
+		x++;
+	}
+}
+
+void	find_player(t_map *map)
+{
+	int	y;
+
+	map->player_x = -1;
+	map->player_y = -1;
+	map->player_dir = '\0';
+	y = 0;
+	while (y < map->height)
+	{
+		search_row(map, y);
+		y++;
+	}
+}

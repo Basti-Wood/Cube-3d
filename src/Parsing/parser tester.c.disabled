@@ -1,0 +1,341 @@
+#include "../../includes/cub3d.h"
+
+static void	print_separator(void)
+{
+	printf("========================================\n");
+}
+
+static void	print_header(void)
+{
+	printf("\n");
+	printf("╔══════════════════════════════════════╗\n");
+	printf("║      CUB3D FILE PARSER v2.0          ║\n");
+	printf("╚══════════════════════════════════════╝\n");
+	printf("\n");
+}
+
+static void	print_textures(t_config *config)
+{
+	printf("\n🖼️  Wall Textures:\n");
+	printf("   North:  %s\n", config->north_tex);
+	printf("   South:  %s\n", config->south_tex);
+	printf("   East:   %s\n", config->east_tex);
+	printf("   West:   %s\n", config->west_tex);
+}
+
+static void	print_colors(t_config *config)
+{
+	printf("\n🎨 Colors:\n");
+	printf("   Floor:   RGB(%3d, %3d, %3d) [0x%06X]\n", 
+		config->floor_r, config->floor_g, config->floor_b, 
+		config->floor_color);
+	printf("   Ceiling: RGB(%3d, %3d, %3d) [0x%06X]\n", 
+		config->ceiling_r, config->ceiling_g, config->ceiling_b, 
+		config->ceiling_color);
+}
+
+static void	print_config(t_config *config)
+{
+	print_separator();
+	printf("📄 CONFIGURATION\n");
+	print_separator();
+	print_textures(config);
+	print_colors(config);
+	printf("\n");
+	print_separator();
+}
+
+static const char	*get_direction_name(char dir)
+{
+	if (dir == 'N')
+		return ("North ↑");
+	else if (dir == 'S')
+		return ("South ↓");
+	else if (dir == 'E')
+		return ("East →");
+	else if (dir == 'W')
+		return ("West ←");
+	return ("Unknown");
+}
+
+static void	print_player_info(t_map *map)
+{
+	const char	*direction_name;
+
+	if (map->player_x >= 0 && map->player_y >= 0)
+	{
+		direction_name = get_direction_name(map->player_dir);
+		printf("Player:     Position (%d, %d), Facing %s\n", 
+			map->player_x, map->player_y, direction_name);
+	}
+	else
+		printf("Player:     NOT FOUND\n");
+}
+
+static void	print_map_info(t_map *map)
+{
+	print_separator();
+	printf("🗺️  MAP INFORMATION\n");
+	print_separator();
+	printf("\nDimensions: %d x %d (width x height)\n", 
+		map->width, map->height);
+	print_player_info(map);
+	printf("\n");
+	print_separator();
+}
+
+static void	print_col_tens(int width)
+{
+	int	x;
+
+	printf("    ");
+	x = 0;
+	while (x < width && x < 80)
+	{
+		if (x % 10 == 0)
+			printf("%d", (x / 10) % 10);
+		else
+			printf(" ");
+		x++;
+	}
+	printf("\n");
+}
+
+static void	print_col_ones(int width)
+{
+	int	x;
+
+	printf("    ");
+	x = 0;
+	while (x < width && x < 80)
+	{
+		printf("%d", x % 10);
+		x++;
+	}
+	printf("\n\n");
+}
+
+static void	print_map_char(char c)
+{
+	if (c == '1')
+		printf("█");
+	else if (c == '0')
+		printf("·");
+	else if (c == 'N')
+		printf("↑");
+	else if (c == 'S')
+		printf("↓");
+	else if (c == 'E')
+		printf("→");
+	else if (c == 'W')
+		printf("←");
+	else if (c == ' ')
+		printf(" ");
+	else
+		printf("%c", c);
+}
+
+static void	print_map_row(char *row)
+{
+	int	x;
+	int	len;
+
+	if (!row)
+		return;
+	len = strlen(row);
+	x = 0;
+	while (x < len)
+	{
+		print_map_char(row[x]);
+		x++;
+	}
+}
+
+static void	print_map_grid(t_map *map)
+{
+	int	y;
+
+	print_separator();
+	printf("🗺️  MAP GRID (Visual)\n");
+	print_separator();
+	printf("\n");
+	print_col_tens(map->width);
+	print_col_ones(map->width);
+	y = 0;
+	while (y < map->height)
+	{
+		printf("%2d  ", y);
+		print_map_row(map->grid[y]);
+		printf("\n");
+		y++;
+	}
+	printf("\n");
+	printf("Legend: █=Wall  ·=Floor  ↑↓←→=Player\n");
+	printf("\n");
+	print_separator();
+}
+
+static void	print_map_raw(t_map *map)
+{
+	int	y;
+
+	print_separator();
+	printf("📋 RAW MAP DATA\n");
+	print_separator();
+	printf("\n");
+	
+	y = 0;
+	while (y < map->height)
+	{
+		if (map->grid[y])
+			printf("%3d: [%s]\n", y, map->grid[y]);
+		y++;
+	}
+	
+	printf("\n");
+	print_separator();
+}
+
+static void	count_row_tiles(char *row, int *walls, int *floors)
+{
+	int	x;
+
+	if (!row)
+		return;
+	x = 0;
+	while (row[x])
+	{
+		if (row[x] == '1')
+			(*walls)++;
+		else if (row[x] == '0')
+			(*floors)++;
+		x++;
+	}
+}
+
+static void	count_tiles(t_map *map, int *walls, int *floors)
+{
+	int	y;
+
+	*walls = 0;
+	*floors = 0;
+	y = 0;
+	while (y < map->height)
+	{
+		count_row_tiles(map->grid[y], walls, floors);
+		y++;
+	}
+}
+
+static void	print_summary(t_map *map)
+{
+	int	wall_count;
+	int	floor_count;
+
+	count_tiles(map, &wall_count, &floor_count);
+	print_separator();
+	printf("📊 SUMMARY\n");
+	print_separator();
+	printf("\n");
+	printf("✅ All 4 wall textures loaded\n");
+	printf("✅ Floor and ceiling colors configured\n");
+	printf("✅ Map parsed: %d x %d (%d total cells)\n", 
+		map->width, map->height, map->width * map->height);
+	printf("   - Walls: %d\n", wall_count);
+	printf("   - Floors: %d\n", floor_count);
+	printf("✅ Player found at (%d, %d) facing '%c'\n", 
+		map->player_x, map->player_y, map->player_dir);
+	printf("\n");
+	print_separator();
+}
+
+static void	print_usage(const char *program)
+{
+	printf("\n");
+	printf("Usage: %s <map_file.cub>\n", program);
+	printf("\n");
+	printf("Example:\n");
+	printf("  %s maps/test.cub\n", program);
+	printf("  %s maps/simple.cub\n", program);
+	printf("\n");
+	printf("Requirements:\n");
+	printf("  ✓ File must have .cub extension\n");
+	printf("  ✓ Hidden files (starting with .) are not allowed\n");
+	printf("  ✓ File cannot be named just '.cub'\n");
+	printf("\n");
+	printf(".cub File Format:\n");
+	printf("  NO <path>    - North wall texture\n");
+	printf("  SO <path>    - South wall texture\n");
+	printf("  EA <path>    - East wall texture\n");
+	printf("  WE <path>    - West wall texture\n");
+	printf("  F R,G,B      - Floor color (RGB values 0-255)\n");
+	printf("  C R,G,B      - Ceiling color (RGB values 0-255)\n");
+	printf("\n");
+	printf("  Map characters:\n");
+	printf("    0 - Empty space/floor\n");
+	printf("    1 - Wall\n");
+	printf("    N/S/E/W - Player start position and direction\n");
+	printf("    (space) - Void\n");
+	printf("\n");
+}
+
+/* ========================= MAIN FUNCTION ========================= */
+
+int	main(int argc, char **argv)
+{
+	t_config	config;
+	t_map		map;
+
+	if (argc != 2)
+	{
+		print_usage(argv[0]);
+		return (1);
+	}
+	
+	print_header();
+	printf("📂 Parsing file: %s\n", argv[1]);
+	printf("\n");
+	
+	map.grid = NULL;
+	map.width = 0;
+	map.height = 0;
+	map.player_x = -1;
+	map.player_y = -1;
+	map.player_dir = '\0';
+	
+	if (!parse_cub_file(argv[1], &config, &map))
+	{
+		printf("\n");
+		print_separator();
+		printf("❌ ERROR: Failed to parse file\n");
+		print_separator();
+		printf("\n");
+		printf("Please check the error messages above and ensure:\n");
+		printf("  • The file exists and is readable\n");
+		printf("  • All required identifiers are present (NO, SO, EA, WE, F, C)\n");
+		printf("  • Texture files exist and are accessible\n");
+		printf("  • Colors are in valid RGB format (0-255)\n");
+		printf("  • The map is properly formatted\n");
+		printf("  • There is exactly one player position (N/S/E/W)\n");
+		printf("\n");
+		return (1);
+	}
+	
+	printf("✅ File parsed successfully!\n");
+	printf("\n");
+	
+	print_config(&config);
+	print_map_info(&map);
+	print_map_grid(&map);
+	print_map_raw(&map);
+	print_summary(&map);
+	
+	free_config(&config);
+	free_map(&map);
+	
+	printf("\n");
+	printf("✨ Parsing completed successfully!\n");
+	printf("\n");
+	
+	return (0);
+}

@@ -1,0 +1,68 @@
+#include "../../includes/cub3d.h"
+
+static void	init_map_struct(t_map *map)
+{
+	map->grid = NULL;
+	map->width = 0;
+	map->height = 0;
+	map->player_x = -1;
+	map->player_y = -1;
+	map->player_dir = '\0';
+}
+
+static void	print_error_help(void)
+{
+	printf("\n");
+	printf("========================================\n");
+	printf("Please check the error messages above and ensure:\n");
+	printf("  • The file exists and is readable\n");
+	printf("  • All required identifiers are present\n");
+	printf("  • Texture files exist and are accessible\n");
+	printf("  • Colors are in valid RGB format (0-255)\n");
+	printf("  • The map is properly formatted\n");
+	printf("  • There is exactly one player position\n");
+	printf("\n");
+}
+
+static void	print_success_info(t_config *config, t_map *map)
+{
+	printf("\n✅ File parsed successfully!\n\n");
+	printf("Textures:\n");
+	printf("  NO: %s\n", config->north_tex);
+	printf("  SO: %s\n", config->south_tex);
+	printf("  EA: %s\n", config->east_tex);
+	printf("  WE: %s\n", config->west_tex);
+	printf("\nColors:\n");
+	printf("  Floor:   RGB(%d,%d,%d)\n", 
+		config->floor_r, config->floor_g, config->floor_b);
+	printf("  Ceiling: RGB(%d,%d,%d)\n", 
+		config->ceiling_r, config->ceiling_g, config->ceiling_b);
+	printf("\nMap: %dx%d\n", map->width, map->height);
+	printf("Player at (%d,%d) facing '%c'\n\n", 
+		map->player_x, map->player_y, map->player_dir);
+}
+
+int	main(int argc, char **argv)
+{
+	t_config	config;
+	t_map		map;
+
+	if (argc != 2)
+	{
+		printf("Usage: %s <map_file.cub>\n", argv[0]);
+		return (1);
+	}
+	printf("\n📂 Parsing: %s\n", argv[1]);
+	init_map_struct(&map);
+	if (!parse_cub_file(argv[1], &config, &map))
+	{
+		printf("\n❌ ERROR: Failed to parse file\n");
+		print_error_help();
+		return (1);
+	}
+	print_success_info(&config, &map);
+	free_config(&config);
+	free_map(&map);
+	printf("✨ Test completed!\n\n");
+	return (0);
+}
