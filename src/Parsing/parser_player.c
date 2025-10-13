@@ -9,7 +9,7 @@ static int	is_player_char(char c)
 
 static int	check_duplicate_player(t_map *map)
 {
-	if (map->player_x != -1)
+	if (map->player.x != -1)
 	{
 		printf("Error: Multiple player positions found\n");
 		return (0);
@@ -19,8 +19,8 @@ static int	check_duplicate_player(t_map *map)
 
 static void	set_player_position(t_map *map, int x, int y, char dir)
 {
-	map->player_x = x;
-	map->player_y = y;
+	map->player.x = x;
+	map->player.y = y;
 	map->player_dir = dir;
 }
 
@@ -44,8 +44,8 @@ void	find_player(t_map *map)
 {
 	int	y;
 
-	map->player_x = -1;
-	map->player_y = -1;
+	map->player.x = -1;
+	map->player.y = -1;
 	map->player_dir = '\0';
 	y = 0;
 	while (y < map->height)

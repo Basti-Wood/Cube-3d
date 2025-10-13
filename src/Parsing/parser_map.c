@@ -50,7 +50,7 @@ static int	validate_map(t_map *map)
 		return (0);
 	}
 	find_player(map);
-	if (map->player_x == -1 || map->player_y == -1)
+	if (map->player.x == -1 || map->player.y == -1)
 	{
 		printf("Error: No player position found in map\n");
 		return (0);

@@ -9,7 +9,7 @@
 # include <math.h>
 # include <fcntl.h>
 # include <errno.h>
-//# include "../libft/libft.h"
+# include "../libft/libft.h"
 # include "../minilibx-linux/mlx.h"
 
 /* ========================= DEFINES ========================= */
@@ -48,6 +48,18 @@
 
 /* ========================= STRUCTURES ========================= */
 
+typedef struct s_ivec
+{
+	int		x;
+	int		y;
+}	t_ivec;
+
+typedef struct s_vec
+{
+	double	x;
+	double	y;
+}	t_vec;
+
 typedef struct s_img
 {
 	void	*img_ptr;
@@ -68,12 +80,9 @@ typedef struct s_texture
 
 typedef struct s_player
 {
-	double	pos_x;
-	double	pos_y;
-	double	dir_x;
-	double	dir_y;
-	double	plane_x;
-	double	plane_y;
+	t_vec	pos;
+	t_vec	dir;
+	t_vec	plane;
 	double	move_speed;
 	double	rot_speed;
 }	t_player;
@@ -81,14 +90,10 @@ typedef struct s_player
 typedef struct s_ray
 {
 	double	camera_x;
-	double	ray_dir_x;
-	double	ray_dir_y;
-	int		map_x;
-	int		map_y;
-	double	side_dist_x;
-	double	side_dist_y;
-	double	delta_dist_x;
-	double	delta_dist_y;
+	t_vec	ray_dir;
+	t_ivec	map;
+	t_vec	side_dist;
+	t_vec	delta_dist;
 	double	perp_wall_dist;
 	int		step_x;
 	int		step_y;
@@ -117,8 +122,7 @@ typedef struct s_map
 	char	**grid;
 	int		width;
 	int		height;
-	int		player_x;
-	int		player_y;
+	t_ivec	player;
 	char	player_dir;
 }	t_map;
 
@@ -151,57 +155,69 @@ typedef struct s_game
 	t_ray		ray;
 }	t_game;
 
-/* ========================= FUNCTION PROTOTYPES ========================= */
+//========================= DEBUG FUNCTIONS =========================//
+void	print_map_row(const char *row);
+void	display_map(t_map *map, t_config *config);
 
-/* Parser main */
+//========================= PARSING FUNCTIONS =========================//
 int		parse_cub_file(const char *filename, t_config *config, t_map *map);
 void	free_config(t_config *config);
 void	free_map(t_map *map);
 
-/* Parser config initialization */
 void	init_config(t_config *config);
 int		config_complete(t_config *config);
 
-/* Parser config section */
 long	parse_config_section(FILE *file, t_config *config);
 
-/* Parser map setup */
 int		setup_map(FILE *file, t_map *map, long map_start_pos);
 
-/* Parser utilities */
 char	*ft_strdup_custom(const char *s);
 char	*trim_whitespace(char *str);
 int		is_empty_line(const char *line);
 
-/* Parser validation */
 int		is_valid_filename(const char *filename);
 
-/* Parser color */
 int		parse_color(char *line, int *r, int *g, int *b);
 int		rgb_to_int(int r, int g, int b);
 
-/* Parser texture */
 int		parse_texture(char *line, char **texture_path);
 
-/* Parser identifiers */
 int		parse_texture_identifier(char *id, char *value, t_config *config);
 int		parse_color_identifier(char *id, char *value, t_config *config);
 int		parse_identifier(char *line, t_config *config);
 
-/* Parser map utilities */
 int		is_map_char(char c);
 int		is_map_line(const char *line);
 char	*read_line(FILE *file);
 
-/* Parser map allocation */
 char	**allocate_map(int height);
 int		count_map_lines(FILE *file, long start_pos);
 
-/* Parser player */
 void	find_player(t_map *map);
 char	*clean_map_line(char *line);
 
-/* Parser map */
 int		parse_map_section(FILE *file, t_map *map, long start_pos);
+//========================= CHECKER FUNCTIONS =========================//
+
+int		is_valid_map(t_map *map);
+
+//========================= GAME FUNCTIONS =========================//
+
+// Window initialization
+void	init_game(t_game *game);
+int		init_mlx(t_game *game);
+int		init_image(t_game *game);
+void	init_player(t_game *game);
+
+// Event hooks
+int		key_press(int keycode, t_game *game);
+int		key_release(int keycode, t_game *game);
+int		close_game(t_game *game);
+void	setup_hooks(t_game *game);
+
+// Rendering
+void	put_pixel(t_img *img, int x, int y, int color);
+void	draw_test_pattern(t_game *game);
+int		render_frame(t_game *game);
 
 #endif
