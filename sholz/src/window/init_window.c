@@ -1,8 +1,5 @@
 #include "../../includes/cub3d.h"
 
-/*
-** Initialize the game structure with default values
-*/
 void	init_game(t_game *game)
 {
 	game->mlx = NULL;

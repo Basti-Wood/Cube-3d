@@ -8,7 +8,7 @@ char	*ft_strdup_custom(const char *s)
 
 	if (!s)
 		return (NULL);
-	len = strlen(s);
+	len = ft_strlen(s);
 	dup = malloc(sizeof(char) * (len + 1));
 	if (!dup)
 		return (NULL);
@@ -33,7 +33,7 @@ char	*trim_trailing(char *str)
 {
 	char	*end;
 
-	end = str + strlen(str) - 1;
+	end = str + ft_strlen(str) - 1;
 	while (end > str && (*end == ' ' || *end == '\t'
 			|| *end == '\n' || *end == '\r'))
 		end--;

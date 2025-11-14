@@ -17,30 +17,46 @@ static int	handle_config_line(char *line, t_config *config)
 	return (1);
 }
 
-long	parse_config_section(FILE *file, t_config *config)
+static int	process_config_line(char *line, t_config *config, int *found_map,
+	char **first_map_line)
+{
+	int	result;
+
+	result = handle_config_line(line, config);
+	if (result == -1)
+	{
+		*found_map = 1;
+		*first_map_line = line;
+		return (-1);
+	}
+	if (result == 0)
+	{
+		free(line);
+		return (-2);
+	}
+	free(line);
+	return (1);
+}
+
+int	parse_config_section(int fd, t_config *config, char **first_map_line)
 {
 	char	*line;
 	int		result;
-	long	map_pos;
+	int		found_map;
 
-	map_pos = -1;
-	line = read_line(file);
+	found_map = 0;
+	*first_map_line = NULL;
+	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		result = handle_config_line(line, config);
-		if (result == -1)
-		{
-			map_pos = ftell(file) - strlen(line);
-			free(line);
+		result = process_config_line(line, config, &found_map, first_map_line);
+		if (result == -1 || result == -2)
 			break ;
-		}
-		if (result == 0)
-		{
-			free(line);
-			return (-2);
-		}
-		free(line);
-		line = read_line(file);
+		line = get_next_line(fd);
 	}
-	return (map_pos);
+	if (found_map)
+		return (1);
+	if (result == -2)
+		return (-2);
+	return (-1);
 }

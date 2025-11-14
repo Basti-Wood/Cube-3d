@@ -51,14 +51,3 @@ int	is_map_line(const char *line)
 		return (0);
 	return (1);
 }
-
-char	*read_line(FILE *file)
-{
-	char	buffer[4096];
-	char	*line;
-
-	if (!fgets(buffer, sizeof(buffer), file))
-		return (NULL);
-	line = ft_strdup_custom(buffer);
-	return (line);
-}

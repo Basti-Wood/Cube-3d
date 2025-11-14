@@ -42,13 +42,13 @@ static int	handle_east_texture(char *value, t_config *config)
 
 int	parse_texture_identifier(char *id, char *value, t_config *config)
 {
-	if (strcmp(id, "NO") == 0)
+	if (ft_strncmp(id, "NO", 3) == 0)
 		return (handle_north_texture(value, config));
-	else if (strcmp(id, "SO") == 0)
+	else if (ft_strncmp(id, "SO", 3) == 0)
 		return (handle_south_texture(value, config));
-	else if (strcmp(id, "WE") == 0)
+	else if (ft_strncmp(id, "WE", 3) == 0)
 		return (handle_west_texture(value, config));
-	else if (strcmp(id, "EA") == 0)
+	else if (ft_strncmp(id, "EA", 3) == 0)
 		return (handle_east_texture(value, config));
 	return (-1);
 }

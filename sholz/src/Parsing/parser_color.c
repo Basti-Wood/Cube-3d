@@ -20,10 +20,29 @@ static int	parse_color_token(char *token, int *value)
 		return (0);
 	}
 	trimmed = trim_whitespace(token);
-	*value = atoi(trimmed);
+	*value = ft_atoi(trimmed);
 	if (!validate_color_value(*value))
 		return (0);
 	return (1);
+}
+
+static char	*find_next_token(char *str, char **next)
+{
+	char	*start;
+	char	*end;
+
+	start = str;
+	end = start;
+	while (*end && *end != ',')
+		end++;
+	if (*end == ',')
+	{
+		*end = '\0';
+		*next = end + 1;
+	}
+	else
+		*next = end;
+	return (start);
 }
 
 int	parse_color(char *line, int *r, int *g, int *b)
@@ -37,10 +56,7 @@ int	parse_color(char *line, int *r, int *g, int *b)
 	i = 0;
 	while (i < 3)
 	{
-		if (i == 0)
-			token = strtok(rest, ",");
-		else
-			token = strtok(NULL, ",");
+		token = find_next_token(rest, &rest);
 		if (!parse_color_token(token, &values[i]))
 			return (0);
 		i++;

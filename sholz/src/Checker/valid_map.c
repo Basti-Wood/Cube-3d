@@ -10,7 +10,7 @@ static char	get_cell(t_map *map, int x, int y)
 		return (' ');
 	if (!map->grid[y])
 		return (' ');
-	row_len = strlen(map->grid[y]);
+	row_len = ft_strlen(map->grid[y]);
 	if (x >= row_len)
 		return (' ');
 	return (map->grid[y][x]);

@@ -1,45 +1,48 @@
 #include "../../includes/cub3d.h"
 
-static FILE	*open_and_validate_file(const char *filename)
+static int	open_and_validate_file(const char *filename)
 {
-	FILE	*file;
+	int	fd;
 
 	if (!is_valid_filename(filename))
 	{
 		printf("Error: Invalid filename\n");
-		return (NULL);
-	}
-	file = fopen(filename, "r");
-	if (!file)
-	{
-		printf("Error: Cannot open file %s\n", filename);
-		return (NULL);
-	}
-	return (file);
-}
-
-static int	parse_config_and_validate(FILE *file, t_config *config)
-{
-	long	map_start_pos;
-
-	map_start_pos = parse_config_section(file, config);
-	if (map_start_pos == -2 || !config_complete(config))
-	{
-		printf("Error: Incomplete configuration\n");
-		return (-2);
-	}
-	if (map_start_pos == -1)
-	{
-		printf("Error: No map found in file\n");
 		return (-1);
 	}
-	return (map_start_pos);
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+	{
+		printf("Error: Cannot open file %s\n", filename);
+		return (-1);
+	}
+	return (fd);
 }
 
-static int	setup_and_validate_map(FILE *file, t_config *config, t_map *map,
-		long map_start_pos)
+static int	parse_config_and_validate(int fd, t_config *config,
+	char **first_map_line)
 {
-	if (!setup_map(file, map, map_start_pos))
+	int	result;
+
+	result = parse_config_section(fd, config, first_map_line);
+	if (result == -2 || !config_complete(config))
+	{
+		printf("Error: Incomplete configuration\n");
+		if (*first_map_line)
+			free(*first_map_line);
+		return (0);
+	}
+	if (result == -1)
+	{
+		printf("Error: No map found in file\n");
+		return (0);
+	}
+	return (1);
+}
+
+static int	setup_and_validate_map(int fd, char *first_line, t_config *config,
+	t_map *map)
+{
+	if (!setup_map(fd, first_line, map))
 	{
 		free_config(config);
 		if (map->grid)
@@ -51,25 +54,24 @@ static int	setup_and_validate_map(FILE *file, t_config *config, t_map *map,
 
 int	parse_cub_file(const char *filename, t_config *config, t_map *map)
 {
-	FILE	*file;
-	long	map_start_pos;
+	int		fd;
+	char	*first_map_line;
 
-	file = open_and_validate_file(filename);
-	if (!file)
+	fd = open_and_validate_file(filename);
+	if (fd < 0)
 		return (0);
 	init_config(config);
-	map_start_pos = parse_config_and_validate(file, config);
-	if (map_start_pos < 0)
+	if (!parse_config_and_validate(fd, config, &first_map_line))
 	{
-		fclose(file);
+		close(fd);
 		free_config(config);
 		return (0);
 	}
-	if (!setup_and_validate_map(file, config, map, map_start_pos))
+	if (!setup_and_validate_map(fd, first_map_line, config, map))
 	{
-		fclose(file);
+		close(fd);
 		return (0);
 	}
-	fclose(file);
+	close(fd);
 	return (1);
 }

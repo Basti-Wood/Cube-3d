@@ -14,30 +14,30 @@ static int	process_map_line(t_map *map, char *line, int *i, int *max_width)
 	free(line);
 	if (!map->grid[*i])
 		return (0);
-	current_len = strlen(map->grid[*i]);
+	current_len = ft_strlen(map->grid[*i]);
 	update_max_width(max_width, current_len);
 	(*i)++;
 	return (1);
 }
 
-static int	read_map_lines(FILE *file, t_map *map, int *max_width)
+static int	read_map_lines(int fd, t_map *map, int *max_width)
 {
 	char	*line;
 	int		i;
 
 	i = 0;
-	line = read_line(file);
+	line = get_next_line(fd);
 	while (line != NULL)
 	{
 		if (!is_map_line(line))
 		{
 			free(line);
-			line = read_line(file);
+			line = get_next_line(fd);
 			continue ;
 		}
 		if (!process_map_line(map, line, &i, max_width))
 			return (0);
-		line = read_line(file);
+		line = get_next_line(fd);
 	}
 	return (i);
 }
@@ -58,14 +58,13 @@ static int	validate_map(t_map *map)
 	return (1);
 }
 
-int	parse_map_section(FILE *file, t_map *map, long start_pos)
+int	parse_map_section(int fd, t_map *map)
 {
 	int	max_width;
 	int	height;
 
-	fseek(file, start_pos, SEEK_SET);
 	max_width = 0;
-	height = read_map_lines(file, map, &max_width);
+	height = read_map_lines(fd, map, &max_width);
 	if (height == 0)
 		return (0);
 	map->height = height;

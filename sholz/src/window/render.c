@@ -10,8 +10,6 @@ void	put_pixel(t_img *img, int x, int y, int color)
 	*(unsigned int *)pixel = color;
 }
 
-
-
 int	render_frame(t_game *game)
 {
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img_ptr, 0, 0);

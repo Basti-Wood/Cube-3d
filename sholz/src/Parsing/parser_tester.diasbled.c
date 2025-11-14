@@ -62,11 +62,11 @@ static void	print_player_info(t_map *map)
 {
 	const char	*direction_name;
 
-	if (map->player_x >= 0 && map->player_y >= 0)
+	if (map->player.x >= 0 && map->player.y >= 0)
 	{
 		direction_name = get_direction_name(map->player_dir);
 		printf("Player:     Position (%d, %d), Facing %s\n", 
-			map->player_x, map->player_y, direction_name);
+			map->player.x, map->player.y, direction_name);
 	}
 	else
 		printf("Player:     NOT FOUND\n");
@@ -135,14 +135,14 @@ static void	print_map_char(char c)
 		printf("%c", c);
 }
 
-static void	print_map_row(char *row)
+static void	print_map_row_tester(const char *row)
 {
 	int	x;
 	int	len;
 
 	if (!row)
 		return;
-	len = strlen(row);
+	len = ft_strlen(row);
 	x = 0;
 	while (x < len)
 	{
@@ -165,7 +165,7 @@ static void	print_map_grid(t_map *map)
 	while (y < map->height)
 	{
 		printf("%2d  ", y);
-		print_map_row(map->grid[y]);
+		print_map_row_tester(map->grid[y]);
 		printf("\n");
 		y++;
 	}
@@ -244,7 +244,7 @@ static void	print_summary(t_map *map)
 	printf("   - Walls: %d\n", wall_count);
 	printf("   - Floors: %d\n", floor_count);
 	printf("✅ Player found at (%d, %d) facing '%c'\n", 
-		map->player_x, map->player_y, map->player_dir);
+		map->player.x, map->player.y, map->player_dir);
 	printf("\n");
 	print_separator();
 }
@@ -299,8 +299,8 @@ int	main(int argc, char **argv)
 	map.grid = NULL;
 	map.width = 0;
 	map.height = 0;
-	map.player_x = -1;
-	map.player_y = -1;
+	map.player.x = -1;
+	map.player.y = -1;
 	map.player_dir = '\0';
 	
 	if (!parse_cub_file(argv[1], &config, &map))

@@ -1,25 +1,50 @@
 #include "../../includes/cub3d.h"
 
-static char	*get_identifier(char *line)
+char	*skip_spaces(char *str)
 {
-	char	*id;
-
-	id = strtok(line, " \t");
-	return (id);
+	while (*str && (*str == ' ' || *str == '\t'))
+		str++;
+	return (str);
 }
 
-static char	*get_value(void)
+char	*find_end_of_word(char *str)
 {
-	char	*value;
+	while (*str && *str != ' ' && *str != '\t' && *str != '\n')
+		str++;
+	return (str);
+}
 
-	value = strtok(NULL, "\n");
-	if (!value)
+char	*get_identifier(char *line, char **rest)
+{
+	char	*start;
+	char	*end;
+
+	start = skip_spaces(line);
+	if (!*start)
 		return (NULL);
-	value = trim_whitespace(value);
-	return (value);
+	end = find_end_of_word(start);
+	if (end > start)
+		*end = '\0';
+	*rest = end + 1;
+	return (start);
 }
 
-static int	process_identifier_value(char *id, char *value, t_config *config)
+char	*get_value(char *rest)
+{
+	char	*start;
+	char	*end;
+
+	start = skip_spaces(rest);
+	if (!*start)
+		return (NULL);
+	end = start;
+	while (*end && *end != '\n')
+		end++;
+	*end = '\0';
+	return (trim_whitespace(start));
+}
+
+int	process_identifier_value(char *id, char *value, t_config *config)
 {
 	int	result;
 
@@ -31,33 +56,5 @@ static int	process_identifier_value(char *id, char *value, t_config *config)
 		printf("Error: Unknown identifier: %s\n", id);
 		return (0);
 	}
-	return (result);
-}
-
-int	parse_identifier(char *line, t_config *config)
-{
-	char	*line_copy;
-	char	*id;
-	char	*value;
-	int		result;
-
-	line_copy = ft_strdup_custom(line);
-	if (!line_copy)
-		return (0);
-	id = get_identifier(line_copy);
-	if (!id)
-	{
-		free(line_copy);
-		return (0);
-	}
-	value = get_value();
-	if (!value)
-	{
-		free(line_copy);
-		printf("Error: Missing value for identifier: %s\n", id);
-		return (0);
-	}
-	result = process_identifier_value(id, value, config);
-	free(line_copy);
 	return (result);
 }

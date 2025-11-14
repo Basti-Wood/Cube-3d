@@ -32,9 +32,9 @@ static int	handle_ceiling_color(char *value, t_config *config)
 
 int	parse_color_identifier(char *id, char *value, t_config *config)
 {
-	if (strcmp(id, "F") == 0)
+	if (ft_strncmp(id, "F", 2) == 0)
 		return (handle_floor_color(value, config));
-	else if (strcmp(id, "C") == 0)
+	else if (ft_strncmp(id, "C", 2) == 0)
 		return (handle_ceiling_color(value, config));
 	return (-1);
 }

@@ -16,7 +16,7 @@ char	*clean_map_line(char *line)
 
 	if (!line)
 		return (NULL);
-	len = strlen(line);
+	len = ft_strlen(line);
 	remove_newline(line, len);
 	cleaned = ft_strdup_custom(line);
 	return (cleaned);

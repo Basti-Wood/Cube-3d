@@ -4,9 +4,9 @@ static const char	*get_basename(const char *filename)
 {
 	const char	*basename;
 
-	basename = strrchr(filename, '/');
+	basename = ft_strrchr(filename, '/');
 	if (!basename)
-		basename = strrchr(filename, '\\');
+		basename = ft_strrchr(filename, '\\');
 	if (basename)
 		basename++;
 	else
@@ -25,10 +25,10 @@ static int	check_extension(const char *basename)
 {
 	int	len;
 
-	if (strcmp(basename, ".cub") == 0)
+	if (ft_strncmp(basename, ".cub", 5) == 0)
 		return (0);
-	len = strlen(basename);
-	if (len < 5 || strcmp(basename + len - 4, ".cub") != 0)
+	len = ft_strlen(basename);
+	if (len < 5 || ft_strncmp(basename + len - 4, ".cub", 5) != 0)
 		return (0);
 	return (1);
 }
