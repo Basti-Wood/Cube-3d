@@ -1,70 +1,165 @@
 #ifndef GAME_H
-#define GAME_H
+# define GAME_H
 
-// # define WIDTH 2240 //1280+768
-// # define WIDTH 1280
-# define WIDTH 1920 //960+960
-# define HEIGHT 768
-# define BLOCK 64
-
-# define W 119
-# define A 97
-# define S 115
-# define D 100
-// # define W 101 //'E'
-// # define A 115 //'S'
-// # define S 100 //'D'
-// # define D 102 //'F'
-# define J 106
-# define L 108
-# define LEFT 65361
-# define RIGHT 65363
-
+// # define BLOCK 64
 # define PI 3.14159265359
 
 #include "./mlx/mlx.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+// #include <cstdint>
+#include <limits.h>
 #include <math.h>
+
+#define	STATIC_MAP
+
+
+typedef enum e_dimensions
+{
+	SCRN_WIDTH = 1920,
+	SCRN_HEIGHT = 960,
+	FRM_WIDTH = SCRN_WIDTH / 2,
+	BLOCK_SIZE = 64
+}	t_dimensions;
+
+typedef enum e_key_codes
+{
+	WIN_X_BTN = 17,
+	KEY_ESC = 65307,
+	// KEY_Q = 113,
+	KEY_W = 119,
+	KEY_E = 101,
+	// KEY_R = 114,
+	// KEY_T = 116,
+	KEY_A = 97,
+	KEY_S = 115,
+	KEY_D = 100,
+	KEY_F = 102,
+	// KEY_G = 103,
+	// KEY_X = 120,
+	// KEY_C = 99,
+	// KEY_V = 118,
+	// KEY_B = 98,
+	// KEY_Y = 121,
+	// KEY_U = 117,
+	// KEY_I = 105,
+	// KEY_O = 111,
+	// KEY_P = 112,
+	// KEY_H = 104,
+	KEY_J = 106,
+	// KEY_K = 107,
+	KEY_L = 108,
+	// KEY_N = 110,
+	// KEY_M = 109,
+	// KEY_COMMA = 44,
+	// KEY_POINT = 46,
+	// KEY_UP = 65362,
+	KEY_LEFT = 65361,
+	// KEY_DOWN = 65364,
+	KEY_RIGHT = 65363,
+	// KEY_SPACE = 32,
+	// MOUSE_WHEEL_UP = 4,
+	// MOUSE_WHEEL_DOWN = 5
+}	t_key_codes;
+
+typedef struct s_square
+{
+	int			x;
+	int			y;
+}	t_square;
+
+typedef struct s_vector
+{
+	double		x;
+	double		y;
+}	t_vector;
+
+typedef struct s_ray
+{
+	bool		side;
+	t_vector	dir;
+	t_square	map;
+	t_square	step;
+
+	t_vector	side_dist;
+	t_vector	delta_dist;
+
+	double		perp_dist_wall;
+}	t_ray;;
 
 typedef struct s_player
 {
-	bool mini;
+	bool		mini;
 
-	float posX;
-	float posY;
-	float angle;
+	t_vector	playerPos;
+	t_vector	pos;
+	t_vector	dir;
+	t_vector	plane;
+	double		scan_x;
+	t_ray		ray;
 
-	bool move_forward;
-	bool move_backward;
-	bool move_port;
-	bool move_starboard;
+	double		angle;
 
-	bool rotate_sinistral;
-	bool rotate_dextral;
-}   t_player;
+	bool		move_forward;
+	bool		move_backward;
+	bool		move_port;
+	bool		move_starboard;
+	double		move_speed;
+
+	bool		turn_sinistral;
+	bool		turn_dextral;
+	double		turn_speed;
+} 	t_player;
 
 typedef struct s_game
 {
-	void *mlx;
-	void *win;
-	void *img;
+	void		*mlx;
+	void		*win;
+	void		*img;
 
-	char *data;
-	int bpp;
-	int size_line;
-	int endian;
-	t_player player;
-	t_player mini_player;
+	char		*data;
+	int			bpp;
+	int			size_line;
+	int			endian;
 
-    char **map;
-} t_game;
+	int			**map;
+	int			map_height;
+	int			map_width;
+	// int			block_size;
 
-void init_player(t_player *player);
-// void init_mini_player(t_player *player);
-int key_press(int keycode, t_game *game);
-int key_release(int keycode, t_game *game);
-void move_player(t_player *player);
-int	close_game(t_game *game);
+	// t_ray		ray;
+	t_player	player;
+	t_player	mini_player;
+
+	// double		time;
+	// double		prev_time;
+}	t_game;
+
+int		close_game(t_game *game);
+
+int	**init_map(int map_width, int map_height);
+
+t_player	init_player(bool mini);
+// void	init_mini_player(t_player *player);
+int		key_press(int keycode, t_game *game);
+int		key_release(int keycode, t_game *game);
+void	move_player(int **map, t_player *player);
+
+// t_ray	init_ray(t_player *player);
+void	cast_ray(t_player *player);
+void	dda_ray(int **map, t_ray *ray, t_game *game);
+bool	touch(double px, double py, t_game *game);
+
+void	put_pixel(int x, int y, int color, t_game *game);
+void	clear_image(t_game *game);
+double	distance(double x, double y);
+double	fixed_dist(double x1, double y1, double x2, double y2, t_game *game);
+
+void	draw_empty_square(int x, int y, int size, int color, t_game *game);
+void	draw_filled_square(int x, int y, int size, int color, t_game *game);
+void	draw_floor_or_ceiling(bool floor, int color, t_game *game);
+void	draw_mini_map(t_game *game);
+void	draw_mini_player(t_game *game);
+
 #endif

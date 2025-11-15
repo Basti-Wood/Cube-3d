@@ -1,187 +1,5 @@
 #include "../includes/game.h"
 
-// our own put_pixel
-
-void put_pixel(int x, int y, int color, t_game *game)
-{
-    if(x >= WIDTH || y >= HEIGHT || x < 0 || y < 0)
-        return;
-    
-    int index = y * game->size_line + x * game->bpp / 8;
-    game->data[index] = color & 0xFF;
-    game->data[index + 1] = (color >> 8) & 0xFF;
-    game->data[index + 2] = (color >> 16) & 0xFF;
-}
-
-// our own clear_image
-void clear_image(t_game *game)
-{
-    for(int y = 0; y < HEIGHT; y++)
-        for(int x = 0; x < WIDTH; x++)
-            put_pixel(x, y, 0, game);
-}
-
-// utils functions
-void draw_empty_square(int x, int y, int size, int color, t_game *game)
-{
-    for(int i = 0; i < size; i++)
-        put_pixel(x + i, y, color, game);
-    for(int i = 0; i < size; i++)
-        put_pixel(x, y + i, color, game);
-    for(int i = 0; i < size; i++)
-        put_pixel(x + size, y + i, color, game);
-    for(int i = 0; i < size; i++)
-        put_pixel(x + i, y + size, color, game);
-}
-
-void draw_filled_square(int x, int y, int size, int color, t_game *game)
-{
-	for(int i = 0; i < size; i++)
-	{
-		for(int j = 0; j <size; j++)
-		{
-			put_pixel(x + i, y + j, color, game);
-		}
-	}
-}
-
-void draw_map(t_game *game)
-{
-    char **map = game->map;
-    int color = 0x0000FF;
-    for(int y = 0; map[y]; y++)
-        for(int x = 0; map[y][x]; x++)
-            if(map[y][x] == '1')
-                draw_filled_square(960 + x * BLOCK, y * BLOCK, BLOCK, color, game);
-}
-
-// distance calculation functions
-float distance(float x, float y){
-    return sqrt(x * x + y * y);
-}
-
-float fixed_dist(float x1, float y1, float x2, float y2, t_game *game)
-{
-    float delta_x = x2 - x1;
-    float delta_y = y2 - y1;
-    float angle = atan2(delta_y, delta_x) - game->player.angle;
-    float fix_dist = distance(delta_x, delta_y) * cos(angle);
-    return fix_dist;
-}
-
-// touch function 
-bool touch(float px, float py, t_game *game)
-{
-    int x = px / BLOCK;
-	// printf("%i\n", x);
-    int y = py / BLOCK;
-    if(game->map[y][x] == '1')
-        return true;
-    return false;
-}
-
-// initialisation functions
-char **get_map(void)
-{
-    char **map = malloc(sizeof(char *) * 13);
-    map[0] = "111111111111111";
-    map[1] = "100000000000001";
-    map[2] = "100000000000001";
-    map[3] = "100000100000001";
-    map[4] = "100000000000001";
-    map[5] = "100000010000001";
-    map[6] = "100001000000001";
-    map[7] = "100000100010001";
-	map[8] = "100000010000001";
-    map[9] = "100000000000001";
-    map[10] = "100000000000001";
-	map[11] = "111111111111111";
-    map[12] = NULL;
-    return (map);
-}
-
-void init_game(t_game *game)
-{
-	game->player.mini = false;
-	init_player(&game->player);
-	game->mini_player.mini = true;
-	init_player(&game->mini_player);
-	game->map = get_map();
-	game->mlx = mlx_init();
-	game->win = mlx_new_window(game->mlx, WIDTH, HEIGHT, "Game");
-	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
-	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
-	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
-}
-
-// raycasting functions
-void draw_line(t_player *player, t_game *game, float start_x, int i)
-{
-    float cos_angle = cos(start_x);
-    float sin_angle = sin(start_x);
-    float ray_x = player->posX;
-    float ray_y = player->posY;
-	int offset = 0;
-	// float ray_x = BLOCK*12;
-    // float ray_y = BLOCK*6;
-
-	if (player->mini == true)
-		offset = 960;
-    while(!touch(ray_x - offset, ray_y, game))
-    {
-        if(player->mini == true)
-            put_pixel(ray_x, ray_y, 0xFF0000, game);
-        ray_x += cos_angle;
-        ray_y += sin_angle;
-    }
-    if(player->mini == false)
-    {
-        float dist = fixed_dist(player->posX, player->posY, ray_x, ray_y, game);
-        float height = (BLOCK / dist) * ((float)(WIDTH - 960) / 2);
-        int start_y = (HEIGHT - height) / 2;
-        int end = start_y + height;
-        while(start_y < end)
-        {
-            put_pixel(i, start_y, 255, game);
-            start_y++;
-        }
-    }
-}
-
-int draw_loop(t_game *game)
-{
-	t_player *player = &game->player;
-	t_player *mini_player = &game->mini_player;
-	move_player(player);
-	move_player(mini_player);
-	clear_image(game);
-	draw_filled_square(mini_player->posX, mini_player->posY, 5, 0x00FF00, game);
-	draw_filled_square(mini_player->posX - 5, mini_player->posY, 5, 0x00FF00, game);
-	draw_filled_square(mini_player->posX, mini_player->posY - 5, 5, 0x00FF00, game);
-	draw_filled_square(mini_player->posX - 5, mini_player->posY - 5, 5, 0x00FF00, game);
-	draw_map(game);
-	float mini_fraction = PI / 2 / (WIDTH - 960);// 3
-	float mini_start_x = mini_player->angle - PI / 4;// 6
-	int mini_i = 0;
-	while(mini_i < (WIDTH - 960))
-	{
-		draw_line(mini_player, game, mini_start_x, mini_i);
-		mini_start_x += mini_fraction;
-		mini_i++;
-	}
-	float fraction = PI / 2 / (WIDTH - 960);// 3
-	float start_x = player->angle - PI / 4;// 6
-	int i = 0;
-	while(i < (WIDTH - 960))
-	{
-		draw_line(player, game, start_x, i);
-		start_x += fraction;
-		i++;
-	}
-	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
-	return 0;
-}
-
 int	close_game(t_game *game)
 {
 	if (game->img)
@@ -193,27 +11,182 @@ int	close_game(t_game *game)
 		mlx_destroy_display(game->mlx);
 		free(game->mlx);
 	}
+	int i = 0;
+	while (game->map[i])
+	{
+		free(game->map[i]);
+		i++;
+	}
 	free(game->map);
 	exit(0);
 	return (0);
 }
 
-int main(void)
+// raycasting functions
+void	draw_line(t_player *player, t_game *game, double start_x, int i)
 {
-    t_game game;
-    // init
-    init_game(&game);
-    // hooks
-    mlx_hook(game.win, 2, 1L<<0, key_press, &game);
-    mlx_hook(game.win, 3, 1L<<1, key_release, &game);
-    // mlx_hook(game.win, 2, 1L<<0, key_press, &game.mini_player);
-    // mlx_hook(game.win, 3, 1L<<1, key_release, &game.mini_player);
-	mlx_hook(game.win, 17, 0, close_game, &game);
-    // draw loop
-    mlx_loop_hook(game.mlx, draw_loop, &game);
+	// double	cos_angle = cos(start_x);
+	// double	sin_angle = sin(start_x);
+	double	ray_x = player->playerPos.x;
+	double	ray_y = player->playerPos.y;
+	// printf("\t%f", player->playerPos.x);
+	// printf("\t%f\n", player->playerPos.y);
+	int	offset = 0;
 
-    mlx_loop(game.mlx);
-	// close_game(&game);
-	// free(game.map);
-    return 0;
+	if (player->mini == true)
+		offset = FRM_WIDTH;
+	while(!touch(ray_x - offset, ray_y, game))
+	{
+		if(player->mini == true)
+			put_pixel(ray_x, ray_y, 0xFF0000, game);
+		ray_x += cos(start_x);
+		ray_y += sin(start_x);
+	}
+	if(player->mini == false)
+	{
+		double	dist = fixed_dist(player->playerPos.x, player->playerPos.y, ray_x, ray_y, game);
+		double	height = (BLOCK_SIZE / dist) * (((double)FRM_WIDTH) / 2);
+		int	start_y = (SCRN_HEIGHT - height) / 2;
+		int	end = start_y + height;
+		while(start_y < end)
+		{
+			put_pixel(i, start_y, 255, game);
+			start_y++;
+		}
+	}
+}
+
+// raycasting functions
+// void	draw_line(bool mini, t_game *game)
+// {
+// 	int	offset;
+// 	double	ray_x;
+// 	double	ray_y;
+//
+// 	offset = 0;
+// 	ray_x = game->player.pos.x;
+// 	ray_y = game->player.pos.y;
+// 	// printf("\t%f\t%f\n", ray_x, ray_y);
+// 	if (mini == true)
+// 		offset = FRM_WIDTH;
+// 	// printf("\t%d\t%d\n", game->player.ray.map.x, game->player.ray.map.y);
+// 	while (ray_x < game->player.ray.map.x || ray_y < game->player.ray.map.y)
+// 	{
+// 		if (mini == true)
+// 			// put_pixel(ray_x, ray_y, 0xFF0000, game);
+// 			draw_filled_square(ray_x, ray_x, 10, 0xFF0000, game);
+// 		ray_x += 1;//game->player.ray.dir.x;
+// 		ray_y += 1;//game->player.ray.dir.y;
+// 		// printf("\t%f\t%f\n", ray_x, ray_y);
+// 	}
+// 	// if(player->mini == false)
+// 	// {
+// 	// 	double	dist = fixed_dist(player->pos.x, player->pos.y, ray_x, ray_y, game);
+// 	// 	double	height = (BLOCK_SIZE / dist) * (((double)FRM_WIDTH) / 2);
+// 	// 	int	start_y = (SCRN_HEIGHT - height) / 2;
+// 	// 	int	end = start_y + height;
+// 	// 	while(start_y < end)
+// 	// 	{
+// 	// 		put_pixel(i, start_y, 255, game);
+// 	// 		start_y++;
+// 	// 	}
+// 	// }
+// }
+
+int	draw_loop(t_game *game)
+{
+	int	i;
+	double	fraction;
+	double	start_x;
+	int			x;
+	t_ray		*ray;
+	t_player 	*player;
+	t_player	*mini_player;
+
+	ray = &game->player.ray;
+	player = &game->player;
+	mini_player = &game->mini_player;
+	fraction = 0;
+	start_x = 0;
+	clear_image(game);
+	move_player(game->map, player);
+	move_player(game->map, mini_player);
+	draw_mini_map(game);
+	draw_mini_player(game);
+	draw_floor_or_ceiling(0, 0xdcdcdc, game);
+	draw_floor_or_ceiling(1, 0x836953, game);
+// 	INSERT HERE
+	x = -1;
+	while (++x < SCRN_WIDTH)
+	{
+		// if (x == 0)
+		// 	printf("%i\n", x);
+		player->scan_x = 2 * x / (double)SCRN_WIDTH - 1;
+		// printf("\tscan_x\t%f\n", player->scan_x);
+		cast_ray(player);
+		// printf("\tdirX\t%f\tdirY\t%f\n", ray->dir.x, ray->dir.y);
+		// printf("\t%d\t%d\n", game->player.ray.map.x, game->player.ray.map.y);
+		// printf("%f\n", game->player.ray.delta_dist.y);
+		dda_ray(game->map, &game->player.ray, game);
+		// printf("\t%d\t%d\n", game->player.ray.map.x, game->player.ray.map.y);
+		// draw_line(true, game);
+		// if (ray->side)
+		// 	ray->perp_dist_wall = ray->side_dist.y - ray->delta_dist.y;
+		// else
+		// 	ray->perp_dist_wall = ray->side_dist.x - ray->delta_dist.x;
+	}
+//	STOP INSERT HERE
+	fraction = PI / 2 / ((double)FRM_WIDTH);// 3
+	start_x = mini_player->angle - PI / 4;// 6
+	i = 0;
+	while(i < (FRM_WIDTH))
+	{
+		draw_line(mini_player, game, start_x, i);
+		start_x += fraction;
+		i++;
+	}
+	// fraction = PI / 2 / ((double)FRM_WIDTH);// 3
+	// start_x = player->angle - PI / 4;// 6
+	// i = 0;
+	// while(i < (FRM_WIDTH))
+	// {
+	// 	draw_line(player, game, start_x, i);
+	// 	start_x += fraction;
+	// 	i++;
+	// }
+	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
+	return 0;
+}
+
+void	init_game(t_game *game)
+{
+	// game->time = 0;
+	// game->prev_time = 0;
+	game->map_width = 15;
+	game->map_height = 15;
+	game->map = init_map(game->map_width, game->map_width);
+	game->player = init_player(false);
+	game->mini_player = init_player(true);
+	// game->player.ray = init_ray(&game->player);
+	// game->ray = game->player.ray;
+	game->mlx = mlx_init();
+	game->win = mlx_new_window(game->mlx, SCRN_WIDTH, SCRN_HEIGHT, "Game");
+	game->img = mlx_new_image(game->mlx, SCRN_WIDTH, SCRN_HEIGHT);
+	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
+	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
+}
+
+int	main(void)
+{
+	t_game game;
+	// init
+	init_game(&game);
+	// hooks
+	mlx_hook(game.win, 2, 1L<<0, key_press, &game);
+	mlx_hook(game.win, 3, 1L<<1, key_release, &game);
+	mlx_hook(game.win, WIN_X_BTN, 0, close_game, &game);
+	// draw loop
+	mlx_loop_hook(game.mlx, draw_loop, &game);
+	mlx_loop(game.mlx);
+	return 0;
 }
