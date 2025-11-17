@@ -2,18 +2,11 @@
 
 static int	get_cell(t_map *map, int x, int y)
 {
-	int	x_pos;
-
 	if (y < 0 || y >= map->height)
 		return ((int) ' ');
-	if (x < 0)
+	if (x < 0 || x >= map->width)
 		return ((int) ' ');
 	if (!map->grid[y])
-		return ((int) ' ');
-	x_pos = 0;
-	while (x_pos < x && map->grid[y][x_pos] != (int) '\0')
-		x_pos++;
-	if (x_pos != x || map->grid[y][x] == (int) '\0')
 		return ((int) ' ');
 	return (map->grid[y][x]);
 }

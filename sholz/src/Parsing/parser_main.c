@@ -49,6 +49,13 @@ static int	setup_and_validate_map(int fd, char *first_line, t_config *config,
 			free_map(map);
 		return (0);
 	}
+	if (!is_valid_map(map))
+	{
+		printf("Error: Map is not properly enclosed by walls\n");
+		free_config(config);
+		free_map(map);
+		return (0);
+	}
 	return (1);
 }
 
