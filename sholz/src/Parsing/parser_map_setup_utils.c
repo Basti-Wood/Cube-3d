@@ -1,13 +1,13 @@
 #include "../../includes/cub3d.h"
 
-void	copy_line_to_grid(char *cleaned, char *grid_row)
+void	copy_line_to_grid(char *cleaned, int *grid_row)
 {
 	int	j;
 
 	j = 0;
 	while (cleaned[j])
 	{
-		grid_row[j] = cleaned[j];
+		grid_row[j] = (int)cleaned[j];
 		j++;
 	}
 }

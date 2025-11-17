@@ -1,6 +1,6 @@
 #include "../../includes/cub3d.h"
 
-static void	init_map_array(char **map, int height, int width)
+static void	init_map_array(int **map, int height, int width)
 {
 	int	i;
 	int	j;
@@ -8,7 +8,7 @@ static void	init_map_array(char **map, int height, int width)
 	i = 0;
 	while (i < height)
 	{
-		map[i] = malloc(sizeof(char) * (width + 1));
+		map[i] = malloc(sizeof(int) * (width + 1));
 		if (!map[i])
 		{
 			while (--i >= 0)
@@ -18,22 +18,22 @@ static void	init_map_array(char **map, int height, int width)
 		j = 0;
 		while (j < width)
 		{
-			map[i][j] = ' ';
+			map[i][j] = (int) ' ';
 			j++;
 		}
-		map[i][width] = '\0';
+		map[i][width] = (int) '\0';
 		i++;
 	}
 	map[i] = NULL;
 }
 
-char	**allocate_map(int height, int width)
+int	**allocate_map(int height, int width)
 {
-	char	**map;
+	int	**map;
 
 	if (height <= 0 || width <= 0)
 		return (NULL);
-	map = malloc(sizeof(char *) * (height + 1));
+	map = malloc(sizeof(int *) * (height + 1));
 	if (!map)
 		return (NULL);
 	init_map_array(map, height, width);

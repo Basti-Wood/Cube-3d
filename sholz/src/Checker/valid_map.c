@@ -1,33 +1,36 @@
 #include "../../includes/cub3d.h"
 
-static char	get_cell(t_map *map, int x, int y)
+static int	get_cell(t_map *map, int x, int y)
 {
-	int	row_len;
+	int	x_pos;
 
 	if (y < 0 || y >= map->height)
-		return (' ');
+		return ((int) ' ');
 	if (x < 0)
-		return (' ');
+		return ((int) ' ');
 	if (!map->grid[y])
-		return (' ');
-	row_len = ft_strlen(map->grid[y]);
-	if (x >= row_len)
-		return (' ');
+		return ((int) ' ');
+	x_pos = 0;
+	while (x_pos < x && map->grid[y][x_pos] != (int) '\0')
+		x_pos++;
+	if (x_pos != x || map->grid[y][x] == (int) '\0')
+		return ((int) ' ');
 	return (map->grid[y][x]);
 }
 
-static int	is_walkable(char c)
+static int	is_walkable(int c)
 {
-	return (c == '0' || c == 'N' || c == 'S' || c == 'E' || c == 'W');
+	return (c == (int) '0' || c == (int) 'N'
+		|| c == (int) 'S' || c == (int) 'E' || c == (int) 'W');
 }
 
 static int	check_cell_enclosed(t_map *map, int x, int y)
 {
-	char	cell;
-	char	up;
-	char	down;
-	char	left;
-	char	right;
+	int	cell;
+	int	up;
+	int	down;
+	int	left;
+	int	right;
 
 	cell = get_cell(map, x, y);
 	if (!is_walkable(cell))
@@ -36,7 +39,8 @@ static int	check_cell_enclosed(t_map *map, int x, int y)
 	down = get_cell(map, x, y + 1);
 	left = get_cell(map, x - 1, y);
 	right = get_cell(map, x + 1, y);
-	if (up == ' ' || down == ' ' || left == ' ' || right == ' ')
+	if (up == (int) ' ' || down == (int) ' '
+		|| left == (int) ' ' || right == (int) ' ')
 		return (0);
 	return (1);
 }

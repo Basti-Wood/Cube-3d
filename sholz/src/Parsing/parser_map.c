@@ -8,13 +8,22 @@ static void	update_max_width(int *max_width, int current_len)
 
 static int	process_map_line(t_map *map, char *line, int *i, int *max_width)
 {
-	int	current_len;
+	char	*cleaned;
+	int		current_len;
+	int		j;
 
-	map->grid[*i] = clean_map_line(line);
+	cleaned = clean_map_line(line);
 	free(line);
-	if (!map->grid[*i])
+	if (!cleaned)
 		return (0);
-	current_len = ft_strlen(map->grid[*i]);
+	current_len = ft_strlen(cleaned);
+	j = 0;
+	while (cleaned[j])
+	{
+		map->grid[*i][j] = (int)cleaned[j];
+		j++;
+	}
+	free(cleaned);
 	update_max_width(max_width, current_len);
 	(*i)++;
 	return (1);

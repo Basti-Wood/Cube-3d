@@ -19,7 +19,7 @@ void	free_config(t_config *config)
 	free_texture(&config->west_tex);
 }
 
-static void	free_grid_row(char **row)
+static void	free_grid_row(int **row)
 {
 	if (*row)
 	{

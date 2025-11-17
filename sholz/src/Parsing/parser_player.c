@@ -29,12 +29,12 @@ static void	search_row(t_map *map, int y)
 	int	x;
 
 	x = 0;
-	while (map->grid[y] && map->grid[y][x])
+	while (map->grid[y] && map->grid[y][x] && map->grid[y][x] != (int) '\0')
 	{
-		if (is_player_char(map->grid[y][x]))
+		if (is_player_char((char)map->grid[y][x]))
 		{
 			if (check_duplicate_player(map))
-				set_player_position(map, x, y, map->grid[y][x]);
+				set_player_position(map, x, y, (char)map->grid[y][x]);
 		}
 		x++;
 	}

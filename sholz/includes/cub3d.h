@@ -119,7 +119,7 @@ typedef struct s_keys
 
 typedef struct s_map
 {
-	char		**grid;
+	int			**grid;
 	int			width;
 	int			height;
 	t_ivec		player;
@@ -156,7 +156,7 @@ typedef struct s_game
 }				t_game;
 
 //========================= DEBUG FUNCTIONS =========================//
-void			print_map_row(const char *row);
+void			print_map_row(const int *row);
 void			display_map(t_map *map, t_config *config);
 
 //========================= PARSING FUNCTIONS =========================//
@@ -192,7 +192,7 @@ int				parse_identifier(char *line, t_config *config);
 int				is_map_char(char c);
 int				is_map_line(const char *line);
 
-char			**allocate_map(int height, int width);
+int				**allocate_map(int height, int width);
 int				count_map_lines(int fd);
 void			count_map_dimensions(int fd, t_map *map);
 
@@ -201,7 +201,7 @@ char			*clean_map_line(char *line);
 
 int				parse_map_section(int fd, t_map *map);
 
-void			copy_line_to_grid(char *cleaned, char *grid_row);
+void			copy_line_to_grid(char *cleaned, int *grid_row);
 char			**read_temp_lines(int fd, char *first_line, int *height,
 					int *max_width);
 void			free_temp_lines(char **temp, int count);

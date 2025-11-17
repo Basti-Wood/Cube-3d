@@ -1,22 +1,22 @@
 #include "../includes/cub3d.h"
 
-void	print_map_row(const char *row)
+void	print_map_row(const int *row)
 {
 	int	x;
 
 	x = 0;
-	while (row[x])
+	while (row[x] && row[x] != (int)'\0')
 	{
-		if (row[x] == '1')
+		if (row[x] == (int)'1')
 			printf("█");
-		else if (row[x] == '0')
+		else if (row[x] == (int)'0')
 			printf("·");
-		else if (row[x] == 'N' || row[x] == 'S' || row[x] == 'E' || row[x] == 'W')
-			printf("\033[1;32m%c\033[0m", row[x]);
-		else if (row[x] == ' ')
+		else if (row[x] == (int)'N' || row[x] == (int)'S' || row[x] == (int)'E' || row[x] == (int)'W')
+			printf("\033[1;32m%c\033[0m", (char)row[x]);
+		else if (row[x] == (int)' ')
 			printf(" ");
 		else
-			printf("%c", row[x]);
+			printf("%c", (char)row[x]);
 		x++;
 	}
 }

@@ -115,36 +115,34 @@ static void	print_col_ones(int width)
 	printf("\n\n");
 }
 
-static void	print_map_char(char c)
+static void	print_map_char(int c)
 {
-	if (c == '1')
+	if (c == (int)'1')
 		printf("█");
-	else if (c == '0')
+	else if (c == (int)'0')
 		printf("·");
-	else if (c == 'N')
+	else if (c == (int)'N')
 		printf("↑");
-	else if (c == 'S')
+	else if (c == (int)'S')
 		printf("↓");
-	else if (c == 'E')
+	else if (c == (int)'E')
 		printf("→");
-	else if (c == 'W')
+	else if (c == (int)'W')
 		printf("←");
-	else if (c == ' ')
+	else if (c == (int)' ')
 		printf(" ");
 	else
-		printf("%c", c);
+		printf("%c", (char)c);
 }
 
-static void	print_map_row_tester(const char *row)
+static void	print_map_row_tester(const int *row)
 {
 	int	x;
-	int	len;
 
 	if (!row)
 		return;
-	len = ft_strlen(row);
 	x = 0;
-	while (x < len)
+	while (row[x] && row[x] != (int)'\0')
 	{
 		print_map_char(row[x]);
 		x++;
@@ -178,9 +176,10 @@ static void	print_map_grid(t_map *map)
 static void	print_map_raw(t_map *map)
 {
 	int	y;
+	int	x;
 
 	print_separator();
-	printf("📋 RAW MAP DATA\n");
+	printf("📋 RAW MAP DATA (as strings)\n");
 	print_separator();
 	printf("\n");
 	
@@ -188,7 +187,16 @@ static void	print_map_raw(t_map *map)
 	while (y < map->height)
 	{
 		if (map->grid[y])
-			printf("%3d: [%s]\n", y, map->grid[y]);
+		{
+			printf("%3d: [", y);
+			x = 0;
+			while (map->grid[y][x] && map->grid[y][x] != (int)'\0')
+			{
+				printf("%c", (char)map->grid[y][x]);
+				x++;
+			}
+			printf("]\n");
+		}
 		y++;
 	}
 	
@@ -196,18 +204,51 @@ static void	print_map_raw(t_map *map)
 	print_separator();
 }
 
-static void	count_row_tiles(char *row, int *walls, int *floors)
+static void	print_map_int_arrays(t_map *map)
+{
+	int	y;
+	int	x;
+
+	print_separator();
+	printf("🔢 MAP DATA (as int arrays)\n");
+	print_separator();
+	printf("\n");
+	
+	y = 0;
+	while (y < map->height)
+	{
+		if (map->grid[y])
+		{
+			printf("%3d: [", y);
+			x = 0;
+			while (map->grid[y][x] && map->grid[y][x] != (int)'\0')
+			{
+				if (x > 0)
+					printf(", ");
+				printf("%d", map->grid[y][x]);
+				x++;
+			}
+			printf("]\n");
+		}
+		y++;
+	}
+	
+	printf("\n");
+	print_separator();
+}
+
+static void	count_row_tiles(int *row, int *walls, int *floors)
 {
 	int	x;
 
 	if (!row)
 		return;
 	x = 0;
-	while (row[x])
+	while (row[x] && row[x] != (int)'\0')
 	{
-		if (row[x] == '1')
+		if (row[x] == (int)'1')
 			(*walls)++;
-		else if (row[x] == '0')
+		else if (row[x] == (int)'0')
 			(*floors)++;
 		x++;
 	}
@@ -328,6 +369,7 @@ int	main(int argc, char **argv)
 	print_map_info(&map);
 	print_map_grid(&map);
 	print_map_raw(&map);
+	print_map_int_arrays(&map);
 	print_summary(&map);
 	
 	free_config(&config);
