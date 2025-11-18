@@ -20,7 +20,7 @@ typedef enum e_dimensions
 	SCRN_WIDTH = 1920,
 	SCRN_HEIGHT = 960,
 	FRM_WIDTH = SCRN_WIDTH / 2,
-	BLOCK_SIZE = 64
+	BLOCK_SIZE = 32
 }	t_dimensions;
 
 typedef enum e_key_codes
@@ -92,14 +92,12 @@ typedef struct s_player
 {
 	bool		mini;
 
-	t_vector	playerPos;
 	t_vector	pos;
 	t_vector	dir;
 	t_vector	plane;
 	double		scan_x;
+	double		fov;
 	t_ray		ray;
-
-	double		angle;
 
 	bool		move_forward;
 	bool		move_backward;
@@ -136,30 +134,30 @@ typedef struct s_game
 	// double		prev_time;
 }	t_game;
 
-int		close_game(t_game *game);
-
-int	**init_map(int map_width, int map_height);
-
+int			**init_map(int map_width, int map_height);
 t_player	init_player(bool mini);
-// void	init_mini_player(t_player *player);
-int		key_press(int keycode, t_game *game);
-int		key_release(int keycode, t_game *game);
-void	move_player(int **map, t_player *player);
-
+// t_player	init_mini_player(t_player *player);
 // t_ray	init_ray(t_player *player);
-void	cast_ray(t_player *player);
-void	dda_ray(int **map, t_ray *ray, t_game *game);
-bool	touch(double px, double py, t_game *game);
+int			i_walk_the_line(t_game *game);
+int			key_press(int keycode, t_game *game);
+int			key_release(int keycode, t_game *game);
+void		move_player(int **map, t_player *player);
 
-void	put_pixel(int x, int y, int color, t_game *game);
-void	clear_image(t_game *game);
-double	distance(double x, double y);
-double	fixed_dist(double x1, double y1, double x2, double y2, t_game *game);
+bool		collision(int x, int y, int **map);
+void		put_pixel(int x, int y, int color, t_game *game);
+void		draw_empty_square(int x, int y, int size, int color, t_game *game);
+void		draw_filled_square(int x, int y, int size, int color, t_game *game);
+void		draw_floor_and_ceiling(t_game *game);
+void		draw_map(t_game *game);
+void		draw_player(t_game *game);
+void		draw_radar(t_game *game);
+void		draw_walls(t_game *game);
+void		cast_ray(t_player *player);
+void		dda(t_game *game);
 
-void	draw_empty_square(int x, int y, int size, int color, t_game *game);
-void	draw_filled_square(int x, int y, int size, int color, t_game *game);
-void	draw_floor_or_ceiling(bool floor, int color, t_game *game);
-void	draw_mini_map(t_game *game);
-void	draw_mini_player(t_game *game);
-
+void		clear_image(t_game *game);
+int			close_game(t_game *game);
 #endif
+
+// double		distance(double x, double y);
+// double		fixed_dist(double x1, double y1, double x2, double y2, t_game *game);
