@@ -16,7 +16,32 @@ void	draw_blimp(int x, int y, t_game *game)
 
 char	get_direction(int *x, int *y, char prev, t_game *game)
 {
-	if (prev == 'W' || !prev)
+	if (!prev)
+	{
+		if (*x < (game->map_width - 1) && game->map[*y][*x + 1] == 1)//W->E
+		{
+			prev = 'W';
+			(*x)++;
+		}
+		else if (*y < (game->map_height - 1) && game->map[*y + 1][*x] == 1)//N->S
+		{
+			prev = 'N';
+			(*y)++;
+		}
+		else if (*x && game->map[*y][*x - 1] == 1)//E->W
+		{
+			prev = 'E';
+			(*x)--;
+		}
+		else if (*y && game->map[*y - 1][*x] == 1)//S-N
+		{
+			prev = 'S';
+			(*y)--;
+		}
+		else
+			prev = 0;
+	}
+	if (prev == 'W')
 	{
 		if (*x < (game->map_width - 1) && game->map[*y][*x + 1] == 1)//W->E
 		{
@@ -137,12 +162,7 @@ int	i_walk_the_line(t_game *game)
 		return (1);
 	start_x = x;
 	start_y = y;
-	// prev = 0;
-	// prev = get_direction(&x, &y, prev, game);
-	// if (!prev)
-	// 	return (1);
-	// draw_blimp(x, y, game);
-	// usleep(25000);
+	prev = 0;
 	while (true)
 	{
 		prev = get_direction(&x, &y, prev, game);
