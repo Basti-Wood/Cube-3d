@@ -1,7 +1,7 @@
 #include "../includes/game.h"
 #include <unistd.h>
 
-void	draw_blimp(int x, int y, t_game *game)
+void	draw_blip(int x, int y, t_game *game)
 {
 	game->mini_player.pos.x = x + 0.5;
 	game->mini_player.pos.y = y + 0.5;
@@ -14,114 +14,75 @@ void	draw_blimp(int x, int y, t_game *game)
 	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
 }
 
-char	get_direction(int *x, int *y, char prev, t_game *game)
+int		probe_direction(int x, int y, t_game *game)
 {
-	if (!prev)
-	{
-		if (*x < (game->map_width - 1) && game->map[*y][*x + 1] == 1)//W->E
-		{
-			prev = 'W';
-			(*x)++;
-		}
-		else if (*y < (game->map_height - 1) && game->map[*y + 1][*x] == 1)//N->S
-		{
-			prev = 'N';
-			(*y)++;
-		}
-		else if (*x && game->map[*y][*x - 1] == 1)//E->W
-		{
-			prev = 'E';
-			(*x)--;
-		}
-		else if (*y && game->map[*y - 1][*x] == 1)//S-N
-		{
-			prev = 'S';
-			(*y)--;
-		}
-		else
-			prev = 0;
-	}
+	if (!(x >= 0 && x < game->map_width && y >=0 && y < game->map_height))
+		return (0);
+	return (game->map[y][x]);
+}
+
+t_square	get_direction(char prev, char *tmp, int i)
+{
+	t_square	dir;
+	int			d;
+
 	if (prev == 'W')
+		d = 0;
+	else if (prev == 'N')
+		d = 1;
+	else if (prev == 'E')
+		d = 2;
+	else if (prev == 'S')
+		d = 3;
+	d = (d + i) % 4 + 1;
+	dir.x = 0;
+	dir.y = 0;
+	if (d == 1)
 	{
-		if (*x < (game->map_width - 1) && game->map[*y][*x + 1] == 1)//W->E
-		{
-			prev = 'W';
-			(*x)++;
-		}
-		else if (*y < (game->map_height - 1) && game->map[*y + 1][*x] == 1)//N->S
-		{
-			prev = 'N';
-			(*y)++;
-		}
-		else if (*y && game->map[*y - 1][*x] == 1)//S-N
-		{
-			prev = 'S';
-			(*y)--;
-		}
-		else
-			prev = 0;
+		*tmp = 'E';
+		dir.x = -1;//go WEST
 	}
-	if (prev == 'N')
+	else if (d == 2)
 	{
-		if (*y < (game->map_height - 1) && game->map[*y + 1][*x] == 1)//N->S
-		{
-			prev = 'N';
-			(*y)++;
-		}
-		else if (*x && game->map[*y][*x - 1] == 1)//E->W
-		{
-			prev = 'E';
-			(*x)--;
-		}
-		else if (*x < (game->map_width - 1) && game->map[*y][*x + 1] == 1)//W->E
-		{
-			prev = 'W';
-			(*x)++;
-		}
-		else
-			prev = 0;
+		*tmp = 'S';
+		dir.y = -1;//go NORTH
 	}
-	if (prev == 'E')
+	else if (d == 3)
 	{
-		if (*x && game->map[*y][*x - 1] == 1)//E->W
-		{
-			prev = 'E';
-			(*x)--;
-		}
-		else if (*y && game->map[*y - 1][*x] == 1)//S-N
-		{
-			prev = 'S';
-			(*y)--;
-		}
-		else if (*y < (game->map_height - 1) && game->map[*y + 1][*x] == 1)//N->S
-		{
-			prev = 'N';
-			(*y)++;
-		}
-		else
-			prev = 0;
+		*tmp = 'W';
+		dir.x = 1;//go EAST
 	}
-	if (prev == 'S')
+	else
 	{
-		if (*y && game->map[*y - 1][*x] == 1)//S-N
-		{
-			prev = 'S';
-			(*y)--;
-		}
-		else if (*x < (game->map_width - 1) && game->map[*y][*x + 1] == 1)//W->E
-		{
-			prev = 'W';
-			(*x)++;
-		}
-		else if (*x && game->map[*y][*x - 1] == 1)//E->W
-		{
-			prev = 'E';
-			(*x)--;
-		}
-		else
-			prev = 0;
+		*tmp = 'N';
+		dir.y = 1;//go SOUTH
 	}
-	return (prev);
+	return (dir);
+}
+
+char	walk_to_next_tile(int *x, int *y, char prev, t_game *game)
+{
+	t_square	dir;
+	// char		c_dir;
+	char 		tmp;
+	int			i;
+	int			s;
+
+	s = 0;
+	i = 0;
+	while (++i < 5)
+	{
+		dir = get_direction(prev, &tmp, i);
+		if (probe_direction(*x + dir.x, *y + dir.y, game))
+		{
+			// printf("\tdir_x\t%i\tdir_y\t%i\t%c", v_dir.x, v_dir.y, prev);
+			prev = tmp;
+			*x += dir.x;
+			*y += dir.y;
+			return (prev);
+		}
+	}
+	return (0);
 }
 
 int	get_start(int *x, int *y, t_game *game)
@@ -151,97 +112,37 @@ int	get_start(int *x, int *y, t_game *game)
 int	i_walk_the_line(t_game *game)
 {
 	char	prev;
-	int		start_x;
-	int		start_y;
+	char	first;
+	char	last;
+	int		i;
 	int		x;
 	int		y;
-	int		flag;
+	int		start_x;
+	int		start_y;
 
-	flag = get_start(&x, &y, game);
-	if (flag == 1)
+	if (get_start(&x, &y, game))
 		return (1);
 	start_x = x;
 	start_y = y;
-	prev = 0;
+	i = 0;
+	prev = 'W';
 	while (true)
 	{
-		prev = get_direction(&x, &y, prev, game);
+		prev = walk_to_next_tile(&x, &y, prev, game);
 		if (!prev)
 			return (1);
+		if (i == 0)
+			first = prev;
 		if (x == start_x && y == start_y)
 			break;
-		draw_blimp(x, y, game);
-		usleep(25000);
+		draw_blip(x, y, game);
+		usleep(5000);
+		i++;
 	}
+	last = prev;
+	if ((first == 'W' && last == 'E') || (first == 'N' && last == 'S') || (first == 'E' && last == 'W') || (first == 'S' && last == 'N'))
+		return (1);
 	game->mini_player.pos.x = 11;
 	game->mini_player.pos.y = 28;
 	return (0);
 }
-
-// if (flag > 1)
-// {
-// 	if (*x && prev != 'W' && game->map[*y][*x - 1] == 1)//E->W
-// 	{
-// 		prev = 'E';
-// 		(*x)--;
-// 	}
-// 	else if (*y && prev != 'N' && game->map[*y - 1][*x] == 1)//S-N
-// 	{
-// 		prev = 'S';
-// 		(*y)--;
-// 	}
-// 	else if (*x < (game->map_width - 1) && prev != 'E' && game->map[*y][*x + 1] == 1)//W->E
-// 	{
-// 		prev = 'W';
-// 		(*x)++;
-// 	}
-// 	else if (*y < (game->map_height - 1) && prev != 'S' && game->map[*y + 1][*x] == 1)//N->S
-// 	{
-// 		prev = 'N';
-// 		(*y)++;
-// 	}
-// 	else
-// 		prev = 0;
-// }
-
-// if (prev == 'W')//W->E
-// {
-// 	prev = get_direction(&x, &y, prev, game);
-// 	draw_blimp(x, y, game);
-// 	// if (!prev || prev == 'E')
-// 	// return (1);
-// }
-// else if (prev == 'N')//N->S
-// {
-// 	prev = get_direction(&x, &y, prev, game);
-// 	draw_blimp(x, y, game);
-// 	// if (!prev || prev == 'S')
-// 	// return (1);
-// }
-// else if (prev == 'E')//E->W
-// {
-// 	prev = get_direction(&x, &y, prev, game);
-// 	draw_blimp(x, y, game);
-// 	// if (!prev || prev == 'W')
-// 	// return (1);
-// }
-// else if (prev == 'S')//S->N
-// {
-// 	prev = get_direction(&x, &y, prev, game);
-// 	draw_blimp(x, y, game);
-// 	// if (!prev || prev == 'N')
-// 	// return (1);
-// }
-
-// while (++y < game->map_height && !flag)
-// {
-// 	while (++x < game->map_width)
-// 	{
-// 		if (game->map[y][x] == 1)
-// 		{
-// 			flag = 1;
-// 			break;
-// 		}
-// 	}
-// 	x = -1;
-// }
