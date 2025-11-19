@@ -1,4 +1,4 @@
-# include "../includes/game.h"
+#include "../includes/game.h"
 
 t_player	init_player(bool mini)
 {
@@ -20,6 +20,7 @@ t_player	init_player(bool mini)
 	// printf("\tplane_len = %f\n", plane_len);
 	player.plane.x = 1;
 	player.fov = 2 * atan(plane_len / dir_len);
+	// hero.fov = 2 * atan(fabs(hero.plane.x + hero.plane.y) / fabs(hero.dir.x + hero.dir.y));
 	// printf("\tFOV = %f\n", player.fov);
 	player.scan_x = 0;
 	// double	angle = atan2(player.dir.y, player.dir.x);
@@ -28,7 +29,7 @@ t_player	init_player(bool mini)
 	player.move_backward = false;
 	player.move_port = false;
 	player.move_starboard = false;
-	player.move_speed = (double)1/30;
+	player.move_speed = (double)1 / 30;
 	player.turn_sinistral = false;
 	player.turn_dextral = false;
 	player.turn_speed = PI / 100;
@@ -57,7 +58,6 @@ void	turn_player(double tmp_dir_x, double tmp_plane_x, t_player *player)
 	}
 	if (player->turn_dextral)
 	{
-
 		// printf("\tray_dirX\t%f", player->ray.dir.x);
 		// fake_angle = atan2(player->dir.y, player->dir.x) + player->turn_speed;
 		// printf("\tpla_dirX\t%f", player->dir.x);

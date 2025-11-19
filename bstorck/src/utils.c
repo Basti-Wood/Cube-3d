@@ -2,17 +2,28 @@
 
 void	clear_image(t_game *game)
 {
-	for(int y = 0; y < SCRN_HEIGHT; y++)
-		for(int x = 0; x < SCRN_WIDTH; x++)
+	int	x;
+	int	y;
+
+	y = -1;
+	while (++y <= SCRN_HEIGHT)
+	{
+		x = -1;
+		while (++x <= SCRN_WIDTH)
 			put_pixel(x, y, 0, game);
+	}
+	// for(int y = 0; y < SCRN_HEIGHT; y++)
+	// 	for(int x = 0; x < SCRN_WIDTH; x++)
+	// 		put_pixel(x, y, 0, game);
 }
 
 void	put_pixel(int x, int y, int color, t_game *game)
 {
-	if(x >= SCRN_WIDTH || y >= SCRN_HEIGHT || x < 0 || y < 0)
-		return;
+	int	index;
 
-	int	index = y * game->size_line + x * game->bpp / 8;
+	if (x >= SCRN_WIDTH || y >= SCRN_HEIGHT || x < 0 || y < 0)
+		return ;
+	index = y * game->size_line + x * game->bpp / 8;
 	game->data[index] = color & 0xFF;
 	game->data[index + 1] = (color >> 8) & 0xFF;
 	game->data[index + 2] = (color >> 16) & 0xFF;
@@ -24,9 +35,38 @@ bool	collision(int x, int y, int **map)
 	// printf("\tX = %i", x);
 	// int	y = ry / BLOCK_SIZE;
 	// printf("\tY = %i\n", y);
-	if(map[y][x] > 0)
+	if (map[y][x] > 0)
 		return (true);
 	return (false);
+}
+
+time_t	get_current_time(void)
+{
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
+}
+
+void	ft_usleep(int usec)
+{
+	time_t	time_to_sleep;
+	time_t	time_to_awake;
+
+	time_to_sleep = usec / 1000;
+	time_to_awake = get_current_time() + time_to_sleep;
+	while (get_current_time() < time_to_awake)
+		continue ;
+}
+
+int	ft_strcmp(char const *s1, char const *s2)
+{
+	while ((*s1 && *s2) && (*s1 == *s2))
+	{
+		s1++;
+		s2++;
+	}
+	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
 
 // double	distance(double x, double y)

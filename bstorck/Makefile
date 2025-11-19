@@ -5,7 +5,7 @@ OBJ = $(SRC:.c=.o)
 LFLAGS = -L./includes/mlx -lmlx -lXext -lX11 -lm -lz
 INCLUDES = includes/mlx/libmlx.a
 SRC = src/main.c src/map.c src/player.c src/key_event.c \
-	src/ray.c src/draw.c src/draw2.c src/utils.c src/walker_texas_ranger.c
+	src/ray.c src/draw_static.c src/draw_ambulatory.c src/utils.c src/walker_texas_ranger.c
 
 all: $(NAME)
 
