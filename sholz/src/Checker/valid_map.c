@@ -11,37 +11,62 @@ static int	get_cell(t_map *map, int x, int y)
 	return (map->grid[y][x]);
 }
 
-static int	is_walkable(int c)
+static int	check_direction_x(t_map *map, int x, int y, int dx)
 {
-	return (c == (int) '0' || c == (int) 'N'
-		|| c == (int) 'S' || c == (int) 'E' || c == (int) 'W');
+	int	nx;
+	int	cell;
+
+	nx = x + dx;
+	while (nx >= 0 && nx < map->width)
+	{
+		cell = get_cell(map, nx, y);
+		if (cell == (int) '1')
+			return (1);
+		nx += dx;
+	}
+	return (0);
 }
 
-static int	check_cell_enclosed(t_map *map, int x, int y)
+static int	check_direction_y(t_map *map, int x, int y, int dy)
 {
+	int	ny;
 	int	cell;
-	int	up;
-	int	down;
-	int	left;
-	int	right;
 
-	cell = get_cell(map, x, y);
-	if (!is_walkable(cell))
-		return (1);
-	up = get_cell(map, x, y - 1);
-	down = get_cell(map, x, y + 1);
-	left = get_cell(map, x - 1, y);
-	right = get_cell(map, x + 1, y);
-	if (up == (int) ' ' || down == (int) ' '
-		|| left == (int) ' ' || right == (int) ' ')
+	ny = y + dy;
+	while (ny >= 0 && ny < map->height)
+	{
+		cell = get_cell(map, x, ny);
+		if (cell == (int) '1')
+			return (1);
+		ny += dy;
+	}
+	return (0);
+}
+
+static int	check_zero_enclosed(t_map *map, int x, int y)
+{
+	if (!check_direction_x(map, x, y, -1))
+		return (0);
+	if (!check_direction_x(map, x, y, 1))
+		return (0);
+	if (!check_direction_y(map, x, y, -1))
+		return (0);
+	if (!check_direction_y(map, x, y, 1))
 		return (0);
 	return (1);
+}
+
+static int	is_player_or_empty(int cell)
+{
+	return (cell == (int) '0' || cell == (int) 'N' || cell == (int) 'S'
+		|| cell == (int) 'E' || cell == (int) 'W');
 }
 
 int	is_valid_map(t_map *map)
 {
 	int	x;
 	int	y;
+	int	cell;
 
 	y = 0;
 	while (y < map->height)
@@ -49,8 +74,12 @@ int	is_valid_map(t_map *map)
 		x = 0;
 		while (x < map->width)
 		{
-			if (!check_cell_enclosed(map, x, y))
-				return (0);
+			cell = get_cell(map, x, y);
+			if (is_player_or_empty(cell))
+			{
+				if (!check_zero_enclosed(map, x, y))
+					return (0);
+			}
 			x++;
 		}
 		y++;

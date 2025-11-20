@@ -60,6 +60,16 @@ typedef struct s_vec
 	double		y;
 }				t_vec;
 
+typedef struct s_walker
+{
+	t_ivec		pos;
+	t_ivec		start;
+	t_ivec		wind_rose[4];
+	t_ivec		first;
+	t_ivec		last;
+	int			prev;
+}				t_walker;
+
 typedef struct s_img
 {
 	void		*img_ptr;
@@ -214,6 +224,7 @@ int				process_identifier_value(char *id, char *value,
 //========================= CHECKER FUNCTIONS =========================//
 
 int				is_valid_map(t_map *map);
+int				i_walk_the_line(t_map *map);
 
 //========================= GAME FUNCTIONS =========================//
 
