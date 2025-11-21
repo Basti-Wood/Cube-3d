@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ray.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bstorck <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/21 15:23:38 by bstorck           #+#    #+#             */
+/*   Updated: 2025/11/21 15:23:41 by bstorck          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/game.h"
 
-// t_ray	init_ray(t_player *player)
+// t_ray	init_ray(t_hero *hero)
 // {
 // 	t_ray	ray;
 //
 // 	ray.side = false;
-// 	ray.dir.x = player->dir.x + player->plane.x * player->scan_x;//-1
-// 	ray.dir.y = player->dir.y + player->plane.y * player->scan_x;// 0
+// 	ray.dir.x = hero->dir.x + hero->plane.x * hero->scan_x;//-1
+// 	ray.dir.y = hero->dir.y + hero->plane.y * hero->scan_x;// 0
 // 	ray.map.x = 0;
 // 	ray.map.y = 0;
 // 	ray.step.x = 0;
@@ -29,53 +41,53 @@ double	get_delta_dist(double dir)
 	return (delta_dist);
 }
 
-double	get_side_dist(char coordinate, t_player *player)
+double	get_side_dist(char coordinate, t_hero *hero)
 {
 	double	ray_dir;
-	double	player_pos;
+	double	hero_pos;
 	double	ray_delta_dist;
 	int		ray_map;
 
 	if (coordinate == 'x')
 	{
-		ray_dir = player->ray.dir.x;
-		player_pos = player->pos.x;
-		ray_delta_dist = player->ray.delta_dist.x;
-		ray_map = player->ray.map.x;
+		ray_dir = hero->ray.dir.x;
+		hero_pos = hero->pos.x;
+		ray_delta_dist = hero->ray.delta_dist.x;
+		ray_map = hero->ray.map.x;
 	}
 	else
 	{
-		ray_dir = player->ray.dir.y;
-		player_pos = player->pos.y;
-		ray_delta_dist = player->ray.delta_dist.y;
-		ray_map = player->ray.map.y;
+		ray_dir = hero->ray.dir.y;
+		hero_pos = hero->pos.y;
+		ray_delta_dist = hero->ray.delta_dist.y;
+		ray_map = hero->ray.map.y;
 	}
 	if (ray_dir < 0)
-		return ((player_pos - ray_map) * ray_delta_dist);
+		return ((hero_pos - ray_map) * ray_delta_dist);
 	else
-		return ((ray_map + 1 - player_pos) * ray_delta_dist);
+		return ((ray_map + 1 - hero_pos) * ray_delta_dist);
 }
 
-void	cast_ray(t_player *player)
+void	cast_ray(t_hero *hero)
 {
 	t_ray	*ray;
 
-	ray = &player->ray;
+	ray = &hero->ray;
 	ray->side = false;
-	ray->map.x = (int)player->pos.x;
-	ray->map.y = (int)player->pos.y;
+	ray->map.x = (int)hero->pos.x;
+	ray->map.y = (int)hero->pos.y;
 	ray->step.x = 1;
-	ray->dir.x = player->dir.x + player->plane.x * player->scan_x;
+	ray->dir.x = hero->dir.x + hero->plane.x * hero->scan_x;
 	if (ray->dir.x < 0)
 		ray->step.x = -1;
 	ray->step.y = 1;
-	ray->dir.y = player->dir.y + player->plane.y * player->scan_x;
+	ray->dir.y = hero->dir.y + hero->plane.y * hero->scan_x;
 	if (ray->dir.y < 0)
 		ray->step.y = -1;
 	ray->delta_dist.x = get_delta_dist(ray->dir.x);
 	ray->delta_dist.y = get_delta_dist(ray->dir.y);
-	ray->side_dist.x = get_side_dist('x', player);
-	ray->side_dist.y = get_side_dist('y', player);
+	ray->side_dist.x = get_side_dist('x', hero);
+	ray->side_dist.y = get_side_dist('y', hero);
 }
 
 void	dda(t_game *game)
@@ -85,19 +97,19 @@ void	dda(t_game *game)
 	hit = false;
 	while (!hit)
 	{
-		if (game->player.ray.side_dist.x < game->player.ray.side_dist.y)
+		if (game->hero.ray.side_dist.x < game->hero.ray.side_dist.y)
 		{
-			game->player.ray.side_dist.x += game->player.ray.delta_dist.x;
-			game->player.ray.map.x += game->player.ray.step.x;
-			game->player.ray.side = false;
+			game->hero.ray.side_dist.x += game->hero.ray.delta_dist.x;
+			game->hero.ray.map.x += game->hero.ray.step.x;
+			game->hero.ray.side = false;
 		}
 		else
 		{
-			game->player.ray.side_dist.y += game->player.ray.delta_dist.y;
-			game->player.ray.map.y += game->player.ray.step.y;
-			game->player.ray.side = true;
+			game->hero.ray.side_dist.y += game->hero.ray.delta_dist.y;
+			game->hero.ray.map.y += game->hero.ray.step.y;
+			game->hero.ray.side = true;
 		}
-		if (game->map[game->player.ray.map.y][game->player.ray.map.x] != 0)
+		if (game->map[game->hero.ray.map.y][game->hero.ray.map.x] != 0)
 			hit = true;
 	}
 }

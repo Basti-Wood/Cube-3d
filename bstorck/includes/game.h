@@ -1,20 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   game.h                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bstorck <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/21 15:22:15 by bstorck           #+#    #+#             */
+/*   Updated: 2025/11/21 15:22:29 by bstorck          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef GAME_H
 # define GAME_H
 
 // # define BLOCK 64
 # define PI 3.14159265359
 
-#include "./mlx/mlx.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-// #include <cstdint>
-#include <limits.h>
-#include <math.h>
-#include <sys/time.h>
+# include "./mlx/mlx.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include <stdbool.h>
+// # include <cstdint>
+# include <limits.h>
+# include <math.h>
+# include <sys/time.h>
 
-#define	STATIC_MAP
-
+// # define	STATIC_MAP
 
 typedef enum e_dimensions
 {
@@ -87,9 +98,9 @@ typedef struct s_ray
 	t_vector	delta_dist;
 
 	double		perp_dist_wall;
-}	t_ray;;
+}	t_ray;
 
-typedef struct s_player
+typedef struct s_hero
 {
 	bool		mini;
 
@@ -109,7 +120,18 @@ typedef struct s_player
 	bool		turn_sinistral;
 	bool		turn_dextral;
 	double		turn_speed;
-} 	t_player;
+}	t_hero;
+
+// typedef struct s_window
+// {
+// 	void		*mlx;
+// 	void		*win;
+// 	void		*img;
+// 	char		*data;
+// 	int			bpp;
+// 	int			size_line;
+// 	int			endian;
+// }	t_window;
 
 typedef struct s_walker
 {
@@ -118,6 +140,7 @@ typedef struct s_walker
 	t_square	wind_rose[4];
 	t_square	first;
 	t_square	last;
+	t_square	dir;
 	// t_square	prev;
 	int			prev;
 }	t_walker;
@@ -125,60 +148,60 @@ typedef struct s_walker
 typedef struct s_game
 {
 	bool		skip_intro;
-
+	// bool		intro_concluded;
 	void		*mlx;
 	void		*win;
 	void		*img;
-
 	char		*data;
 	int			bpp;
 	int			size_line;
 	int			endian;
 
 	int			**map;
-	int			map_height;
 	int			map_width;
+	int			map_height;
 	// int			block_size;
-
 	// t_ray		ray;
-	t_player	player;
-	t_player	mini_player;
+	t_hero		hero;
+	t_hero		mini_hero;
+	t_walker	walker;
 
+	// t_window	w;
 	// double		time;
 	// double		prev_time;
 }	t_game;
 
-int			ft_strcmp(char const *s1, char const *s2);
+// int			ft_strcmp(char const *s1, char const *s2);
+void		init_intro(t_game *g);
+int			intro_loop(t_game *game);
+t_walker	init_walker(void);
+int			get_start(t_game *game);
+int			get_direction(t_game *game);
+// void		check_wall_integrity(t_game *game);
 
 int			**init_map(int map_width, int map_height);
-t_player	init_player(bool mini);
-// t_player	init_mini_player(t_player *player);
-// t_ray	init_ray(t_player *player);
-int			i_walk_the_line(t_game *game);
+t_hero		init_hero(bool mini);
+// t_hero	init_mini_hero(t_hero *hero);
+// t_ray	init_ray(t_hero *hero);
 int			key_press(int keycode, t_game *game);
 int			key_release(int keycode, t_game *game);
-void		move_player(int **map, t_player *player);
-
+void		move_hero(int **map, t_hero *hero);
+int			game_loop(t_game *game);
 // time_t		get_current_time(void);
 void		ft_usleep(int usec);
 bool		collision(int x, int y, int **map);
 void		put_pixel(int x, int y, int color, t_game *game);
 void		draw_blip(int x, int y, t_game *game);
-void		draw_empty_square(t_square square, int size, int color, t_game *game);
-void		draw_filled_square(t_square square, int size, int color, t_game *game);
+void		draw_empty_square(t_square s, int size, int color, t_game *game);
+void		draw_filled_square(t_square s, int size, int color, t_game *game);
 void		draw_floor_and_ceiling(t_game *game);
 void		draw_map(t_game *game);
-// void		draw_player(t_game *game);
 void		draw_hero(double x, double y, int size, t_game *game);
 void		draw_radar(t_game *game);
 void		draw_walls(t_game *game);
-void		cast_ray(t_player *player);
+void		cast_ray(t_hero *hero);
 void		dda(t_game *game);
 
 void		clear_image(t_game *game);
-void		throw_error(int num_error, t_game *game);
 int			close_game(t_game *game);
 #endif
-
-// double		distance(double x, double y);
-// double		fixed_dist(double x1, double y1, double x2, double y2, t_game *game);

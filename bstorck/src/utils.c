@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bstorck <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/21 15:24:18 by bstorck           #+#    #+#             */
+/*   Updated: 2025/11/21 15:24:19 by bstorck          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/game.h"
 
 void	clear_image(t_game *game)
@@ -59,15 +71,15 @@ void	ft_usleep(int usec)
 		continue ;
 }
 
-int	ft_strcmp(char const *s1, char const *s2)
-{
-	while ((*s1 && *s2) && (*s1 == *s2))
-	{
-		s1++;
-		s2++;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
-}
+// int	ft_strcmp(char const *s1, char const *s2)
+// {
+// 	while ((*s1 && *s2) && (*s1 == *s2))
+// 	{
+// 		s1++;
+// 		s2++;
+// 	}
+// 	return ((unsigned char)*s1 - (unsigned char)*s2);
+// }
 
 // double	distance(double x, double y)
 // {
@@ -76,7 +88,7 @@ int	ft_strcmp(char const *s1, char const *s2)
 
 // double	fixed_dist(double x1, double y1, double x2, double y2, t_game *game)
 // {
-// 	double	dir_angle = atan2(game->player.dir.y, game->player.dir.x);
+// 	double	dir_angle = atan2(game->hero.dir.y, game->hero.dir.x);
 // 	double	delta_x = x2 - x1;
 // 	double	delta_y = y2 - y1;
 // 	double	angle = atan2(delta_y, delta_x) - dir_angle;
@@ -84,9 +96,9 @@ int	ft_strcmp(char const *s1, char const *s2)
 // 	return (fix_dist);
 // }
 
-// if(player->mini == false)
+// if(hero->mini == false)
 // {
-// 	double	dist = fixed_dist(player->pos.x, player->pos.y, ray_x, ray_y, game);
+// 	double	dist = fixed_dist(hero->pos.x, hero->pos.y, ray_x, ray_y, game);
 // 	double	height = (BLOCK_SIZE / dist) * (((double)FRM_WIDTH) / 2);
 // 	int	start_y = (SCRN_HEIGHT - height) / 2;
 // 	int	end = start_y + height;

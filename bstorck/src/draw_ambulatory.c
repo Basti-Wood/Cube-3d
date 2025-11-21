@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw_ambulatory.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bstorck <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/21 15:24:06 by bstorck           #+#    #+#             */
+/*   Updated: 2025/11/21 15:24:08 by bstorck          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/game.h"
 
 void	draw_line(int screen_x, t_game *game)
@@ -7,7 +19,7 @@ void	draw_line(int screen_x, t_game *game)
 	int	end_y;
 	int	color;
 
-	line_height = (int)(SCRN_HEIGHT / game->player.ray.perp_dist_wall) / 2;
+	line_height = (int)(SCRN_HEIGHT / game->hero.ray.perp_dist_wall) / 2;
 	start_y = (SCRN_HEIGHT / 2) - (line_height / 2);
 	if (start_y < 0)
 		start_y = 0;
@@ -17,7 +29,7 @@ void	draw_line(int screen_x, t_game *game)
 	while (start_y <= end_y)
 	{
 		color = 0x0000FF;
-		if (game->player.ray.side)
+		if (game->hero.ray.side)
 			color /= 2;
 		put_pixel(screen_x, start_y, color, game);
 		start_y++;
@@ -28,9 +40,9 @@ void	draw_walls(t_game *game)
 {
 	int			i;
 	t_ray		*ray;
-	t_player	*hero;
+	t_hero		*hero;
 
-	hero = &game->player;
+	hero = &game->hero;
 	ray = &hero->ray;
 	i = -1;
 	while (++i < FRM_WIDTH)
@@ -51,8 +63,8 @@ void	draw_beam(double beam, t_game *game)
 	double	beam_x;
 	double	beam_y;
 
-	beam_x = game->mini_player.pos.x * BLOCK_SIZE;
-	beam_y = game->mini_player.pos.y * BLOCK_SIZE;
+	beam_x = game->mini_hero.pos.x * BLOCK_SIZE;
+	beam_y = game->mini_hero.pos.y * BLOCK_SIZE;
 	while (!collision(beam_x / BLOCK_SIZE, beam_y / BLOCK_SIZE, game->map))
 	{
 		put_pixel(beam_x + FRM_WIDTH, beam_y, 0xFF0000, game);
@@ -63,12 +75,12 @@ void	draw_beam(double beam, t_game *game)
 
 void	draw_radar(t_game *game)
 {
-	t_player	*hero;
+	t_hero		*hero;
 	double		beam;
 	double		dir;
 	int			i;
 
-	hero = &game->mini_player;
+	hero = &game->mini_hero;
 	beam = atan2(hero->dir.y, hero->dir.x) - (hero->fov / 2);
 	dir = hero->fov / FRM_WIDTH;
 	i = -1;

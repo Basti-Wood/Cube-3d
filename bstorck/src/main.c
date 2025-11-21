@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bstorck <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/21 15:22:40 by bstorck           #+#    #+#             */
+/*   Updated: 2025/11/21 15:22:42 by bstorck          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/game.h"
 
 int	close_game(t_game *game)
@@ -11,84 +23,108 @@ int	close_game(t_game *game)
 		mlx_destroy_display(game->mlx);
 		free(game->mlx);
 	}
-	// int i = 0;
 	while (game->map_height--)
-	// {
 		free(game->map[game->map_height]);
-		// i++;
-	// }
 	free(game->map);
 	exit(0);
 	return (0);
 }
 
-void	throw_error(int num_error, t_game *game)
+void	init_game_window(t_game *g)
 {
-	if (num_error == 99)
-		printf("Error\nThe map must be closed/surrounded by walls.\n");
-	else if (num_error == 1)
-		printf("Error\nInvalid map.\n");
-	else
-		printf("Error\nUnknown error.\n");
-	close_game(game);
+	g->win = mlx_new_window(g->mlx, SCRN_WIDTH, SCRN_HEIGHT, "Picostein No D");
+	g->img = mlx_new_image(g->mlx, SCRN_WIDTH, SCRN_HEIGHT);
+	g->data = mlx_get_data_addr(g->img, &g->bpp, &g->size_line, &g->endian);
+	// mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
+	mlx_hook(g->win, 2, 1L << 0, key_press, g);
+	mlx_hook(g->win, 3, 1L << 1, key_release, g);
+	mlx_hook(g->win, WIN_X_BTN, 0, close_game, g);
 }
 
-int	game_loop(t_game *game)
+void	init_intro_window(t_game *g)
 {
-	move_player(game->map, &game->player);
-	move_player(game->map, &game->mini_player);
-	clear_image(game);
-	draw_map(game);
-	// draw_player((game);
-	draw_hero(game->mini_player.pos.x, game->mini_player.pos.y, 5, game);
-	draw_radar(game);
-	draw_floor_and_ceiling(game);
-	draw_walls(game);
-	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
-	return (0);
+	g->win = mlx_new_window(g->mlx, FRM_WIDTH, SCRN_HEIGHT, "Map Checker");
+	g->img = mlx_new_image(g->mlx, FRM_WIDTH, SCRN_HEIGHT);
+	g->data = mlx_get_data_addr(g->img, &g->bpp, &g->size_line, &g->endian);
+	// mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
+	mlx_hook(g->win, 2, 1L << 0, key_press, g);
+	mlx_hook(g->win, 3, 1L << 1, key_release, g);
+	mlx_hook(g->win, WIN_X_BTN, 0, close_game, g);
 }
 
-void	init_game(char *flag, t_game *g)
+void	init_game(t_game *g)
 {
 	// game->time = 0;
 	// game->prev_time = 0;
 	g->skip_intro = false;
-	if (ft_strcmp(flag, "no-intro") == 0)
-		g->skip_intro = true;
 	g->map_width = 30;
 	g->map_height = 30;
 	g->map = init_map(g->map_width, g->map_width);
-	g->player = init_player(false);
-	g->mini_player = init_player(true);
-	// game->player.ray = init_ray(&game->player);
-	// game->ray = game->player.ray;
+	g->walker = init_walker();
+	if (get_start(g))
+	{
+		printf("Error\nUnknown error.\n");
+		close_game(g);
+	}
+	if (get_direction(g))
+	{
+		printf("Error\nUnknown error.\n");
+		close_game(g);
+	}
+	g->walker.first = g->walker.wind_rose[g->walker.prev];
+	g->hero = init_hero(false);
+	g->mini_hero = init_hero(true);
+	// game->hero.ray = init_ray(&game->hero);
+	// game->ray = game->hero.ray;
 	g->mlx = mlx_init();
-	g->win = mlx_new_window(g->mlx, SCRN_WIDTH, SCRN_HEIGHT, "Game");
-	g->img = mlx_new_image(g->mlx, SCRN_WIDTH, SCRN_HEIGHT);
-	g->data = mlx_get_data_addr(g->img, &g->bpp, &g->size_line, &g->endian);
-	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 }
 
-int	main(int argc, char **argv)
+int	main(void)
 {
 	t_game	game;
-	char	*flag;
-	// init
-	if (argc == 2)
-		flag = argv[1];
-	else
-		flag = "intro";
-	init_game(flag, &game);
-	// i_walk_the_line(&game);
-	// hooks
-	mlx_hook(game.win, 2, 1L << 0, key_press, &game);
-	mlx_hook(game.win, 3, 1L << 1, key_release, &game);
-	mlx_hook(game.win, WIN_X_BTN, 0, close_game, &game);
-	// draw loop
-	i_walk_the_line(&game);
-	// mlx_loop_hook(game.mlx, i_walk_the_line, &game);
-	// mlx_loop(game.mlx);
+
+	init_game(&game);
+	init_intro_window(&game);
+	mlx_loop_hook(game.mlx, intro_loop, &game);
+	mlx_loop(game.mlx);
+	init_game_window(&game);
 	mlx_loop_hook(game.mlx, game_loop, &game);
 	mlx_loop(game.mlx);
 	return (0);
 }
+
+	// char	*flag;
+
+	// if (argc == 2)
+	// 	flag = argv[1];
+	// else
+	// 	flag = "intro";
+	// init
+	// init_game(&game);
+	// init_intro(&game);
+	// hooks
+	// mlx_hook(game.win, 2, 1L << 0, key_press, &game);
+	// mlx_hook(game.win, 3, 1L << 1, key_release, &game);
+	// mlx_hook(game.win, WIN_X_BTN, 0, close_game, &game);
+	// // check_wall_integrity(&game);
+	// mlx_loop_hook(game.mlx, intro_loop, &game);
+	// mlx_loop(game.mlx);
+	// // printf("\tfirst\t%i\t%i\n", game.walker.first.x, game.walker.first.y);
+	// // printf("\tlast\t%i\t%i\n\n", game.walker.last.x, game.walker.last.y);
+	// if ((game.walker.first.x + game.walker.last.x == 0) && (game.walker.first.y + game.walker.last.y == 0))
+	// 	close_game(&game);
+	// mlx_destroy_image(game.mlx, game.img);
+	// mlx_destroy_window(game.mlx, game.win);
+	// check_wall_integrity(&game);
+	// init_intro_window(&game);
+	// mlx_loop_hook(game.mlx, intro_loop, &game);
+	// mlx_loop(game.mlx);
+	// init_game_window(&game);
+	// mlx_hook(game.win, 2, 1L << 0, key_press, &game);
+	// mlx_hook(game.win, 3, 1L << 1, key_release, &game);
+	// mlx_hook(game.win, WIN_X_BTN, 0, close_game, &game);
+	// draw loop
+// 	mlx_loop_hook(game.mlx, game_loop, &game);
+// 	mlx_loop(game.mlx);
+// 	return (0);
+// }

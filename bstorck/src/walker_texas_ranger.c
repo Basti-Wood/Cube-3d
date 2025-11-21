@@ -1,35 +1,83 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   walker_texas_ranger.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bstorck <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/21 15:23:02 by bstorck           #+#    #+#             */
+/*   Updated: 2025/11/21 15:23:04 by bstorck          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/game.h"
 
-int	probe_direction(int x, int y, t_game *game)
+t_walker	init_walker(void)
 {
+	t_walker	walker;
+
+	walker.pos.x = 0;
+	walker.pos.y = 0;
+	walker.start.x = 0;
+	walker.start.y = 0;
+	walker.wind_rose[0].x = -1;
+	walker.wind_rose[0].y = 0;
+	walker.wind_rose[1].x = 0;
+	walker.wind_rose[1].y = -1;
+	walker.wind_rose[2].x = 1;
+	walker.wind_rose[2].y = 0;
+	walker.wind_rose[3].x = 0;
+	walker.wind_rose[3].y = 1;
+	walker.first.x = 0;
+	walker.first.y = 0;
+	walker.last.x = 0;
+	walker.last.y = 0;
+	walker.dir.x = 0;
+	walker.dir.y = 0;
+	walker.prev = 0;
+	return (walker);
+}
+
+int	probe_direction(t_game *game)
+{
+	t_walker	*w;
+	int			x;
+	int			y;
+
+	w = &game->walker;
+	x = w->pos.x + w->dir.x;
+	y = w->pos.y + w->dir.y;
 	if (x >= 0 && x < game->map_width && y >= 0 && y < game->map_height)
 		return (game->map[y][x]);
 	return (0);
 }
 
-int	get_direction(t_walker *walker, t_game *game)
+int	get_direction(t_game *game)
 {
-	t_square	dir;
-	int			prev;
+	t_walker	*walker;
 	int			i;
 
+	walker = &game->walker;
 	i = 0;
 	while (++i < 5)
 	{
-		dir = walker->wind_rose[(walker->prev + i) % 4];
-		if (probe_direction(walker->pos.x + dir.x, walker->pos.y + dir.y, game))
+		walker->dir = walker->wind_rose[(walker->prev + i) % 4];
+		if (probe_direction(game))
 		{
-			prev = (walker->prev + i + 2) % 4;
-			walker->pos.x += dir.x;
-			walker->pos.y += dir.y;
-			return (prev);
+			walker->prev = (walker->prev + i + 2) % 4;
+			walker->pos.x += walker->dir.x;
+			walker->pos.y += walker->dir.y;
+			return (0);
 		}
 	}
-	return (-1);
+	return (1);
 }
 
-int	get_start(t_walker *walker, t_game *game)
+int	get_start(t_game *game)
 {
+	t_walker	*walker;
+
+	walker = &game->walker;
 	walker->pos.y = -1;
 	while (++walker->pos.y < game->map_height)
 	{
@@ -47,54 +95,64 @@ int	get_start(t_walker *walker, t_game *game)
 	return (1);
 }
 
-void	init_walker(t_walker *w)
+int	intro_loop(t_game *game)
 {
-	w->pos.x = 0;
-	w->pos.y = 0;
-	w->start.x = 0;
-	w->start.y = 0;
-	w->wind_rose[0].x = -1;
-	w->wind_rose[0].y = 0;
-	w->wind_rose[1].x = 0;
-	w->wind_rose[1].y = -1;
-	w->wind_rose[2].x = 1;
-	w->wind_rose[2].y = 0;
-	w->wind_rose[3].x = 0;
-	w->wind_rose[3].y = 1;
-	w->first.x = 0;
-	w->first.y = 0;
-	w->last.x = 0;
-	w->last.y = 0;
-	w->prev = 0;
-}
+	t_walker	*w;
 
-int	i_walk_the_line(t_game *game)
-{
-	t_walker	w;
-	int			i;
-
-	init_walker(&w);
-	if (get_start(&w, game))
-		throw_error(0, game);
-	i = 0;
-	while (true)
+	w = &game->walker;
+	if (get_direction(game))
 	{
-		w.prev = get_direction(&w, game);
-		if (w.prev == -1)
-			throw_error(1, game);
-		if (!i)
-			w.first = w.wind_rose[w.prev];
-		i++;
-		w.last = w.wind_rose[w.prev];
-		if (w.pos.x == w.start.x && w.pos.y == w.start.y)
-			break ;
-		if (!game->skip_intro)
-			draw_blip(w.pos.x, w.pos.y, game);
+		printf("Error\nInvalid map.\n");
+		close_game(game);
 	}
-	if ((w.first.x + w.last.x == 0) && (w.first.y + w.last.y == 0))
-		throw_error(99, game);
+	w->last = w->wind_rose[w->prev];
+	if (!game->skip_intro)
+		draw_blip(w->pos.x, w->pos.y, game);
+	if (w->pos.x == w->start.x && w->pos.y == w->start.y)
+	{
+		if ((w->first.x + w->last.x == 0) && (w->first.y + w->last.y == 0))
+		{
+			printf("Error\nThe map must be closed/surrounded by walls.\n");
+			close_game(game);
+		}
+		mlx_destroy_image(game->mlx, game->img);
+		mlx_destroy_window(game->mlx, game->win);
+	}
 	return (0);
 }
+
+// printf("\tfirst\t%i\t%i\n", g->walker.first.x, g->walker.first.y);
+// printf("\tlast\t%i\t%i\n\n", g->walker.last.x, g->walker.last.y);
+// printf("\tstart\t%i\t%i\n", g->walker.start.x, g->walker.start.y);
+// printf("\tpos\t%i\t%i\n\n", g->walker.pos.x, g->walker.pos.y);
+
+// void	i_walk_the_line(t_game *game)
+// {
+// 	t_walker	w;
+// 	int			i;
+//
+// 	init_walker(&w);
+// 	if (get_start(&w, game))
+// 		throw_error(0, game);
+// 	i = 0;
+// 	while (true)
+// 	{
+// 		w.prev = get_direction(&w, game);
+// 		if (w.prev == -1)
+// 			throw_error(1, game);
+// 		if (!i)
+// 			w.first = w.wind_rose[w.prev];
+// 		i++;
+// 		w.last = w.wind_rose[w.prev];
+// 		if (w.pos.x == w.start.x && w.pos.y == w.start.y)
+// 			break ;
+// 		if (!game->skip_intro)
+// 			draw_blip(w.pos.x, w.pos.y, game);
+// 	}
+// 	if ((w.first.x + w.last.x == 0) && (w.first.y + w.last.y == 0))
+// 		throw_error(99, game);
+// }
+
 	// printf("\tfirst\t%i\t%i\n", w.first.x, w.first.y);
 	// printf("\tlast\t%i\t%i\n", w.last.x, w.last.y);
 	// printf("\n\t\t%i + %i = %i\n\t\t%i + %i = %i\n", w.first.x, w.last.x, w.first.x + w.last.x, w.first.y, w.last.y, w.first.y + w.last.y);
