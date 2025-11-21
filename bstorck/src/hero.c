@@ -62,70 +62,115 @@ void	turn_hero(double dir_x, double plane_x, t_hero *h)
 	}
 }
 
-void	move_longitudal(int **map, t_hero *h)
+t_vector	move_longitudal(t_hero *h)
 {
-	double	tmp_x;
-	double	tmp_y;
+	t_vector	tmp_pos;
 
-	tmp_x = h->pos.x;
-	tmp_y = h->pos.y;
 	if (h->move_forward)
 	{
-		tmp_x += cos(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
-		tmp_y += sin(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
-		if (!collision((int)tmp_x, (int)tmp_y, map))
-		{
-			h->pos.x += cos(atan2(h->dir.y, h->dir.x)) * h->move_speed;
-			h->pos.y += sin(atan2(h->dir.y, h->dir.x)) * h->move_speed;
-		}
+		tmp_pos.x = h->pos.x + cos(atan2(h->dir.y, h->dir.x)) * h->move_speed;
+		tmp_pos.y = h->pos.y + sin(atan2(h->dir.y, h->dir.x)) * h->move_speed;
 	}
 	if (h->move_backward)
 	{
-		tmp_x -= cos(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
-		tmp_y -= sin(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
-		if (!collision((int)tmp_x, (int)tmp_y, map))
-		{
-			h->pos.x -= cos(atan2(h->dir.y, h->dir.x)) * h->move_speed;
-			h->pos.y -= sin(atan2(h->dir.y, h->dir.x)) * h->move_speed;
-		}
+		tmp_pos.x = h->pos.x - cos(atan2(h->dir.y, h->dir.x)) * h->move_speed;
+		tmp_pos.y = h->pos.y - sin(atan2(h->dir.y, h->dir.x)) * h->move_speed;
 	}
+	return (tmp_pos);
 }
 
-void	move_lateral(int **map, t_hero *h)
-{
-	double	tmp_x;
-	double	tmp_y;
+// void	move_longitudal(int **map, t_hero *h)
+// {
+// 	double	tmp_x;
+// 	double	tmp_y;
+//
+// 	tmp_x = h->pos.x;
+// 	tmp_y = h->pos.y;
+// 	if (h->move_forward)
+// 	{
+// 		tmp_x += cos(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
+// 		tmp_y += sin(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
+// 		if (!collision((int)tmp_x, (int)tmp_y, map))
+// 		{
+// 			h->pos.x += cos(atan2(h->dir.y, h->dir.x)) * h->move_speed;
+// 			h->pos.y += sin(atan2(h->dir.y, h->dir.x)) * h->move_speed;
+// 		}
+// 	}
+// 	if (h->move_backward)
+// 	{
+// 		tmp_x -= cos(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
+// 		tmp_y -= sin(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
+// 		if (!collision((int)tmp_x, (int)tmp_y, map))
+// 		{
+// 			h->pos.x -= cos(atan2(h->dir.y, h->dir.x)) * h->move_speed;
+// 			h->pos.y -= sin(atan2(h->dir.y, h->dir.x)) * h->move_speed;
+// 		}
+// 	}
+// }
 
-	tmp_x = h->pos.x;
-	tmp_y = h->pos.y;
+t_vector	move_lateral(t_hero *h)
+{
+	t_vector	tmp_pos;
+
 	if (h->move_port)
 	{
-		tmp_x += sin(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
-		tmp_y -= cos(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
-		if (!collision((int)tmp_x, (int)tmp_y, map))
-		{
-			h->pos.x += sin(atan2(h->dir.y, h->dir.x)) * h->move_speed;
-			h->pos.y -= cos(atan2(h->dir.y, h->dir.x)) * h->move_speed;
-		}
+		tmp_pos.x = h->pos.x + sin(atan2(h->dir.y, h->dir.x)) * h->move_speed;
+		tmp_pos.y = h->pos.y - cos(atan2(h->dir.y, h->dir.x)) * h->move_speed;
 	}
 	if (h->move_starboard)
 	{
-		tmp_x -= sin(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
-		tmp_y += cos(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
-		if (!collision((int)tmp_x, (int)tmp_y, map))
-		{
-			h->pos.x -= sin(atan2(h->dir.y, h->dir.x)) * h->move_speed;
-			h->pos.y += cos(atan2(h->dir.y, h->dir.x)) * h->move_speed;
-		}
+		tmp_pos.x = h->pos.x - sin(atan2(h->dir.y, h->dir.x)) * h->move_speed;
+		tmp_pos.y = h->pos.y + cos(atan2(h->dir.y, h->dir.x)) * h->move_speed;
 	}
+	return (tmp_pos);
 }
+
+// void	move_lateral(int **map, t_hero *h)
+// {
+// 	double	tmp_x;
+// 	double	tmp_y;
+//
+// 	tmp_x = h->pos.x;
+// 	tmp_y = h->pos.y;
+// 	if (h->move_port)
+// 	{
+// 		tmp_x += sin(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
+// 		tmp_y -= cos(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
+// 		if (!collision((int)tmp_x, (int)tmp_y, map))
+// 		{
+// 			h->pos.x += sin(atan2(h->dir.y, h->dir.x)) * h->move_speed;
+// 			h->pos.y -= cos(atan2(h->dir.y, h->dir.x)) * h->move_speed;
+// 		}
+// 	}
+// 	if (h->move_starboard)
+// 	{
+// 		tmp_x -= sin(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
+// 		tmp_y += cos(atan2(h->dir.y, h->dir.x)) * h->move_speed * 15;
+// 		if (!collision((int)tmp_x, (int)tmp_y, map))
+// 		{
+// 			h->pos.x -= sin(atan2(h->dir.y, h->dir.x)) * h->move_speed;
+// 			h->pos.y += cos(atan2(h->dir.y, h->dir.x)) * h->move_speed;
+// 		}
+// 	}
+// }
 
 void	move_hero(int **map, t_hero *hero)
 {
+	t_vector	tmp_pos;
+
 	if (hero->turn_sinistral || hero->turn_dextral)
 		turn_hero(hero->dir.x, hero->plane.x, hero);
+	// if (hero->move_forward || hero->move_backward)
+		// move_longitudal(map, hero);
+	// if (hero->move_port || hero->move_starboard)
+		// move_lateral(map, hero);
 	if (hero->move_forward || hero->move_backward)
-		move_longitudal(map, hero);
+		tmp_pos = move_longitudal(hero);
 	if (hero->move_port || hero->move_starboard)
-		move_lateral(map, hero);
+		tmp_pos = move_lateral(hero);
+	if ((!collision((int)tmp_pos.x, (int)tmp_pos.y, map)))
+	{
+		hero->pos.x = tmp_pos.x;
+		hero->pos.y = tmp_pos.y;
+	}
 }
