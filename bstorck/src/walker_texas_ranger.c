@@ -12,7 +12,7 @@
 
 #include "../includes/game.h"
 
-t_walker	init_walker(void)
+t_walker	init_walker(t_game *game)
 {
 	t_walker	walker;
 
@@ -28,6 +28,7 @@ t_walker	init_walker(void)
 	walker.wind_rose[2].y = 0;
 	walker.wind_rose[3].x = 0;
 	walker.wind_rose[3].y = 1;
+	// walker.c = &game->c;
 	walker.first.x = 0;
 	walker.first.y = 0;
 	walker.last.x = 0;

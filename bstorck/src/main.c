@@ -52,33 +52,6 @@ void	init_intro_window(t_game *g)
 	mlx_hook(g->win, WIN_X_BTN, 0, close_game, g);
 }
 
-void	init_game(t_game *g)
-{
-	// game->time = 0;
-	// game->prev_time = 0;
-	g->skip_intro = false;
-	g->map_width = 30;
-	g->map_height = 30;
-	g->map = init_map(g->map_width, g->map_width);
-	g->walker = init_walker();
-	if (get_start(g))
-	{
-		printf("Error\nUnknown error.\n");
-		close_game(g);
-	}
-	if (get_direction(g))
-	{
-		printf("Error\nUnknown error.\n");
-		close_game(g);
-	}
-	g->walker.first = g->walker.wind_rose[g->walker.prev];
-	g->hero = init_hero(false);
-	g->mini_hero = init_hero(true);
-	// game->hero.ray = init_ray(&game->hero);
-	// game->ray = game->hero.ray;
-	g->mlx = mlx_init();
-}
-
 int	main(void)
 {
 	t_game	game;

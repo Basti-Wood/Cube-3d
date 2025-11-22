@@ -100,21 +100,30 @@ typedef struct s_ray
 	double		perp_dist_wall;
 }	t_ray;
 
+// typedef struct s_wind_rose
+// {
+// 	t_square	wind_rose[4];
+// }	t_wind_rose;
+
 typedef struct s_hero
 {
 	bool		mini;
 
 	t_vector	pos;
+	t_vector	probe;
 	t_vector	dir;
 	t_vector	plane;
 	double		scan_x;
 	double		fov;
 	t_ray		ray;
 
+	// t_wind_rose	*c;
 	bool		move_forward;
 	bool		move_backward;
 	bool		move_port;
 	bool		move_starboard;
+	int			collision_radius;
+	// double		probe_speed;
 	double		move_speed;
 
 	bool		turn_sinistral;
@@ -141,6 +150,7 @@ typedef struct s_walker
 	t_square	first;
 	t_square	last;
 	t_square	dir;
+	// t_wind_rose	*c;
 	// t_square	prev;
 	int			prev;
 }	t_walker;
@@ -161,6 +171,7 @@ typedef struct s_game
 	int			map_width;
 	int			map_height;
 	// int			block_size;
+	// t_wind_rose	c;
 	// t_ray		ray;
 	t_hero		hero;
 	t_hero		mini_hero;
@@ -172,15 +183,15 @@ typedef struct s_game
 }	t_game;
 
 // int			ft_strcmp(char const *s1, char const *s2);
-void		init_intro(t_game *g);
+void		init_game(t_game *g);
 int			intro_loop(t_game *game);
-t_walker	init_walker(void);
+t_walker	init_walker(t_game *game);
 int			get_start(t_game *game);
 int			get_direction(t_game *game);
 // void		check_wall_integrity(t_game *game);
 
 int			**init_map(int map_width, int map_height);
-t_hero		init_hero(bool mini);
+t_hero		init_hero(bool mini, t_game *game);
 // t_hero	init_mini_hero(t_hero *hero);
 // t_ray	init_ray(t_hero *hero);
 int			key_press(int keycode, t_game *game);

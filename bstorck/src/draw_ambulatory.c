@@ -58,36 +58,35 @@ void	draw_walls(t_game *game)
 	}
 }
 
-void	draw_beam(double beam, t_game *game)
+void	draw_beam(double dir, t_game *game)
 {
-	double	beam_x;
-	double	beam_y;
+	t_vector	beam;
 
-	beam_x = game->mini_hero.pos.x * BLOCK_SIZE;
-	beam_y = game->mini_hero.pos.y * BLOCK_SIZE;
-	while (!collision(beam_x / BLOCK_SIZE, beam_y / BLOCK_SIZE, game->map))
+	beam.x = game->mini_hero.pos.x * BLOCK_SIZE;
+	beam.y = game->mini_hero.pos.y * BLOCK_SIZE;
+	while (!collision(beam.x / BLOCK_SIZE, beam.y / BLOCK_SIZE, game->map))
 	{
-		put_pixel(beam_x + FRM_WIDTH, beam_y, 0xFF0000, game);
-		beam_x += cos(beam);
-		beam_y += sin(beam);
+		put_pixel(beam.x + FRM_WIDTH, beam.y, 0xFF0000, game);
+		beam.x += cos(dir);
+		beam.y += sin(dir);
 	}
 }
 
 void	draw_radar(t_game *game)
 {
 	t_hero		*hero;
-	double		beam;
 	double		dir;
+	double		delta_dir;
 	int			i;
 
 	hero = &game->mini_hero;
-	beam = atan2(hero->dir.y, hero->dir.x) - (hero->fov / 2);
-	dir = hero->fov / FRM_WIDTH;
+	dir = atan2(hero->dir.y, hero->dir.x) - (hero->fov / 2);
+	delta_dir = hero->fov / FRM_WIDTH;
 	i = -1;
 	while (++i < FRM_WIDTH)
 	{
-		draw_beam(beam, game);
-		beam += dir;
+		draw_beam(dir, game);
+		dir += delta_dir;
 	}
 }
 
