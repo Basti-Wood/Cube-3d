@@ -122,13 +122,13 @@ typedef struct s_hero
 	bool		move_backward;
 	bool		move_port;
 	bool		move_starboard;
-	int			collision_radius;
 	// double		probe_speed;
 	double		move_speed;
 
 	bool		turn_sinistral;
 	bool		turn_dextral;
 	double		turn_speed;
+	int			collision_radius;
 }	t_hero;
 
 // typedef struct s_window

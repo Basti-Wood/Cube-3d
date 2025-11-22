@@ -34,12 +34,12 @@ t_hero	init_hero(bool mini, t_game *g)
 	h.move_backward = false;
 	h.move_port = false;
 	h.move_starboard = false;
-	h.collision_radius = 5;
 	// h.probe_speed = (double)1 / 42;
-	h.move_speed = (double)1 / 42;
+	h.move_speed = (double)2 / 42;
 	h.turn_sinistral = false;
 	h.turn_dextral = false;
 	h.turn_speed = PI / 157;
+	h.collision_radius = 5;
 	return (h);
 }
 

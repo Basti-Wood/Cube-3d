@@ -100,6 +100,8 @@ void	draw_sonar(t_game *game)
 
 int	game_loop(t_game *game)
 {
+	// printf("\tspeed=%f\t", game->hero.move_speed);
+	// printf("\tspeed=%f\n", game->mini_hero.move_speed);
 	move_hero(game->map, &game->hero);
 	move_hero(game->map, &game->mini_hero);
 	clear_image(game);

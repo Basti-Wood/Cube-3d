@@ -39,6 +39,8 @@ int	key_press_extended(int keycode, t_game *game)
 
 int	key_press(int keycode, t_game *game)
 {
+	game->hero.move_speed /= 2;
+	game->mini_hero.move_speed /= 2;
 	if (keycode == KEY_ESC)
 		close_game(game);
 	if (keycode == KEY_SPACE)
@@ -60,21 +62,6 @@ int	key_press(int keycode, t_game *game)
 
 int	key_release_extended(int keycode, t_game *game)
 {
-	if (keycode == KEY_LEFT || keycode == KEY_J)
-	{
-		game->hero.turn_sinistral = false;
-		game->mini_hero.turn_sinistral = false;
-	}
-	if (keycode == KEY_RIGHT || keycode == KEY_L)
-	{
-		game->hero.turn_dextral = false;
-		game->mini_hero.turn_dextral = false;
-	}
-	return (0);
-}
-
-int	key_release(int keycode, t_game *game)
-{
 	if (keycode == KEY_W)
 	{
 		game->hero.move_forward = false;
@@ -94,6 +81,23 @@ int	key_release(int keycode, t_game *game)
 	{
 		game->hero.move_starboard = false;
 		game->mini_hero.move_starboard = false;
+	}
+	return (0);
+}
+
+int	key_release(int keycode, t_game *game)
+{
+	game->hero.move_speed *= 2;
+	game->mini_hero.move_speed *= 2;
+	if (keycode == KEY_LEFT || keycode == KEY_J)
+	{
+		game->hero.turn_sinistral = false;
+		game->mini_hero.turn_sinistral = false;
+	}
+	if (keycode == KEY_RIGHT || keycode == KEY_L)
+	{
+		game->hero.turn_dextral = false;
+		game->mini_hero.turn_dextral = false;
 	}
 	else
 		key_release_extended(keycode, game);
