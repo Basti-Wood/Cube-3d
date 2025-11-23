@@ -47,6 +47,8 @@ void	init_game(t_game *g)
 		printf("Error\nUnknown error.\n");
 		close_game(g);
 	}
+	// g->settings.speed_factor = 1;
+	g->level_of_speed = 0;
 	g->walker.first = g->walker.wind_rose[g->walker.prev];
 	g->hero = init_hero(false, g);
 	g->mini_hero = init_hero(true, g);

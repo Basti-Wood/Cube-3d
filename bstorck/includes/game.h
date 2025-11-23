@@ -43,12 +43,12 @@ typedef enum e_key_codes
 	KEY_W = 119,
 	KEY_E = 101,
 	// KEY_R = 114,
-	// KEY_T = 116,
+	KEY_T = 116,
 	KEY_A = 97,
 	KEY_S = 115,
 	KEY_D = 100,
 	KEY_F = 102,
-	// KEY_G = 103,
+	KEY_G = 103,
 	// KEY_X = 120,
 	// KEY_C = 99,
 	// KEY_V = 118,
@@ -89,7 +89,6 @@ typedef struct s_vector
 
 typedef struct s_ray
 {
-	bool		side;
 	t_vector	dir;
 	t_square	map;
 	t_square	step;
@@ -98,6 +97,7 @@ typedef struct s_ray
 	t_vector	delta_dist;
 
 	double		perp_dist_wall;
+	bool		side;
 }	t_ray;
 
 // typedef struct s_wind_rose
@@ -110,9 +110,9 @@ typedef struct s_hero
 	bool		mini;
 
 	t_vector	pos;
-	t_vector	probe;
 	t_vector	dir;
 	t_vector	plane;
+	t_vector	probe;
 	double		scan_x;
 	double		fov;
 	t_ray		ray;
@@ -133,6 +133,11 @@ typedef struct s_hero
 	int			collision_radius;
 }	t_hero;
 
+// typedef struct s_settings
+// {
+// 	int			speed_factor;
+// }	t_settings;
+
 // typedef struct s_window
 // {
 // 	void		*mlx;
@@ -147,11 +152,11 @@ typedef struct s_hero
 typedef struct s_walker
 {
 	t_square	pos;
+	t_square	dir;
 	t_square	start;
-	t_square	wind_rose[4];
 	t_square	first;
 	t_square	last;
-	t_square	dir;
+	t_square	wind_rose[4];
 	// t_wind_rose	*c;
 	// t_square	prev;
 	int			prev;
@@ -159,6 +164,8 @@ typedef struct s_walker
 
 typedef struct s_game
 {
+	int			level_of_speed;
+
 	bool		skip_intro;
 	// bool		intro_concluded;
 	void		*mlx;
@@ -175,9 +182,10 @@ typedef struct s_game
 	// int			block_size;
 	// t_wind_rose	c;
 	// t_ray		ray;
+	// t_settings	settings;
+	t_walker	walker;
 	t_hero		hero;
 	t_hero		mini_hero;
-	t_walker	walker;
 
 	// t_window	w;
 	// double		time;
@@ -214,6 +222,9 @@ void		draw_radar(t_game *game);
 void		draw_walls(t_game *game);
 void		cast_ray(t_hero *hero);
 void		dda(t_game *game);
+
+void		make_slower(t_game *game);
+void		make_faster(t_game *game);
 
 void		clear_image(t_game *game);
 int			close_game(t_game *game);

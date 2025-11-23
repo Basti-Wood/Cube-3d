@@ -51,19 +51,31 @@ int	key_press(int key, t_game *game)
 {
 	if (key == KEY_ESC)
 		close_game(game);
-	else if (key == KEY_SPACE)
+	if (key == KEY_SPACE)
 		game->skip_intro = true;
-	else if (key == KEY_LEFT || key == KEY_J)
+	if (key == KEY_T)
+	{
+		game->level_of_speed++;
+		printf("\n\tlevel %i\n", game->level_of_speed);
+		make_faster(game);
+	}
+	if (key == KEY_G)
+	{
+		game->level_of_speed--;
+		printf("\n\tlevel %i\n", game->level_of_speed);
+		make_slower(game);
+	}
+	if (key == KEY_LEFT || key == KEY_J)
 	{
 		game->hero.turn_sinistral = true;
 		game->mini_hero.turn_sinistral = true;
 	}
-	else if (key == KEY_RIGHT || key == KEY_L)
+	if (key == KEY_RIGHT || key == KEY_L)
 	{
 		game->hero.turn_dextral = true;
 		game->mini_hero.turn_dextral = true;
 	}
-	else if (key == KEY_W || key == KEY_A || key == KEY_S || key == KEY_D)
+	if (key == KEY_W || key == KEY_A || key == KEY_S || key == KEY_D)
 		key_press_extended(key, game);
 	return (0);
 }

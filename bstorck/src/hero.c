@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "../includes/game.h"
-#include <math.h>
-#include <stdbool.h>
 
 t_hero	init_hero(bool mini, t_game *g)
 {
@@ -26,7 +24,7 @@ t_hero	init_hero(bool mini, t_game *g)
 	h.probe.y = 0;
 	h.dir.x = 0;
 	h.dir.y = -1;
-	h.plane.x = 1;
+	h.plane.x = 0.66;
 	h.plane.y = 0;
 	h.scan_x = 0;
 	h.fov = 2 * atan(fabs(h.plane.x + h.plane.y) / fabs(h.dir.x + h.dir.y));

@@ -77,9 +77,11 @@ void	draw_radar(t_game *game)
 	t_hero		*hero;
 	double		dir;
 	double		delta_dir;
+	// double		fov;
 	int			i;
 
 	hero = &game->mini_hero;
+	// fov = 2 * atan(fabs(hero->plane.x + hero->plane.y) / fabs(hero->dir.x + hero->dir.y));
 	dir = atan2(hero->dir.y, hero->dir.x) - (hero->fov / 2);
 	delta_dir = hero->fov / FRM_WIDTH;
 	i = -1;

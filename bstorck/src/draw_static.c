@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../includes/game.h"
-// #include <unistd.h>
 
 void	draw_blip(int x, int y, t_game *game)
 {
