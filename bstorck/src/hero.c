@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/game.h"
+#include <math.h>
 #include <stdbool.h>
 
 t_hero	init_hero(bool mini, t_game *g)
@@ -29,16 +30,15 @@ t_hero	init_hero(bool mini, t_game *g)
 	h.plane.y = 0;
 	h.scan_x = 0;
 	h.fov = 2 * atan(fabs(h.plane.x + h.plane.y) / fabs(h.dir.x + h.dir.y));
-	// h.c = &g->c;
 	h.move_forward = false;
 	h.move_backward = false;
 	h.move_port = false;
 	h.move_starboard = false;
-	// h.probe_speed = (double)1 / 42;
-	h.move_speed = (double)2 / 42;
+	h.move_speed = sqrt(2) / 100;
 	h.turn_sinistral = false;
 	h.turn_dextral = false;
-	h.turn_speed = PI / 157;
+	h.turn_speed = PI / 200;
+	h.axes_of_travel = 0;
 	h.collision_radius = 5;
 	return (h);
 }
@@ -71,12 +71,22 @@ t_vector	move_longitudal(t_hero *h, bool probe)
 	t_vector	tmp_pos;
 	double		speed;
 
-	speed = h->move_speed;
 	tmp_pos = h->pos;
 	if (probe)
 	// {
 		tmp_pos = h->probe;
 		// speed = h->probe_speed;
+	// }
+	speed = h->move_speed;
+	if (h->axes_of_travel >= 2)
+		speed /= sqrt(2);
+	// if (!h->mini)
+	// {
+	// // 	printf("\tmini-hero");
+	// // else
+	// // 	printf("\t\thero");
+	// printf("\taxes=%i\t", h->axes_of_travel);
+	// printf("\tspeed=%f\t\n", speed);
 	// }
 	if (h->move_forward)
 	{
@@ -152,12 +162,22 @@ t_vector	move_lateral(t_hero *h, bool probe)
 	t_vector	tmp_pos;
 	double		speed;
 
-	speed = h->move_speed;
 	tmp_pos = h->pos;
 	if (probe)
 	// {
 		tmp_pos = h->probe;
 		// speed = h->probe_speed;
+	// }
+	speed = h->move_speed;
+		if (h->axes_of_travel >= 2)
+		speed /= sqrt(2);
+	// if (!h->mini)
+	// {
+	// // 	printf("\tmini-hero");
+	// // else
+	// // 	printf("\t\thero");
+	// printf("\taxes=%i\t", h->axes_of_travel);
+	// printf("\tspeed=%f\t\n", speed);
 	// }
 	if (h->move_port)
 	{
@@ -291,8 +311,8 @@ void	move_hero(int **map, t_hero *hero)
 	// col = 0;
 	// tmp_pos = hero->pos;
 	// new_pos = hero->pos;
-	if (hero->turn_sinistral || hero->turn_dextral)
-		turn_hero(hero->dir.x, hero->plane.x, hero);
+	// if (hero->turn_sinistral || hero->turn_dextral)
+	// 	turn_hero(hero->dir.x, hero->plane.x, hero);
 	hero->probe = hero->pos;
 	//
 	if (hero->move_forward || hero->move_backward)
@@ -314,6 +334,8 @@ void	move_hero(int **map, t_hero *hero)
 			hero->pos = move_longitudal(hero, false);
 		if (hero->move_port || hero->move_starboard)
 			hero->pos = move_lateral(hero, false);
+		if (hero->turn_sinistral || hero->turn_dextral)
+			turn_hero(hero->dir.x, hero->plane.x, hero);
 	}
 	//
 	// hero->pos = new_pos;

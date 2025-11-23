@@ -128,6 +128,8 @@ typedef struct s_hero
 	bool		turn_sinistral;
 	bool		turn_dextral;
 	double		turn_speed;
+
+	int			axes_of_travel;
 	int			collision_radius;
 }	t_hero;
 

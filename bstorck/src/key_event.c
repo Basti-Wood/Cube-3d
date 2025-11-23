@@ -14,6 +14,16 @@
 
 int	key_press_extended(int keycode, t_game *game)
 {
+	game->hero.axes_of_travel += 1;
+	game->mini_hero.axes_of_travel += 1;
+	// if (game->hero.axes_of_travel >= 2)
+	// {
+	// 	game->hero.move_speed = (double)1 / 100;
+	// 	game->mini_hero.move_speed = (double)1 / 100;
+	// }
+	// printf("\taxes=%i\t", game->hero.axes_of_travel);
+	// printf("\tspeed=%f\t", game->hero.move_speed);
+	// printf("\tspeed=%f\n", game->mini_hero.move_speed);
 	if (keycode == KEY_W)
 	{
 		game->hero.move_forward = true;
@@ -37,31 +47,39 @@ int	key_press_extended(int keycode, t_game *game)
 	return (0);
 }
 
-int	key_press(int keycode, t_game *game)
+int	key_press(int key, t_game *game)
 {
-	game->hero.move_speed /= 2;
-	game->mini_hero.move_speed /= 2;
-	if (keycode == KEY_ESC)
+	if (key == KEY_ESC)
 		close_game(game);
-	if (keycode == KEY_SPACE)
+	else if (key == KEY_SPACE)
 		game->skip_intro = true;
-	if (keycode == KEY_LEFT || keycode == KEY_J)
+	else if (key == KEY_LEFT || key == KEY_J)
 	{
 		game->hero.turn_sinistral = true;
 		game->mini_hero.turn_sinistral = true;
 	}
-	if (keycode == KEY_RIGHT || keycode == KEY_L)
+	else if (key == KEY_RIGHT || key == KEY_L)
 	{
 		game->hero.turn_dextral = true;
 		game->mini_hero.turn_dextral = true;
 	}
-	else
-		key_press_extended(keycode, game);
+	else if (key == KEY_W || key == KEY_A || key == KEY_S || key == KEY_D)
+		key_press_extended(key, game);
 	return (0);
 }
 
 int	key_release_extended(int keycode, t_game *game)
 {
+	game->hero.axes_of_travel -= 1;
+	game->mini_hero.axes_of_travel -= 1;
+	// if (game->hero.axes_of_travel < 2)
+	// {
+	// 	game->hero.move_speed = sqrt(2) / 100;
+	// 	game->mini_hero.move_speed = sqrt(2) / 100;
+	// }
+	// printf("\taxes=%i\t", game->hero.axes_of_travel);
+	// printf("\tspeed=%f\t", game->hero.move_speed);
+	// printf("\tspeed=%f\n", game->mini_hero.move_speed);
 	if (keycode == KEY_W)
 	{
 		game->hero.move_forward = false;
@@ -85,21 +103,21 @@ int	key_release_extended(int keycode, t_game *game)
 	return (0);
 }
 
-int	key_release(int keycode, t_game *game)
+int	key_release(int key, t_game *game)
 {
-	game->hero.move_speed *= 2;
-	game->mini_hero.move_speed *= 2;
-	if (keycode == KEY_LEFT || keycode == KEY_J)
+	if (key == KEY_LEFT || key == KEY_J)
 	{
 		game->hero.turn_sinistral = false;
 		game->mini_hero.turn_sinistral = false;
 	}
-	if (keycode == KEY_RIGHT || keycode == KEY_L)
+	else if (key == KEY_SPACE)
+		game->skip_intro = false;
+	else if (key == KEY_RIGHT || key == KEY_L)
 	{
 		game->hero.turn_dextral = false;
 		game->mini_hero.turn_dextral = false;
 	}
-	else
-		key_release_extended(keycode, game);
+	else if (key == KEY_W || key == KEY_A || key == KEY_S || key == KEY_D)
+		key_release_extended(key, game);
 	return (0);
 }
