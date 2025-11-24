@@ -194,6 +194,8 @@ typedef struct s_game
 
 // int			ft_strcmp(char const *s1, char const *s2);
 void		init_game(t_game *g);
+void		init_intro_window(t_game *g);
+void		init_game_window(t_game *g);
 int			intro_loop(t_game *game);
 t_walker	init_walker(t_game *game);
 int			get_start(t_game *game);
@@ -207,6 +209,12 @@ t_hero		init_hero(bool mini, t_game *game);
 int			key_press(int keycode, t_game *game);
 int			key_release(int keycode, t_game *game);
 void		move_hero(int **map, t_hero *hero);
+void		go_forward(t_hero *h, int **map);
+void		go_backward(t_hero *h, int **map);
+void		go_port(t_hero *h, int **map);
+void		go_starboard(t_hero *h, int **map);
+void		turn_hero(double dir_x, double plane_x, t_hero *h);
+int			sonar(t_hero *hero, int **map);
 int			game_loop(t_game *game);
 // time_t		get_current_time(void);
 void		ft_usleep(int usec);
@@ -223,8 +231,8 @@ void		draw_walls(t_game *game);
 void		cast_ray(t_hero *hero);
 void		dda(t_game *game);
 
-void		make_slower(t_game *game);
-void		make_faster(t_game *game);
+void		go_slower(t_game *game);
+void		go_faster(t_game *game);
 
 void		clear_image(t_game *game);
 int			close_game(t_game *game);

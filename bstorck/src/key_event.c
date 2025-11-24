@@ -54,17 +54,17 @@ int	key_press(int key, t_game *game)
 	if (key == KEY_SPACE)
 		game->skip_intro = true;
 	if (key == KEY_T)
-	{
-		game->level_of_speed++;
-		printf("\n\tlevel %i\n", game->level_of_speed);
-		make_faster(game);
-	}
+	// {
+		// game->level_of_speed++;
+		// printf("\n\tlevel %i\n", game->level_of_speed);
+		go_faster(game);
+	// }
 	if (key == KEY_G)
-	{
-		game->level_of_speed--;
-		printf("\n\tlevel %i\n", game->level_of_speed);
-		make_slower(game);
-	}
+	// {
+		// game->level_of_speed--;
+		// printf("\n\tlevel %i\n", game->level_of_speed);
+		go_slower(game);
+	// }
 	if (key == KEY_LEFT || key == KEY_J)
 	{
 		game->hero.turn_sinistral = true;
@@ -122,14 +122,14 @@ int	key_release(int key, t_game *game)
 		game->hero.turn_sinistral = false;
 		game->mini_hero.turn_sinistral = false;
 	}
-	else if (key == KEY_SPACE)
+	if (key == KEY_SPACE)
 		game->skip_intro = false;
-	else if (key == KEY_RIGHT || key == KEY_L)
+	if (key == KEY_RIGHT || key == KEY_L)
 	{
 		game->hero.turn_dextral = false;
 		game->mini_hero.turn_dextral = false;
 	}
-	else if (key == KEY_W || key == KEY_A || key == KEY_S || key == KEY_D)
+	if (key == KEY_W || key == KEY_A || key == KEY_S || key == KEY_D)
 		key_release_extended(key, game);
 	return (0);
 }

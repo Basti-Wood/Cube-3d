@@ -12,33 +12,6 @@
 
 #include "../includes/game.h"
 
-t_walker	init_walker(t_game *game)
-{
-	t_walker	walker;
-
-	walker.pos.x = 0;
-	walker.pos.y = 0;
-	walker.start.x = 0;
-	walker.start.y = 0;
-	walker.wind_rose[0].x = -1;
-	walker.wind_rose[0].y = 0;
-	walker.wind_rose[1].x = 0;
-	walker.wind_rose[1].y = -1;
-	walker.wind_rose[2].x = 1;
-	walker.wind_rose[2].y = 0;
-	walker.wind_rose[3].x = 0;
-	walker.wind_rose[3].y = 1;
-	// walker.c = &game->c;
-	walker.first.x = 0;
-	walker.first.y = 0;
-	walker.last.x = 0;
-	walker.last.y = 0;
-	walker.dir.x = 0;
-	walker.dir.y = 0;
-	walker.prev = 0;
-	return (walker);
-}
-
 int	probe_direction(t_game *game)
 {
 	t_walker	*w;

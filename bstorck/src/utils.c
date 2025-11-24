@@ -41,17 +41,6 @@ void	put_pixel(int x, int y, int color, t_game *game)
 	game->data[index + 2] = (color >> 16) & 0xFF;
 }
 
-bool	collision(int x, int y, int **map)
-{
-	// int	x = rx / BLOCK_SIZE;
-	// printf("\tX = %i", x);
-	// int	y = ry / BLOCK_SIZE;
-	// printf("\tY = %i\n", y);
-	if (map[y][x] > 0)
-		return (true);
-	return (false);
-}
-
 time_t	get_current_time(void)
 {
 	struct timeval	time;

@@ -30,26 +30,35 @@ int	close_game(t_game *game)
 	return (0);
 }
 
-void	init_game_window(t_game *g)
+void	move_hero(int **map, t_hero *hero)
 {
-	g->win = mlx_new_window(g->mlx, SCRN_WIDTH, SCRN_HEIGHT, "Picostein No D");
-	g->img = mlx_new_image(g->mlx, SCRN_WIDTH, SCRN_HEIGHT);
-	g->data = mlx_get_data_addr(g->img, &g->bpp, &g->size_line, &g->endian);
-	// mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-	mlx_hook(g->win, 2, 1L << 0, key_press, g);
-	mlx_hook(g->win, 3, 1L << 1, key_release, g);
-	mlx_hook(g->win, WIN_X_BTN, 0, close_game, g);
+	if (hero->move_forward)
+		go_forward(hero, map);
+	if (hero->move_backward)
+		go_backward(hero, map);
+	if (hero->move_port)
+		go_port(hero, map);
+	if (hero->move_starboard)
+		go_starboard(hero, map);
+	if (hero->turn_sinistral || hero->turn_dextral)
+		turn_hero(hero->dir.x, hero->plane.x, hero);
 }
 
-void	init_intro_window(t_game *g)
+int	game_loop(t_game *game)
 {
-	g->win = mlx_new_window(g->mlx, FRM_WIDTH, SCRN_HEIGHT, "Map Checker");
-	g->img = mlx_new_image(g->mlx, FRM_WIDTH, SCRN_HEIGHT);
-	g->data = mlx_get_data_addr(g->img, &g->bpp, &g->size_line, &g->endian);
-	// mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-	mlx_hook(g->win, 2, 1L << 0, key_press, g);
-	mlx_hook(g->win, 3, 1L << 1, key_release, g);
-	mlx_hook(g->win, WIN_X_BTN, 0, close_game, g);
+	// printf("\tspeed=%f\t", game->hero.move_speed);
+	// printf("\tspeed=%f\n", game->mini_hero.move_speed);
+	move_hero(game->map, &game->hero);
+	move_hero(game->map, &game->mini_hero);
+	clear_image(game);
+	draw_map(game);
+	draw_hero(game->mini_hero.pos.x, game->mini_hero.pos.y, 5, game);
+	draw_radar(game);
+	// draw_sonar(game);
+	draw_floor_and_ceiling(game);
+	draw_walls(game);
+	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
+	return (0);
 }
 
 int	main(void)
