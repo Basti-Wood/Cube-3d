@@ -53,13 +53,15 @@ int	key_press(int key, t_game *game)
 		close_game(game);
 	if (key == KEY_SPACE)
 		game->skip_intro = true;
-	if (key == KEY_T)
+	if (key == KEY_TAB)
+		game->display_map = true;
+	if (key == KEY_I)
 	// {
 		// game->level_of_speed++;
 		// printf("\n\tlevel %i\n", game->level_of_speed);
 		go_faster(game);
 	// }
-	if (key == KEY_G)
+	if (key == KEY_K)
 	// {
 		// game->level_of_speed--;
 		// printf("\n\tlevel %i\n", game->level_of_speed);
@@ -119,6 +121,8 @@ int	key_release(int key, t_game *game)
 {
 	if (key == KEY_SPACE)
 		game->skip_intro = false;
+	if (key == KEY_TAB)
+		game->display_map = false;
 	if (key == KEY_LEFT || key == KEY_J)
 	{
 		game->hero.turn_sinistral = false;

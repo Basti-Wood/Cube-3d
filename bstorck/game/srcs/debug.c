@@ -63,11 +63,11 @@ void	draw_pulse(double dir, t_game *game)
 	while (sqrt(pow((pulse.x - start.x), 2) + pow((pulse.y - start.y), 2)) <= game->hero.collision_radius)
 	{
 		// printf("\tpulse=%f\n", sqrt(powf((pulse.x - start.x), 2) +  powf((pulse.y - start.y), 2)));
-		// put_pixel(pulse.x + game->w_width / 2, pulse.y, 0x00FF00, game);
+		// put_pixel(pulse.x + WIN_WIDTH / 2, pulse.y, 0x00FF00, game);
 		pulse.x += cos(dir);
 		pulse.y += sin(dir);
 	}
-	put_pixel(pulse.x + (double)game->w_width / 2, pulse.y, 0x00FF00, game);
+	put_pixel(pulse.x + (double)WIN_WIDTH / 2, pulse.y, 0x00FF00, game);
 	// printf("\tpulse.len=%f", sqrt(powf((pulse.x - start.x), 2) +  powf((pulse.y - start.y), 2)));
 	// printf("\tpulse.x=%i\tpulse.y=%i\n", (int)(pulse.x / BLOCK_SIZE), (int)(pulse.y / BLOCK_SIZE));
 }

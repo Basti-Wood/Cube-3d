@@ -32,43 +32,45 @@
 
 typedef enum e_dimensions
 {
-	INTRO_WIDTH = 960,//1920,
-	INTRO_HEIGHT = 960,
-	GAME_WIDTH = 1920,
-	GAME_HEIGHT = 960,
+	// INTRO_WIDTH = 960,//1920,
+	// INTRO_HEIGHT = 960,
+	WIN_WIDTH = 1728,//1536,//1920,
+	WIN_HEIGHT = 1080,//960,
 	// FRM_WIDTH = SCRN_WIDTH / 2,
 	// TEX_WIDTH = 64,
 	// TEX_HEIGHT = 64,
 	TEXEL_SIZE = 16,
-	BLOCK_SIZE = 32
+	TILE_SIZE = 32,
+	BLOCK_SIZE = 16
 }	t_dimensions;
 
 typedef enum e_key_codes
 {
 	WIN_X_BTN = 17,
 	KEY_ESC = 65307,
+	KEY_TAB = 65289,
 	// KEY_Q = 113,
 	KEY_W = 119,
 	KEY_E = 101,
 	// KEY_R = 114,
-	KEY_T = 116,
+	// KEY_T = 116,
 	KEY_A = 97,
 	KEY_S = 115,
 	KEY_D = 100,
 	KEY_F = 102,
-	KEY_G = 103,
+	// KEY_G = 103,
 	// KEY_X = 120,
 	// KEY_C = 99,
 	// KEY_V = 118,
 	// KEY_B = 98,
 	// KEY_Y = 121,
 	// KEY_U = 117,
-	// KEY_I = 105,
+	KEY_I = 105,
 	// KEY_O = 111,
 	// KEY_P = 112,
 	// KEY_H = 104,
 	KEY_J = 106,
-	// KEY_K = 107,
+	KEY_K = 107,
 	KEY_L = 108,
 	// KEY_N = 110,
 	// KEY_M = 109,
@@ -83,6 +85,13 @@ typedef enum e_key_codes
 	// MOUSE_WHEEL_DOWN = 5
 }	t_key_codes;
 
+typedef struct s_line
+{
+	int		start;
+	int		end;
+	int		height;
+}	t_line;
+
 typedef struct s_texture
 {
     int			width;
@@ -93,12 +102,6 @@ typedef struct s_texture
     // int			**image_data;
 	int			**pixel_map;
 }	t_texture;
-
-typedef struct s_line
-{
-	int		start;
-	int		end;
-}	t_line;
 
 typedef struct s_square
 {
@@ -191,6 +194,7 @@ typedef struct s_game
 {
 	// int		level_of_speed;
 	bool		skip_intro;
+	bool		display_map;
 	// bool		intro_concluded;
 	void		*mlx;
 	void		*win;
@@ -205,8 +209,8 @@ typedef struct s_game
 	int			map_width;
 	int			map_height;
 	// int			block_size;
-	t_texture	texture;
-	// t_texture	texture[4];
+	// t_texture	texture;
+	t_texture	texture[4];
 	// t_wind_rose	c;
 	// t_ray		ray;
 	// t_settings	settings;
@@ -239,7 +243,7 @@ char		*skip_lines(int xpm_fd);
 // int			ft_strcmp(char const *s1, char const *s2);
 // time_t		get_current_time(void);
 void		init_game(t_game *g);
-void		parse_xpm_file(const char *filename, t_game *game);
+t_texture	parse_xpm_file(const char *filename, t_game *game);
 void		init_intro_window(t_game *g);
 int			**init_map(int map_width, int map_height);
 t_hero		init_hero(bool mini, t_game *game);
@@ -252,7 +256,7 @@ int			get_start(t_game *game);
 int			get_direction(t_game *game);
 void		init_game_window(t_game *g);
 int			game_loop(t_game *game);
-void		draw_line_loop(int screen_x, t_line line, int line_height, t_game *game);
+void		draw_line_loop(int screen_x, t_line line, t_game *game);
 int			key_press(int keycode, t_game *game);
 int			key_release(int keycode, t_game *game);
 void		hero_action(t_hero *hero, int **map);
@@ -264,6 +268,7 @@ int			hero_sonar(t_hero *hero, int **map);
 // void		turn_hero(double dir_x, double plane_x, t_hero *h);
 int			get_fd(const char *filename);
 void		ft_usleep(int usec);
+t_square	get_offset(bool intro);
 bool		collision(int x, int y, int **map);
 void		put_pixel(int x, int y, int color, t_game *game);
 void		draw_walker(int x, int y, t_game *game);

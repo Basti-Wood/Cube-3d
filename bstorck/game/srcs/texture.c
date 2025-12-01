@@ -1,6 +1,6 @@
 #include "../incs/game.h"
 
-int	parse_xpm_header(int xpm_fd, t_texture *texture)
+int	parse_xpm_header(int xpm_fd, t_texture *texture) // 25 lines
 {
 	int		i;
 	char	*line;
@@ -30,7 +30,7 @@ int	parse_xpm_header(int xpm_fd, t_texture *texture)
 	return (0);
 }
 
-int	parse_hex_color(const char *line)
+int	parse_hex_color(const char *line) // 17 lines
 {
 	int	i;
 	int	r;
@@ -51,7 +51,7 @@ int	parse_hex_color(const char *line)
 	return ((r << 16) | (g << 8) | b);
 }
 
-int	parse_xpm_color_table_line(char *line, t_texture *texture)
+int	parse_xpm_color_table_line(char *line, t_texture *texture) // 18 lines
 {
 	int	color;
 	int	i;
@@ -73,7 +73,7 @@ int	parse_xpm_color_table_line(char *line, t_texture *texture)
 	return (0);
 }
 
-int	parse_xpm_color_table(int xpm_fd, t_texture *texture)
+int	parse_xpm_color_table(int xpm_fd, t_texture *texture) // 17 lines
 {
 	char	*line;
 	int		line_count;
@@ -85,7 +85,8 @@ int	parse_xpm_color_table(int xpm_fd, t_texture *texture)
 	while (line_count < texture->color_count)
 	{
 		// if ((line = get_next_line(xpm_fd)) == NULL)
-		if ((line = skip_lines(xpm_fd)) == NULL)
+		line = skip_lines(xpm_fd);
+		if (line == NULL)
 			return (1);
 		// if (line[0] == '/' || line[0] == '#')
 			// free(line);
@@ -111,43 +112,44 @@ int	parse_xpm_color_table(int xpm_fd, t_texture *texture)
 	return (0);
 }
 
-int	init_xpm_pixel_map(t_texture *texture)
+int	init_xpm_pixel_map(t_texture *texture) // 13 lines
 {
 	int		i;
 
-	texture->pixel_map = (int**)malloc(sizeof(int*) * texture->height);
+	texture->pixel_map = (int **)malloc(sizeof(int *) * texture->height);
 	if (!texture->pixel_map)
 		return (1);
 	i = -1;
 	while (++i < texture->height)
 	{
-		texture->pixel_map[i] = (int*)malloc(sizeof(int) * texture->width);
+		texture->pixel_map[i] = (int *)malloc(sizeof(int) * texture->width);
 		if (!texture->pixel_map[i])
 			return (1);
 	}
 	return (0);
 }
 
-int	parse_xpm_pixel_map(int xpm_fd, t_texture  *tex)
+int	parse_xpm_pixel_map(int xpm_fd, t_texture *tx) // 25 lines
 {
-	int		x;
-	int		y;
+	// int		x;
+	// int		y;
+	t_square	m;
 	int		index;
 	char	*line;
 
-	if (init_xpm_pixel_map(tex))//will be replaced with initialisaton in init_game -> 25 lines
+	if (init_xpm_pixel_map(tx))
 		return (1);
 	line = skip_lines(xpm_fd);
-	y = -1;
-	while (++y < tex->height)
+	m.y = -1;
+	while (++m.y < tx->height)
 	{
 		if (line == NULL)
 			break ;
-		x = -1;
-		while (++x < tex->width)
+		m.x = -1;
+		while (++m.x < tx->width)
 		{
-			index = (int)line[x + 1] - 32;
-			tex->pixel_map[y][x] = tex->color_table[(int)line[x + 1] - 32];
+			index = (int)line[m.x + 1] - 32;
+			tx->pixel_map[m.y][m.x] = tx->color_table[(int)line[m.x + 1] - 32];
 		}
 		free(line);
 		line = get_next_line(xpm_fd);
@@ -157,15 +159,15 @@ int	parse_xpm_pixel_map(int xpm_fd, t_texture  *tex)
 	// while (++i < tex->height)
 	// 	free(tex->image_data[i]);
 	// free(tex->image_data);
-	if (y < tex->height)
+	if (m.y < tx->height)
 		return (1);
 	return (0);
 }
 
-void	parse_xpm_file(const char *filename, t_game *game)
+t_texture	parse_xpm_file(const char *filename, t_game *game) // 25 lines
 {
-	// t_texture	texture;
-	int		xpm_fd;
+	t_texture	texture;
+	int			xpm_fd;
 	// char	*line;
 
 	// if ((xpm_fd = get_fd(filename)) == -1)
@@ -176,22 +178,22 @@ void	parse_xpm_file(const char *filename, t_game *game)
 		close_game(game);
 	}
 	// line = skip_lines(xpm_fd);
-	if (parse_xpm_header(xpm_fd, &game->texture))
+	if (parse_xpm_header(xpm_fd, &/*game->*/texture))
 	{
 		printf("Error\nFailed to parse XPM file header\n");
 		close_game(game);
 	}
-	if (parse_xpm_color_table(xpm_fd, &game->texture))
+	if (parse_xpm_color_table(xpm_fd, &/*game->*/texture))
 	{
 		printf("Error\nFailed to parse XPM color table\n");
 		close_game(game);
 	}
-	if (parse_xpm_pixel_map(xpm_fd, &game->texture))
+	if (parse_xpm_pixel_map(xpm_fd, &/*game->*/texture))
 	{
 		printf("Error\nFailed to parse XPM pixel map\n");
 		close_game(game);
 	}
-	// return (texture);
+	return (texture);
 }
 
 // int	main(int argc, char **argv)

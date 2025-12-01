@@ -101,13 +101,13 @@ void	dda(t_game *game)
 		{
 			game->hero.ray.side_dist.x += game->hero.ray.delta_dist.x;
 			game->hero.ray.map.x += game->hero.ray.step.x;
-			game->hero.ray.side = false;
+			game->hero.ray.side = true;
 		}
 		else
 		{
 			game->hero.ray.side_dist.y += game->hero.ray.delta_dist.y;
 			game->hero.ray.map.y += game->hero.ray.step.y;
-			game->hero.ray.side = true;
+			game->hero.ray.side = false;
 		}
 		if (game->map[game->hero.ray.map.y][game->hero.ray.map.x] != 0)
 			hit = true;

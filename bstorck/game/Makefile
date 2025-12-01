@@ -16,6 +16,7 @@ mlx:
 
 $(NAME): $(OBJS)
 	make -C ./libs/libft
+	make -C ./libs/mlx
 	$(CC) $(SRCS) -o $(NAME) $(INCS) $(LFLAGS)
 
 re:
@@ -24,7 +25,11 @@ re:
 
 clean:
 	rm -rf $(OBJS)
+	make fclean -C ./libs/libft
+	make clean -C ./libs/mlx
 
 fclean:
 	rm -rf $(OBJS)
 	rm -rf $(NAME)
+	rm -rf ./libs/mlx
+	make fclean -C ./libs/libft
