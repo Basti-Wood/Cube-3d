@@ -257,9 +257,9 @@ void	init_game_logic(t_game *g)
 	
 	// Load textures from parsed config
 	g->texture[0] = parse_xpm_file(g->config.north_tex, g);
-	g->texture[1] = parse_xpm_file(g->config.south_tex, g);
-	g->texture[2] = parse_xpm_file(g->config.west_tex, g);
-	g->texture[3] = parse_xpm_file(g->config.east_tex, g);
+	g->texture[1] = parse_xpm_file(g->config.east_tex, g);
+	g->texture[2] = parse_xpm_file(g->config.south_tex, g);
+	g->texture[3] = parse_xpm_file(g->config.west_tex, g);
 	
 	// Initialize walker for map validation (already done in parsing)
 	g->walker = init_walker(g);

@@ -59,9 +59,9 @@ int	key_press(int keycode, t_game *game)
 		game->keys.a = 1;
 	else if (keycode == KEY_D)
 		game->keys.d = 1;
-	else if (keycode == KEY_LEFT)
+	else if (keycode == KEY_LEFT || keycode == KEY_J)
 		game->keys.left = 1;
-	else if (keycode == KEY_RIGHT)
+	else if (keycode == KEY_RIGHT || keycode == KEY_L)
 		game->keys.right = 1;
 	else if (keycode == KEY_TAB)
 		game->display_map = true;
@@ -82,9 +82,9 @@ int	key_release(int keycode, t_game *game)
 		game->keys.a = 0;
 	else if (keycode == KEY_D)
 		game->keys.d = 0;
-	else if (keycode == KEY_LEFT)
+	else if (keycode == KEY_LEFT || keycode == KEY_J)
 		game->keys.left = 0;
-	else if (keycode == KEY_RIGHT)
+	else if (keycode == KEY_RIGHT || keycode == KEY_L)
 		game->keys.right = 0;
 	else if (keycode == KEY_TAB)
 		game->display_map = false;

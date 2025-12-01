@@ -160,7 +160,7 @@ typedef struct s_hero
 	double		turn_speed;
 
 	int			axes_of_travel;
-	int			collision_radius;
+	double		collision_radius;
 }	t_hero;
 
 // typedef struct s_settings
