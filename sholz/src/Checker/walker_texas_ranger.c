@@ -4,7 +4,7 @@ static int	probe_direction(int x, int y, t_map *map)
 {
 	if (x >= 0 && x < map->width && y >= 0 && y < map->height)
 	{
-		if (map->grid[y][x] == (int) '1')
+		if (map->grid[y][x] == (int)'1')
 			return (1);
 	}
 	return (0);
@@ -12,9 +12,9 @@ static int	probe_direction(int x, int y, t_map *map)
 
 static int	get_direction(t_walker *walker, t_map *map)
 {
-	t_ivec	dir;
-	int		prev;
-	int		i;
+	t_square	dir;
+	int			prev;
+	int			i;
 
 	i = 0;
 	while (++i < 5)
@@ -39,7 +39,7 @@ static int	get_start(t_walker *walker, t_map *map)
 		walker->pos.x = -1;
 		while (++walker->pos.x < map->width)
 		{
-			if (map->grid[walker->pos.y][walker->pos.x] == (int) '1')
+			if (map->grid[walker->pos.y][walker->pos.x] == (int)'1')
 			{
 				walker->start.x = walker->pos.x;
 				walker->start.y = walker->pos.y;

@@ -15,13 +15,6 @@ int	main(int argc, char **argv)
 		printf("Error: Failed to parse map\n");
 		return (1);
 	}
-	if (!is_valid_map(&game.map))
-	{
-		printf("Error: Invalid map\n");
-		free_config(&game.config);
-		free_map(&game.map);
-		return (1);
-	}
 	if (!init_mlx(&game))
 	{
 		free_config(&game.config);
@@ -33,7 +26,9 @@ int	main(int argc, char **argv)
 		close_game(&game);
 		return (1);
 	}
+	display_map(&game.map, &game.config);
 	init_player(&game);
+	init_game_logic(&game);
 	setup_hooks(&game);
 	mlx_loop(game.mlx);
 	return (0);

@@ -63,11 +63,6 @@ int	setup_map(int fd, char *first_line, t_map *map)
 		return (0);
 	if (!i_walk_the_line(map))
 		return (0);
-	if (!is_valid_map(map))
-	{
-		printf("Error: Map is not properly enclosed by walls\n");
-		return (0);
-	}
 	convert_spaces_to_zeros(map);
 	return (1);
 }

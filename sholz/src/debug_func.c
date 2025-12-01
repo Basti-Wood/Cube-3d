@@ -1,11 +1,11 @@
 #include "../includes/cub3d.h"
 
-void	print_map_row(const int *row)
+void	print_map_row(const int *row, int width)
 {
 	int	x;
 
 	x = 0;
-	while (row[x] && row[x] != (int)'\0')
+	while (x < width)
 	{
 		if (row[x] == (int)'1')
 			printf("█");
@@ -16,7 +16,7 @@ void	print_map_row(const int *row)
 		else if (row[x] == (int)' ')
 			printf(" ");
 		else
-			printf("%c", (char)row[x]);
+			printf("?");
 		x++;
 	}
 }
@@ -50,7 +50,7 @@ void	display_map(t_map *map, t_config *config)
 	{
 		printf("   ");
 		if (map->grid[y])
-			print_map_row(map->grid[y]);
+			print_map_row(map->grid[y], map->width);
 		printf("\n");
 		y++;
 	}

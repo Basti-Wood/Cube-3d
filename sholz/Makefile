@@ -4,7 +4,7 @@ CFLAGS := -Wall -Wextra -Werror -I./includes -I./libft -I./minilibx-linux
 LDFLAGS := -L./libft -L./minilibx-linux -lft -lmlx -lXext -lX11 -lm
 
 # Executable name
-NAME := cube3d
+NAME := cub3d
 
 # Directories
 SRC_DIR := src
@@ -16,8 +16,8 @@ MLX_DIR := minilibx-linux
 LIBFT := $(LIBFT_DIR)/libft.a
 MLX := $(MLX_DIR)/libmlx.a
 
-# Find mandatory sources (exclude test files and bonus files)
-SRC := $(shell find $(SRC_DIR) -name '*.c' ! -name '*_bonus.c' ! -name 'test_*.c')
+# Find mandatory sources (exclude test files, bonus files, and disabled files)
+SRC := $(shell find $(SRC_DIR) -name '*.c' ! -name '*_bonus.c' ! -name 'test_*.c' ! -name '*.disabled.c' ! -name '*.diasbled.c')
 OBJ := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
 
 # Bonus sources

@@ -29,7 +29,7 @@ static void	search_row(t_map *map, int y)
 	int	x;
 
 	x = 0;
-	while (map->grid[y] && map->grid[y][x] && map->grid[y][x] != (int) '\0')
+	while (x < map->width)
 	{
 		if (is_player_char((char)map->grid[y][x]))
 		{
@@ -53,4 +53,6 @@ void	find_player(t_map *map)
 		search_row(map, y);
 		y++;
 	}
+	if (map->player.x != -1 && map->player.y != -1)
+		map->grid[map->player.y][map->player.x] = (int)'0';
 }

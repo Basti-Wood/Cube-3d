@@ -18,7 +18,7 @@ static void	init_map_array(int **map, int height, int width)
 		j = 0;
 		while (j < width)
 		{
-			map[i][j] = (int) ' ';
+			map[i][j] = (int)' ';
 			j++;
 		}
 		map[i][width] = (int) '\0';
