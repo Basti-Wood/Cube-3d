@@ -1,12 +1,17 @@
-NAME = game 
+NAME = game
+
 CC = gcc
+
 OBJS = $(SRCS:.c=.o)
 
 LFLAGS = -L./libs/libft -lft -L./libs/mlx -lmlx -lXext -lX11 -lm -lz
+
 INCS = libs/libft/libft.a -I./libs/libft libs/mlx/libmlx.a incs/game.h
-SRCS = srcs/main.c srcs/init.c srcs/map.c srcs/key_event.c srcs/movement.c srcs/collision.c srcs/ray.c \
-	srcs/draw_static.c srcs/draw_ambulatory.c srcs/walker_texas_ranger.c srcs/debug.c srcs/utils.c \
-	srcs/texture.c srcs/texture_utils.c
+
+SRCS = srcs/close+free.c srcs/collision.c srcs/dda.c srcs/draw_1.c srcs/draw_2.c \
+	srcs/draw_line_loop.c srcs/game_loop.c srcs/get_functions.c srcs/hex_calc.c \
+	srcs/key_event.c srcs/main.c srcs/map.c srcs/parse_helpers.c srcs/parse_xpm_file.c \
+	srcs/presenter_loop.c srcs/utils.c srcs/walker_loop.c
 
 all: $(NAME)
 
@@ -16,7 +21,6 @@ mlx:
 
 $(NAME): $(OBJS)
 	make -C ./libs/libft
-	make -C ./libs/mlx
 	$(CC) $(SRCS) -o $(NAME) $(INCS) $(LFLAGS)
 
 re:
@@ -26,10 +30,8 @@ re:
 clean:
 	rm -rf $(OBJS)
 	make fclean -C ./libs/libft
-	make clean -C ./libs/mlx
 
 fclean:
 	rm -rf $(OBJS)
 	rm -rf $(NAME)
-	rm -rf ./libs/mlx
 	make fclean -C ./libs/libft

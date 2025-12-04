@@ -6,203 +6,117 @@
 /*   By: bstorck <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 15:22:40 by bstorck           #+#    #+#             */
-/*   Updated: 2025/11/21 15:22:42 by bstorck          ###   ########.fr       */
+/*   Updated: 2025/12/04 00:30:52 by bstorck          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/game.h"
-#include <stdbool.h>
 
-int	close_game(t_game *game)
+static void	ft_swap(t_texture *a, t_texture *b)
 {
-	int	i;
-	int	j;
+	t_texture	tmp;
 
-	if (game->img)
-		mlx_destroy_image(game->mlx, game->img);
-	if (game->win)
-		mlx_destroy_window(game->mlx, game->win);
-	if (game->mlx)
-	{
-		mlx_destroy_display(game->mlx);
-		free(game->mlx);
-	}
-	i = -1;
-	while (++i < 4)
-	{
-		j = -1;
-		while (++j < game->texture[i].height)
-			free(game->texture[i].pixel_map[j]);
-		free(game->texture[i].pixel_map);
-	}
-	// j = -1;
-	// while (++j < game->texture.height)
-	// 	free(game->texture.pixel_map[j]);
-	// free(game->texture.pixel_map);
-	while (game->map_height--)
-		free(game->map[game->map_height]);
-	free(game->map);
-	exit(0);
-	return (0);
-}
-
-int	game_loop(t_game *game)
-{
-	// printf("\tspeed=%f\t", game->hero.move_speed);
-	// printf("\tspeed=%f\n", game->mini_hero.move_speed);
-	hero_action(&game->hero, game->map);
-	hero_action(&game->mini_hero, game->map);
-	clear_image(game);
-	draw_floor_and_ceiling(game);
-	draw_walls(game);
-	if (game->display_map)
-	{
-		draw_map(false, game);
-		draw_hero(false, game->mini_hero.pos, 0.15625 * TILE_SIZE, game);
-	// draw_sonar(game);
-		draw_radar(game);
-	}
-	// draw_floor_and_ceiling(game);
-	// draw_walls(game);
-	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
-	return (0);
-}
-
-void	draw_texture(t_game *g)
-{
-	int			x;
-	int			y;
-	int			size;
-	t_square	square;
-
-	size = TEXEL_SIZE;
-	y = -1;
-	while (++y < g->texture->height)
-	{
-		// printf("\t%i < %i\n", y, g->texture.height);
-		x = -1;
-		while (++x < g->texture->width)
-		{
-			square.x = x * size;
-			square.y = y * size;
-			draw_filled_square(square, size, g->texture->pixel_map[y][x], g);
-		}
-	}
-	// printf("\t%i\t%i\t%X\n", y, x, g->texture.pixel_map[y - 1][x - 1]);
-}
-
-int	presenter_loop(t_game *game)
-{
-	clear_image(game);
-	draw_texture(game);
-	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
-	if (game->skip_intro)
-	{
-		game->skip_intro = false;
-		mlx_destroy_image(game->mlx, game->img);
-		mlx_destroy_window(game->mlx, game->win);
-	}
-	return (0);
-}
-
-void	init_presenter_window(t_game *g)
-{
-	g->w_width = g->texture->width * TEXEL_SIZE;
-	g->w_height = g->texture->height * TEXEL_SIZE;
-	g->win = mlx_new_window(g->mlx, g->w_width, g->w_height, "XPM Presenter");
-	g->img = mlx_new_image(g->mlx, g->w_width, g->w_height);
-	g->data = mlx_get_data_addr(g->img, &g->bpp, &g->size_line, &g->endian);
-	// mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-	mlx_hook(g->win, 2, 1L << 0, key_press, g);
-	// mlx_hook(g->win, 3, 1L << 1, key_release, g);
-	mlx_hook(g->win, WIN_X_BTN, 0, close_game, g);
-}
-
-void ft_swap(t_texture *a, t_texture *b)
-{
-	t_texture tmp = *a;
+	tmp = *a;
 	*a = *b;
 	*b = tmp;
 }
 
+t_hero	init_hero(bool mini, t_game *g)
+{
+	t_hero		h;
+
+	h.mini = mini;
+	h.pos.x = 11;
+	h.pos.y = 28;
+	h.probe.x = 0;
+	h.probe.y = 0;
+	h.dir.x = 0;
+	h.dir.y = -1;
+	h.plane.x = 0.7679;
+	h.plane.y = 0;
+	h.scan_x = 0;
+	h.fov = 2 * atan(fabs(h.plane.x));
+	h.move_forward = false;
+	h.move_backward = false;
+	h.move_port = false;
+	h.move_starboard = false;
+	h.move_speed = sqrt(2) * 0.04;
+	h.turn_sinistral = false;
+	h.turn_dextral = false;
+	h.turn_speed = PI / 75;
+	h.axes_of_travel = 0;
+	h.collision_radius = 0.15625 * BLOCK_SIZE;
+	return (h);
+}
+
+void	load_textures(t_game *game)
+{
+	game->texture[0] = parse_xpm_file("texs/bluestone.xpm", game);
+	game->texture[1] = parse_xpm_file("texs/greystone.xpm", game);
+	game->texture[2] = parse_xpm_file("texs/redbrick.xpm", game);
+	game->texture[3] = parse_xpm_file("texs/mossy.xpm", game);
+}
+
+int	init_game_resources(t_game *game)
+{
+	game->skip_intro = false;
+	game->display_map = false;
+	game->map.width = 30;
+	game->map.height = 30;
+	if (init_map(game))
+		return (1);
+	load_textures(game);
+	game->walker = init_walker(game);
+	if (get_walker_start(game))
+	{
+		printf("Error\nUnknown error.\n");
+		close_game(game);
+	}
+	if (move_walker(game))
+	{
+		printf("Error\nUnknown error.\n");
+		close_game(game);
+	}
+	game->walker.first = game->walker.dir_set[game->walker.prev];
+	game->hero = init_hero(false, game);
+	game->mini_hero = init_hero(true, game);
+	game->mlx = mlx_init();
+	return (0);
+}
+
 int	main(void)
 {
-	// int		x, y;
 	t_game	game;
 
-	// parse_xpm_file("texs/redbrick.xpm", &game);
-	// y = -1;
-	// while (++y < game.texture.height)
-	// {
-	// 	// printf("\n%p\t", game.texture.pixel_map[y]);
-	// 	printf("\n");
-	// 	x = -1;
-	// 	while (++x < game.texture.width)
-	// 		printf("%X ", game.texture.pixel_map[y][x]);
-	// }
-	init_game(&game);
-	init_presenter_window(&game);
-	mlx_loop_hook(game.mlx, presenter_loop, &game);
-	mlx_loop(game.mlx);
-	ft_swap(&game.texture[0], &game.texture[1]);
-	init_presenter_window(&game);
-	mlx_loop_hook(game.mlx, presenter_loop, &game);
-	mlx_loop(game.mlx);
-	ft_swap(&game.texture[0], &game.texture[2]);
-	init_presenter_window(&game);
-	mlx_loop_hook(game.mlx, presenter_loop, &game);
-	mlx_loop(game.mlx);
-	ft_swap(&game.texture[0], &game.texture[3]);
-	init_presenter_window(&game);
-	mlx_loop_hook(game.mlx, presenter_loop, &game);
-	mlx_loop(game.mlx);
-	ft_swap(&game.texture[0], &game.texture[1]);
-	ft_swap(&game.texture[1], &game.texture[2]);
-	ft_swap(&game.texture[2], &game.texture[3]);
-	init_intro_window(&game);
-	mlx_loop_hook(game.mlx, intro_loop, &game);
+	if (init_game_resources(&game))
+	{
+		printf("Failed to initialize game\n");
+		free_game_resources(&game);
+		return (1);
+	}
+	// init_presenter_window(&game);
+	// mlx_loop_hook(game.mlx, presenter_loop, &game);
+	// mlx_loop(game.mlx);
+	// ft_swap(&game.texture[0], &game.texture[1]);
+	// init_presenter_window(&game);
+	// mlx_loop_hook(game.mlx, presenter_loop, &game);
+	// mlx_loop(game.mlx);
+	// ft_swap(&game.texture[0], &game.texture[2]);
+	// init_presenter_window(&game);
+	// mlx_loop_hook(game.mlx, presenter_loop, &game);
+	// mlx_loop(game.mlx);
+	// ft_swap(&game.texture[0], &game.texture[3]);
+	// init_presenter_window(&game);
+	// mlx_loop_hook(game.mlx, presenter_loop, &game);
+	// mlx_loop(game.mlx);
+	// ft_swap(&game.texture[0], &game.texture[1]);
+	// ft_swap(&game.texture[1], &game.texture[2]);
+	// ft_swap(&game.texture[2], &game.texture[3]);
+	init_walker_window(&game);
+	mlx_loop_hook(game.mlx, walker_loop, &game);
 	mlx_loop(game.mlx);
 	init_game_window(&game);
 	mlx_loop_hook(game.mlx, game_loop, &game);
 	mlx_loop(game.mlx);
 	return (0);
 }
-
-// int	main(void)
-// {
-// 	t_game	game;
-// 	char	*flag;
-//
-// 	if (argc == 2)
-// 		flag = argv[1];
-// 	else
-// 		flag = "intro";
-// 	init
-// 	init_game(&game);
-// 	init_intro(&game);
-// 	hooks
-// 	mlx_hook(game.win, 2, 1L << 0, key_press, &game);
-// 	mlx_hook(game.win, 3, 1L << 1, key_release, &game);
-// 	mlx_hook(game.win, WIN_X_BTN, 0, close_game, &game);
-// 	// check_wall_integrity(&game);
-// 	mlx_loop_hook(game.mlx, intro_loop, &game);
-// 	mlx_loop(game.mlx);
-// 	// printf("\tfirst\t%i\t%i\n", game.walker.first.x, game.walker.first.y);
-// 	// printf("\tlast\t%i\t%i\n\n", game.walker.last.x, game.walker.last.y);
-// 	if ((game.walker.first.x + game.walker.last.x == 0) && (game.walker.first.y + game.walker.last.y == 0))
-// 		close_game(&game);
-// 	mlx_destroy_image(game.mlx, game.img);
-// 	mlx_destroy_window(game.mlx, game.win);
-// 	check_wall_integrity(&game);
-// 	init_intro_window(&game);
-// 	mlx_loop_hook(game.mlx, intro_loop, &game);
-// 	mlx_loop(game.mlx);
-// 	init_game_window(&game);
-// 	mlx_hook(game.win, 2, 1L << 0, key_press, &game);
-// 	mlx_hook(game.win, 3, 1L << 1, key_release, &game);
-// 	mlx_hook(game.win, WIN_X_BTN, 0, close_game, &game);
-// 	draw loop
-// 	mlx_loop_hook(game.mlx, game_loop, &game);
-// 	mlx_loop(game.mlx);
-// 	return (0);
-// }

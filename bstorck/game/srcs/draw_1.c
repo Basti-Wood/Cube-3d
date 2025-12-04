@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   draw_static.c                                      :+:      :+:    :+:   */
+/*   draw_1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bstorck <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 15:23:57 by bstorck           #+#    #+#             */
-/*   Updated: 2025/11/21 15:23:58 by bstorck          ###   ########.fr       */
+/*   Updated: 2025/12/04 00:14:21 by bstorck          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,18 @@ void	draw_floor_and_ceiling(t_game *game)
 	int	y;
 	int	color;
 
-	color = 0x303030;//0xdcdcdc;
+	color = 0x303030;
+	if (game->display_map)
+		color = (color >> 1) & 8355711;
 	y = -1;
-	while (++y <= game->w_height)
+	while (++y <= WIN_HEIGHT)
 	{
-		if (y >= game->w_height / 2)
-			color = 0x707070;//0x836953;
+		if (y >= WIN_HEIGHT / 2)
+			color = 0x707070;
+		if (game->display_map)
+			color = (color >> 1) & 8355711;
 		x = -1;
-		while (++x < game->w_width / 2)
+		while (++x < WIN_WIDTH)
 			put_pixel(x, y, color, game);
 	}
 }
@@ -38,8 +42,8 @@ void	draw_walker(int x, int y, t_game *game)
 	pos.y = y + 0.5;
 	clear_image(game);
 	draw_map(true, game);
-	draw_hero(true, pos, 5, game);
-	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
+	draw_hero(true, pos, (TILE_SIZE / 2), game);
+	mlx_put_image_to_window(game->mlx, game->win, game->img.ptr, 0, 0);
 	ft_usleep(10000);
 }
 
@@ -78,27 +82,24 @@ void	draw_filled_square(t_square square, int size, int color, t_game *game)
 void	draw_map(bool intro, t_game *game)
 {
 	t_square	square;
+	t_square	offset;
 	int			x;
 	int			y;
-	int			**map;
-	int			offset;
 
-	offset = 0;
-	if (!intro)
-		offset = game->w_width / 2;
-	map = game->map;
+	offset = get_offset(intro, game);
 	y = -1;
-	while (++y < game->map_height)
+	while (++y < game->map.height)
 	{
 		x = -1;
-		while (++x < game->map_width)
+		while (++x < game->map.width)
 		{
-			if (map[y][x] > 0)
+			if (collision(x, y, &game->map))
 			{
-				square.x = x * BLOCK_SIZE + offset;
-				square.y = y * BLOCK_SIZE;
-				draw_filled_square(square, BLOCK_SIZE, 0x0000FF, game);
-				draw_empty_square(square, BLOCK_SIZE, 0xFFFFFF, game);
+				square.x = x * TILE_SIZE + offset.x;
+				square.y = y * TILE_SIZE + offset.y;
+				if (intro)
+					draw_filled_square(square, TILE_SIZE, 0x0000FF, game);
+				draw_empty_square(square, TILE_SIZE, 0xFFFFFF, game);
 			}
 		}
 	}

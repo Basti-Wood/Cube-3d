@@ -6,7 +6,7 @@
 /*   By: bstorck <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 15:24:18 by bstorck           #+#    #+#             */
-/*   Updated: 2025/11/21 15:24:19 by bstorck          ###   ########.fr       */
+/*   Updated: 2025/12/04 00:31:48 by bstorck          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@ void	put_pixel(int x, int y, int color, t_game *game)
 {
 	int	index;
 
-	if (x >= game->w_width || y >= game->w_height || x < 0 || y < 0)
+	if (x >= game->img.width || y >= game->img.height || x < 0 || y < 0)
 		return ;
-	index = y * game->size_line + x * game->bpp / 8;
-	game->data[index] = color & 0xFF;
-	game->data[index + 1] = (color >> 8) & 0xFF;
-	game->data[index + 2] = (color >> 16) & 0xFF;
+	index = y * game->img.size_line + x * game->img.bpp / 8;
+	game->img.data[index] = color & 0xFF;
+	game->img.data[index + 1] = (color >> 8) & 0xFF;
+	game->img.data[index + 2] = (color >> 16) & 0xFF;
 }
 
 void	clear_image(t_game *game)
@@ -30,31 +30,15 @@ void	clear_image(t_game *game)
 	int	y;
 
 	y = -1;
-	while (++y <= game->w_height)
+	while (++y <= game->img.height)
 	{
 		x = -1;
-		while (++x <= game->w_width)
+		while (++x <= game->img.width)
 			put_pixel(x, y, 0, game);
 	}
-	// for(int y = 0; y < SCRN_HEIGHT; y++)
-	// 	for(int x = 0; x < SCRN_WIDTH; x++)
-	// 		put_pixel(x, y, 0, game);
 }
 
-int	get_fd(const char *filename)
-{
-	int	fd;
-
-	fd = open(filename, O_RDONLY);
-	if (fd == -1)
-	{
-		perror("Error\n");
-		return (-1);
-	}
-	return (fd);
-}
-
-time_t	get_current_time(void)
+static time_t	get_current_time(void)
 {
 	struct timeval	time;
 

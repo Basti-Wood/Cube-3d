@@ -24,7 +24,7 @@ t_hero	init_hero(bool mini, t_game *g)
 	h.probe.y = 0;
 	h.dir.x = 0;
 	h.dir.y = -1;
-	h.plane.x = 0.66 * (1.0 * WIN_WIDTH / WIN_HEIGHT);
+	h.plane.x = 0.66;
 	h.plane.y = 0;
 	h.scan_x = 0;
 	h.fov = 2 * atan(fabs(h.plane.x + h.plane.y) / fabs(h.dir.x + h.dir.y));
@@ -32,12 +32,12 @@ t_hero	init_hero(bool mini, t_game *g)
 	h.move_backward = false;
 	h.move_port = false;
 	h.move_starboard = false;
-	h.move_speed = /*1.771561 * */sqrt(2) / 25/*100*/;
+	h.move_speed = /*1.771561 * */sqrt(2) / 50/*100*/;
 	h.turn_sinistral = false;
 	h.turn_dextral = false;
-	h.turn_speed = /*1.265319018496 * */PI / 75/*200*/;
+	h.turn_speed = /*1.265319018496 * */PI / 100/*200*/;
 	h.axes_of_travel = 0;
-	h.collision_radius = 0.15625 * BLOCK_SIZE;
+	h.collision_radius = 5;
 	return (h);
 }
 
@@ -94,8 +94,8 @@ t_walker	init_walker(t_game *game)
 
 void	init_game_window(t_game *g)
 {
-	g->w_width = WIN_WIDTH;
-	g->w_height = WIN_HEIGHT;
+	g->w_width = GAME_WIDTH;
+	g->w_height = GAME_HEIGHT;
 	g->win = mlx_new_window(g->mlx, g->w_width, g->w_height, "Picostein No D");
 	g->img = mlx_new_image(g->mlx, g->w_width, g->w_height);
 	g->data = mlx_get_data_addr(g->img, &g->bpp, &g->size_line, &g->endian);
@@ -107,8 +107,8 @@ void	init_game_window(t_game *g)
 
 void	init_intro_window(t_game *g)
 {
-	g->w_width = g->map_width * TILE_SIZE;
-	g->w_height = g->map_height * TILE_SIZE;
+	g->w_width = INTRO_WIDTH;
+	g->w_height = INTRO_HEIGHT;
 	g->win = mlx_new_window(g->mlx, g->w_width, g->w_height, "Map Checker");
 	g->img = mlx_new_image(g->mlx, g->w_width, g->w_height);
 	g->data = mlx_get_data_addr(g->img, &g->bpp, &g->size_line, &g->endian);
@@ -120,28 +120,16 @@ void	init_intro_window(t_game *g)
 
 void	init_game(t_game *g)
 {
-	int		i;
-	char	*path[5];
-
+	// int	i;
 	// game->time = 0;
 	// game->prev_time = 0;
 	g->skip_intro = false;
-	g->display_map = false;
-	path[0] = "texs/bluestone.xpm";
-	path[1] = "texs/greystone.xpm";
-	path[2] = "texs/redbrick.xpm";
-	path[3] = "texs/mossy.xpm";
-	path[4] = NULL;
-	i = -1;
-	while (++i < 4)
-		g->texture[i] = parse_xpm_file(path[i], g);
 	g->map_width = 30;
 	g->map_height = 30;
 	g->map = init_map(g->map_width, g->map_width);
-	// int	i;
 	// i = -1;
 	// while (++i < 4)
-	// 	g->texture[i].pixel_map = init_xpm_pixel_map(g);
+		// g->texture[0].pixel_map = init_xpm_pixel_map(g);
 	// g->c = init_wind_rose();
 	g->walker = init_walker(g);
 	if (get_start(g))

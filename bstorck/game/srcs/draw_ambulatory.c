@@ -17,19 +17,17 @@ void	draw_line(int screen_x, t_game *game)
 	int		color;
 	// int		end_y;
 	// int		start_y;
-	// int		line_height;
+	int		line_height;
 	t_line	line;
-	double	ratio;
 
-	ratio = 1.0 * WIN_WIDTH / WIN_HEIGHT;
-	line.height = (int)(WIN_HEIGHT / game->hero.ray.perp_dist_wall) / ratio;
-	line.start = (WIN_HEIGHT / 2) - (line.height / 2);
+	line_height = (int)(game->w_height / game->hero.ray.perp_dist_wall) / 2;
+	line.start = (game->w_height / 2) - (line_height / 2);
 	if (line.start < 0)
 		line.start = 0;
-	line.end = (WIN_HEIGHT / 2) + (line.height / 2);
+	line.end = (game->w_height / 2) + (line_height / 2);
 	if (line.end < 0)
 		line.end = 0;
-	draw_line_loop(screen_x, line, game);
+	draw_line_loop(screen_x, line, line_height, game);
 	// while (start_y <= end_y)
 	// {
 	// 	color = 0x0000FF;
@@ -49,15 +47,15 @@ void	draw_walls(t_game *game)
 	hero = &game->hero;
 	ray = &hero->ray;
 	i = -1;
-	while (++i < WIN_WIDTH/* / 2*/)
+	while (++i < game->w_width / 2)
 	{
-		hero->scan_x = 2 * i / ((double)WIN_WIDTH/* / 2*/) - 1;
+		hero->scan_x = 2 * i / ((double)game->w_width / 2) - 1;
 		cast_ray(hero);
 		dda(game);
 		if (ray->side)
-			ray->perp_dist_wall = ray->side_dist.x - ray->delta_dist.x;
-		else
 			ray->perp_dist_wall = ray->side_dist.y - ray->delta_dist.y;
+		else
+			ray->perp_dist_wall = ray->side_dist.x - ray->delta_dist.x;
 		draw_line(i, game);
 	}
 }
@@ -65,19 +63,12 @@ void	draw_walls(t_game *game)
 void	draw_beam(double dir, t_game *game)
 {
 	t_vector	beam;
-	t_square	offset;
 
-	// offset = (double)game->w_width / 2;
-	// if (game->display_map)
-		// offset = 0;
-	// offset.x = 384;
-	// offset.y = 60;
-	offset = get_offset(false);
-	beam.x = game->mini_hero.pos.x * TILE_SIZE;
-	beam.y = game->mini_hero.pos.y * TILE_SIZE;
-	while (!collision(beam.x / TILE_SIZE, beam.y / TILE_SIZE, game->map))
+	beam.x = game->mini_hero.pos.x * BLOCK_SIZE;
+	beam.y = game->mini_hero.pos.y * BLOCK_SIZE;
+	while (!collision(beam.x / BLOCK_SIZE, beam.y / BLOCK_SIZE, game->map))
 	{
-		put_pixel(beam.x + offset.x, beam.y + offset.y, 0xFFFF00, game);
+		put_pixel(beam.x + (double)game->w_width / 2, beam.y, 0xFF0000, game);
 		beam.x += cos(dir);
 		beam.y += sin(dir);
 	}
@@ -94,18 +85,9 @@ void	draw_radar(t_game *game)
 	hero = &game->mini_hero;
 	// fov = 2 * atan(fabs(hero->plane.x + hero->plane.y) / fabs(hero->dir.x + hero->dir.y));
 	dir = atan2(hero->dir.y, hero->dir.x) - (hero->fov / 2);
-	// draw_beam(dir, game);
-	// dir = atan2(hero->dir.y, hero->dir.x) - (hero->fov / 4);
-	// draw_beam(dir, game);
-	// dir = atan2(hero->dir.y, hero->dir.x);
-	// draw_beam(dir, game);
-	// dir = atan2(hero->dir.y, hero->dir.x) + (hero->fov / 4);
-	// draw_beam(dir, game);
-	// dir = atan2(hero->dir.y, hero->dir.x) + (hero->fov / 2);
-	// draw_beam(dir, game);
-	delta_dir = (hero->fov / (double)WIN_WIDTH);
+	delta_dir = hero->fov / ((double)game->w_width / 2);
 	i = -1;
-	while (++i < WIN_WIDTH/* / 2*/)
+	while (++i < game->w_width / 2)
 	{
 		draw_beam(dir, game);
 		dir += delta_dir;
@@ -115,20 +97,19 @@ void	draw_radar(t_game *game)
 void	draw_hero(bool intro, t_vector pos, int size, t_game *game)
 {
 	t_square	square;
-	t_square	offset;
+	int			offset;
 
-	offset = get_offset(intro);
-	// 	offset = game->w_width / 2;
-	// if (game->display_map)
-	// 	offset = 0;
-	square.x = pos.x * TILE_SIZE + offset.x;
-	square.y = pos.y * TILE_SIZE + offset.y;
+	offset = 0;
+	if (!intro)
+		offset = game->w_width / 2;
+	square.x = pos.x * BLOCK_SIZE + offset;
+	square.y = pos.y * BLOCK_SIZE;
 	draw_filled_square(square, size, 0x00FF00, game);
-	square.x = pos.x * TILE_SIZE + offset.x - size;
+	square.x = pos.x * BLOCK_SIZE + offset - size;
 	draw_filled_square(square, size, 0x00FF00, game);
-	square.x = pos.x * TILE_SIZE + offset.x;
-	square.y = pos.y * TILE_SIZE + offset.y - size;
+	square.x = pos.x * BLOCK_SIZE + offset;
+	square.y = pos.y * BLOCK_SIZE - size;
 	draw_filled_square(square, size, 0x00FF00, game);
-	square.x = pos.x * TILE_SIZE + offset.x - size;
+	square.x = pos.x * BLOCK_SIZE + offset - size;
 	draw_filled_square(square, size, 0x00FF00, game);
 }

@@ -1,6 +1,6 @@
 #include "../incs/game.h"
 
-int	parse_xpm_header(int xpm_fd, t_texture *texture) // 25 lines
+int	parse_xpm_header(int xpm_fd, t_texture *texture)
 {
 	int		i;
 	char	*line;
@@ -30,7 +30,7 @@ int	parse_xpm_header(int xpm_fd, t_texture *texture) // 25 lines
 	return (0);
 }
 
-int	parse_hex_color(const char *line) // 17 lines
+int	parse_hex_color(const char *line)
 {
 	int	i;
 	int	r;
@@ -51,7 +51,7 @@ int	parse_hex_color(const char *line) // 17 lines
 	return ((r << 16) | (g << 8) | b);
 }
 
-int	parse_xpm_color_table_line(char *line, t_texture *texture) // 18 lines
+int	parse_xpm_color_table_line(char *line, t_texture *texture)
 {
 	int	color;
 	int	i;
@@ -73,7 +73,7 @@ int	parse_xpm_color_table_line(char *line, t_texture *texture) // 18 lines
 	return (0);
 }
 
-int	parse_xpm_color_table(int xpm_fd, t_texture *texture) // 17 lines
+int	parse_xpm_color_table(int xpm_fd, t_texture *texture)
 {
 	char	*line;
 	int		line_count;
@@ -85,8 +85,7 @@ int	parse_xpm_color_table(int xpm_fd, t_texture *texture) // 17 lines
 	while (line_count < texture->color_count)
 	{
 		// if ((line = get_next_line(xpm_fd)) == NULL)
-		line = skip_lines(xpm_fd);
-		if (line == NULL)
+		if ((line = skip_lines(xpm_fd)) == NULL)
 			return (1);
 		// if (line[0] == '/' || line[0] == '#')
 			// free(line);
@@ -112,44 +111,43 @@ int	parse_xpm_color_table(int xpm_fd, t_texture *texture) // 17 lines
 	return (0);
 }
 
-int	init_xpm_pixel_map(t_texture *texture) // 13 lines
+int	init_xpm_pixel_map(t_texture *texture)
 {
 	int		i;
 
-	texture->pixel_map = (int **)malloc(sizeof(int *) * texture->height);
+	texture->pixel_map = (int**)malloc(sizeof(int*) * texture->height);
 	if (!texture->pixel_map)
 		return (1);
 	i = -1;
 	while (++i < texture->height)
 	{
-		texture->pixel_map[i] = (int *)malloc(sizeof(int) * texture->width);
+		texture->pixel_map[i] = (int*)malloc(sizeof(int) * texture->width);
 		if (!texture->pixel_map[i])
 			return (1);
 	}
 	return (0);
 }
 
-int	parse_xpm_pixel_map(int xpm_fd, t_texture *tx) // 25 lines
+int	parse_xpm_pixel_map(int xpm_fd, t_texture  *tex)
 {
-	// int		x;
-	// int		y;
-	t_square	m;
+	int		x;
+	int		y;
 	int		index;
 	char	*line;
 
-	if (init_xpm_pixel_map(tx))
+	if (init_xpm_pixel_map(tex))//will be replaced with initialisaton in init_game -> 25 lines
 		return (1);
 	line = skip_lines(xpm_fd);
-	m.y = -1;
-	while (++m.y < tx->height)
+	y = -1;
+	while (++y < tex->height)
 	{
 		if (line == NULL)
 			break ;
-		m.x = -1;
-		while (++m.x < tx->width)
+		x = -1;
+		while (++x < tex->width)
 		{
-			index = (int)line[m.x + 1] - 32;
-			tx->pixel_map[m.y][m.x] = tx->color_table[(int)line[m.x + 1] - 32];
+			index = (int)line[x + 1] - 32;
+			tex->pixel_map[y][x] = tex->color_table[(int)line[x + 1] - 32];
 		}
 		free(line);
 		line = get_next_line(xpm_fd);
@@ -159,15 +157,15 @@ int	parse_xpm_pixel_map(int xpm_fd, t_texture *tx) // 25 lines
 	// while (++i < tex->height)
 	// 	free(tex->image_data[i]);
 	// free(tex->image_data);
-	if (m.y < tx->height)
+	if (y < tex->height)
 		return (1);
 	return (0);
 }
 
-t_texture	parse_xpm_file(const char *filename, t_game *game) // 25 lines
+void	parse_xpm_file(const char *filename, t_game *game)
 {
-	t_texture	texture;
-	int			xpm_fd;
+	// t_texture	texture;
+	int		xpm_fd;
 	// char	*line;
 
 	// if ((xpm_fd = get_fd(filename)) == -1)
@@ -178,22 +176,22 @@ t_texture	parse_xpm_file(const char *filename, t_game *game) // 25 lines
 		close_game(game);
 	}
 	// line = skip_lines(xpm_fd);
-	if (parse_xpm_header(xpm_fd, &/*game->*/texture))
+	if (parse_xpm_header(xpm_fd, &game->texture))
 	{
 		printf("Error\nFailed to parse XPM file header\n");
 		close_game(game);
 	}
-	if (parse_xpm_color_table(xpm_fd, &/*game->*/texture))
+	if (parse_xpm_color_table(xpm_fd, &game->texture))
 	{
 		printf("Error\nFailed to parse XPM color table\n");
 		close_game(game);
 	}
-	if (parse_xpm_pixel_map(xpm_fd, &/*game->*/texture))
+	if (parse_xpm_pixel_map(xpm_fd, &game->texture))
 	{
 		printf("Error\nFailed to parse XPM pixel map\n");
 		close_game(game);
 	}
-	return (texture);
+	// return (texture);
 }
 
 // int	main(int argc, char **argv)

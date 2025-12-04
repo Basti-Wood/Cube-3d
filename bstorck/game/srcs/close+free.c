@@ -1,0 +1,69 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   close+free.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bstorck <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/04 00:13:31 by bstorck           #+#    #+#             */
+/*   Updated: 2025/12/04 00:13:34 by bstorck          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../incs/game.h"
+
+void	free_texture(t_texture *texture)
+{
+	if (texture->pixel_map)
+	{
+		free(texture->pixel_map);
+		texture->pixel_map = NULL;
+	}
+}
+
+void	free_all_textures(t_game *game)
+{
+	int	i;
+
+	i = -1;
+	while (++i < NUM_TEXTURES)
+		free_texture(&game->texture[i]);
+}
+
+void	free_map(t_game *game)
+	{
+	if (game->map.grid)
+	{
+		free(game->map.grid);
+		game->map.grid = NULL;
+	}
+}
+
+void	free_game_resources(t_game *game)
+{
+	if (game->img.ptr)
+	{
+		mlx_destroy_image(game->mlx, game->img.ptr);
+		game->img.ptr = NULL;
+	}
+	if (game->win)
+	{
+		mlx_destroy_window(game->mlx, game->win);
+		game->win = NULL;
+	}
+	if (game->mlx)
+	{
+		mlx_destroy_display(game->mlx);
+		free(game->mlx);
+		game->mlx = NULL;
+	}
+	free_all_textures(game);
+	free_map(game);
+}
+
+int	close_game(t_game *game)
+{
+	free_game_resources(game);
+	exit(0);
+	return (0);
+}
