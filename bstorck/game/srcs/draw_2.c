@@ -32,7 +32,7 @@ void	draw_line(int screen_x, t_game *game)
 
 void	draw_walls(t_game *game)
 {
-	int		i;
+	int	i;
 
 	i = -1;
 	while (++i < WIN_WIDTH)
@@ -65,10 +65,10 @@ void	draw_beam(double dir, t_game *game)
 
 void	draw_radar(t_game *game)
 {
-	t_hero		*hero;
-	double		dir;
-	double		delta_dir;
-	int			i;
+	t_hero	*hero;
+	double	dir;
+	double	delta_dir;
+	int		i;
 
 	hero = &game->mini_hero;
 	dir = atan2(hero->dir.y, hero->dir.x) - (hero->fov / 2);

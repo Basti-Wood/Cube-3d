@@ -127,9 +127,10 @@ int	intro_loop(t_game *game)
 // 		throw_error(99, game);
 // }
 
-	// printf("\tfirst\t%i\t%i\n", w.first.x, w.first.y);
-	// printf("\tlast\t%i\t%i\n", w.last.x, w.last.y);
-	// printf("\n\t\t%i + %i = %i\n\t\t%i + %i = %i\n", w.first.x, w.last.x, w.first.x + w.last.x, w.first.y, w.last.y, w.first.y + w.last.y);
+// printf("\tfirst\t%i\t%i\n", w.first.x, w.first.y);
+// printf("\tlast\t%i\t%i\n", w.last.x, w.last.y);
+// printf("\n\t\t%i + %i = %i\n\t\t%i + %i = %i\n", w.first.x, w.last.x,
+//	w.first.x + w.last.x, w.first.y, w.last.y, w.first.y + w.last.y);
 // t_square	get_direction(char prev, char *tmp, int i)
 // {
 // 	t_square	dir;
@@ -208,12 +209,14 @@ int	intro_loop(t_game *game)
 // 		prev = 'S';
 // 		(*y)--;
 // 	}
-// 	else if (*x < (game->map_width - 1) && prev != 'E' && game->map[*y][*x + 1] == 1)//W->E
+// 	else if (*x < (game->map_width - 1) && prev != 'E' && game->map[*y][*x
+//		+ 1] == 1)//W->E
 // 	{
 // 		prev = 'W';
 // 		(*x)++;
 // 	}
-// 	else if (*y < (game->map_height - 1) && prev != 'S' && game->map[*y + 1][*x] == 1)//N->S
+// 	else if (*y < (game->map_height - 1) && prev != 'S' && game->map[*y
+//		+ 1][*x] == 1)//N->S
 // 	{
 // 		prev = 'N';
 // 		(*y)++;
@@ -258,7 +261,7 @@ int	intro_loop(t_game *game)
 // 		if (game->map[y][x] == 1)
 // 		{
 // 			flag = 1;
-// 			break;
+// 			break ;
 // 		}
 // 	}
 // 	x = -1;
@@ -351,7 +354,8 @@ int	intro_loop(t_game *game)
 // 			(*x)--;
 // 			// printf("W\n");
 // 		}
-// 		else if (*y < (game->map_height - 1) && game->map[*y + 1][*x] == 1)//N->S
+// 		else if (*y < (game->map_height - 1) && game->map[*y
+//			+ 1][*x] == 1)//N->S
 // 		{
 // 			prev = 'N';
 // 			(*y)++;
@@ -421,7 +425,8 @@ int	intro_loop(t_game *game)
 // 			(*x)--;
 // 			// printf("W\n");
 // 		}
-// 		else// if (*y < (game->map_height - 1) && game->map[*y + 1][*x] == 1)//N->S
+// 		else// if (*y < (game->map_height - 1) && game->map[*y
+//			+ 1][*x] == 1)//N->S
 // 		{
 // 			prev = 'N';//'N';
 // 			(*y)++;
@@ -443,13 +448,15 @@ int	intro_loop(t_game *game)
 // 			(*x)--;
 // 			// printf("W\n");
 // 		}
-// 		else if (*y < (game->map_height - 1) && game->map[*y + 1][*x] == 1)//E->S//go SOUTH
+// 		else if (*y < (game->map_height - 1) && game->map[*y
+//			+ 1][*x] == 1)//E->S//go SOUTH
 // 		{
 // 			prev = 'N';
 // 			(*y)++;
 // 			// printf("S\n");
 // 		}
-// 		else// if (*x < (game->map_width - 1) && game->map[*y][*x + 1] == 1)//W->E//go back
+// 		else// if (*x < (game->map_width - 1) && game->map[*y][*x
+//			+ 1] == 1)//W->E//go back
 // 		{
 // 			prev = 'W';
 // 			(*x)++;

@@ -69,7 +69,7 @@ void	ft_usleep(int usec)
 
 // double	distance(double x, double y)
 // {
-	// return (sqrt(x * x + y * y));
+// return (sqrt(x * x + y * y));
 // }
 
 // double	fixed_dist(double x1, double y1, double x2, double y2, t_game *game)

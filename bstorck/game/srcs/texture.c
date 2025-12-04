@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   movement.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bstorck <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/25 09:02:21 by bstorck           #+#    #+#             */
+/*   Updated: 2025/11/25 09:02:26 by bstorck          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incs/game.h"
 
 int	parse_xpm_header(int xpm_fd, t_texture *texture)
@@ -7,7 +19,6 @@ int	parse_xpm_header(int xpm_fd, t_texture *texture)
 	char	*header;
 	char	**token;
 
-	// line = ft_strdup(ft_strchr(xpm_header, '"') + 1);
 	line = skip_lines(xpm_fd);
 	i = 0;
 	while (!ft_isdigit(line[i]))
@@ -77,121 +88,38 @@ int	parse_xpm_color_table(int xpm_fd, t_texture *texture)
 {
 	char	*line;
 	int		line_count;
-	// char	c;
-	// char	*ln;
-	// char	**token;
 
 	line_count = 0;
 	while (line_count < texture->color_count)
 	{
-		// if ((line = get_next_line(xpm_fd)) == NULL)
-		if ((line = skip_lines(xpm_fd)) == NULL)
+		line = skip_lines(xpm_fd);
+		if (line == NULL)
 			return (1);
-		// if (line[0] == '/' || line[0] == '#')
-			// free(line);
 		else
 		{
 			if (parse_xpm_color_table_line(line, texture))
 				return (1);
 			line_count++;
 		}
-		// i = 0;
-		// while (ln[i] < ' ' || ln[i] == '"' || ln[i] == '\\' || ln[i] > '~')
-			// i++;
-		// c = ln[i];
-		// i++;
-		// while (ln[i] != '#')
-			// i++;
-		// if (ft_strlcat("0x", &ln[i + 1], 8) != 8)
-			// return (1);
-		// texture->color_map[(int)c] = ;
-		// line = ft_strdup(&ln[i]);
-		// free(ln);
 	}
 	return (0);
 }
 
 int	init_xpm_pixel_map(t_texture *texture)
 {
-	int		i;
+	int	i;
 
-	texture->pixel_map = (int**)malloc(sizeof(int*) * texture->height);
+	texture->pixel_map = (int **)malloc(sizeof(int *) * texture->height);
 	if (!texture->pixel_map)
 		return (1);
 	i = -1;
 	while (++i < texture->height)
 	{
-		texture->pixel_map[i] = (int*)malloc(sizeof(int) * texture->width);
+		texture->pixel_map[i] = (int *)malloc(sizeof(int) * texture->width);
 		if (!texture->pixel_map[i])
 			return (1);
 	}
 	return (0);
-}
-
-int	parse_xpm_pixel_map(int xpm_fd, t_texture  *tex)
-{
-	int		x;
-	int		y;
-	int		index;
-	char	*line;
-
-	if (init_xpm_pixel_map(tex))//will be replaced with initialisaton in init_game -> 25 lines
-		return (1);
-	line = skip_lines(xpm_fd);
-	y = -1;
-	while (++y < tex->height)
-	{
-		if (line == NULL)
-			break ;
-		x = -1;
-		while (++x < tex->width)
-		{
-			index = (int)line[x + 1] - 32;
-			tex->pixel_map[y][x] = tex->color_table[(int)line[x + 1] - 32];
-		}
-		free(line);
-		line = get_next_line(xpm_fd);
-	}
-	free(line);
-	// int i = -1;
-	// while (++i < tex->height)
-	// 	free(tex->image_data[i]);
-	// free(tex->image_data);
-	if (y < tex->height)
-		return (1);
-	return (0);
-}
-
-void	parse_xpm_file(const char *filename, t_game *game)
-{
-	// t_texture	texture;
-	int		xpm_fd;
-	// char	*line;
-
-	// if ((xpm_fd = get_fd(filename)) == -1)
-	xpm_fd = get_fd(filename);
-	if (xpm_fd == -1)
-	{
-		printf("Error\nFailed to open XPM file\n");
-		close_game(game);
-	}
-	// line = skip_lines(xpm_fd);
-	if (parse_xpm_header(xpm_fd, &game->texture))
-	{
-		printf("Error\nFailed to parse XPM file header\n");
-		close_game(game);
-	}
-	if (parse_xpm_color_table(xpm_fd, &game->texture))
-	{
-		printf("Error\nFailed to parse XPM color table\n");
-		close_game(game);
-	}
-	if (parse_xpm_pixel_map(xpm_fd, &game->texture))
-	{
-		printf("Error\nFailed to parse XPM pixel map\n");
-		close_game(game);
-	}
-	// return (texture);
 }
 
 // int	main(int argc, char **argv)
@@ -199,9 +127,9 @@ void	parse_xpm_file(const char *filename, t_game *game)
 // 	t_texture	tex;
 // 	t_game		game;
 // 	if (argc != 2)
-// 		return 1;
+// 		return (1);
 // 	parse_xpm_file(argv[1], &tex, &game);
-// 	return 0;
+// 	return (0);
 // }
 
 // #include <stdio.h>
@@ -222,7 +150,7 @@ void	parse_xpm_file(const char *filename, t_game *game)
 //     FILE *file = fopen(filename, "r");
 //     if (!file) {
 //         perror("Failed to open XPM file");
-//         return -1;
+//         return (-1);
 //     }
 //
 //     // Read the header
@@ -232,11 +160,13 @@ void	parse_xpm_file(const char *filename, t_game *game)
 //     while (fgets(line, sizeof(line), file)) {
 //         // Skip comment lines (lines starting with /* or //)
 //         if (line[0] == '/' || line[0] == '#')
-// 			continue;
+// 			continue ;
 //         if (line_count == 0)
 // 		{
-//             // Read the width, height, and number of colors from the first line
-//             sscanf(line, "%d %d %d", &image->width, &image->height, &image->num_colors);
+//             // Read the width, height,
+//	and number of colors from the first line
+//             sscanf(line, "%d %d %d", &image->width, &image->height,
+//	&image->num_colors);
 //         }
 //         else if (line_count <= image->num_colors) {
 //             // Read the color map
@@ -246,14 +176,16 @@ void	parse_xpm_file(const char *filename, t_game *game)
 //         }
 //         else {
 //             // Read the pixel data
-//             image->image_data = (char **)malloc(image->height * sizeof(char *));
-//             image->image_data[line_count - image->num_colors - 1] = strdup(line);
+//             image->image_data = (char **)malloc(image->height
+//		* sizeof(char *));
+//             image->image_data[line_count - image->num_colors
+//	- 1] = strdup(line);
 //         }
 //         line_count++;
 //     }
 //
 //     fclose(file);
-//     return 0;
+//     return (0);
 // }
 
 // void free_xpm(XPMImage *image) {
@@ -282,7 +214,7 @@ void	parse_xpm_file(const char *filename, t_game *game)
 //     } else {
 //         printf("Error reading XPM file.\n");
 //     }
-//     return 0;
+//     return (0);
 // }
 
 // int	***init_textures(void)

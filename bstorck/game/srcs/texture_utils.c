@@ -1,29 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   movement.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bstorck <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/25 09:02:21 by bstorck           #+#    #+#             */
+/*   Updated: 2025/11/25 09:02:26 by bstorck          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incs/game.h"
-
-char	*skip_lines(int xpm_fd)
-{
-	char	*line;
-
-	line = get_next_line(xpm_fd);
-	while (line != NULL)
-	{
-		if (line[0] == '/' || line[0] == '#')
-			free(line);
-		else if (ft_strncmp(line, "static const char", 17) == 0)
-			free(line);
-		else
-			break ;
-		line = get_next_line(xpm_fd);
-	}
-	return (line);
-}
-
-int	ft_isxdigit(int c)
-{
-	return (('0' <= c && c <= '9')
-		|| ('A' <= c && c <= 'Z')
-		|| ('a' <= c && c <= 'z'));
-}
 
 int	hex_char_to_int(char c)
 {
@@ -53,7 +40,6 @@ int	get_texture_y(int tex_pos, t_game *game)
 	int	tex_y;
 
 	tex_y = (int)tex_pos & (game->texture.height - 1);
-	// tex_y *= game->texture.height;
 	return (tex_y);
 }
 

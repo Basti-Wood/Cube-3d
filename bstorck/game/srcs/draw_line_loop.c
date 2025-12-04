@@ -47,8 +47,8 @@ int	get_texture_x(int o, t_game *g)
 		wall_x = g->hero.pos.y + g->hero.ray.perp_dist * g->hero.ray.dir.y;
 	wall_x -= floor(wall_x);
 	tex_x = (int)(wall_x * (double)g->texture[o].width);
-	if ((!g->hero.ray.side && g->hero.ray.dir.x < 0)
-		|| (g->hero.ray.side && g->hero.ray.dir.y > 0))
+	if ((!g->hero.ray.side && g->hero.ray.dir.x < 0) || (g->hero.ray.side
+			&& g->hero.ray.dir.y > 0))
 		tex_x = g->texture[o].width - tex_x - 1;
 	return (tex_x);
 }

@@ -114,7 +114,8 @@ void	dda(t_game *game)
 	}
 }
 
-// void	hit(double sideDistX, double sideDistY, double deltaDistX, double deltaDistX, int mapX, int mapY, int stepX, int stepY, int side)
+// void	hit(double sideDistX, double sideDistY, double deltaDistX,
+//		double deltaDistX, int mapX, int mapY, int stepX, int stepY, int side)
 // {
 // 	//jump to next map square, either in x-direction, or in y-direction
 // 	if (sideDistX < sideDistY)
@@ -131,5 +132,6 @@ void	dda(t_game *game)
 // 	}
 // 	//Check if ray has hit a wall
 // 	if (worldMap[mapX][mapY] == 0)
-// 		hit(sideDistX, sideDistY, deltaDistX, deltaDistX, mapX, mapY, stepX, stepY, side);
+// 		hit(sideDistX, sideDistY, deltaDistX, deltaDistX, mapX, mapY, stepX,
+//			stepY, side);
 // }

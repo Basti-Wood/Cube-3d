@@ -18,12 +18,12 @@ void	draw_floor_and_ceiling(t_game *game)
 	int	y;
 	int	color;
 
-	color = 0x303030;//0xdcdcdc;
+	color = 0x303030;
 	y = -1;
 	while (++y <= game->w_height)
 	{
 		if (y >= game->w_height / 2)
-			color = 0x707070;//0x836953;
+			color = 0x707070;
 		x = -1;
 		while (++x < game->w_width / 2)
 			put_pixel(x, y, color, game);

@@ -15,8 +15,6 @@
 void	draw_line(int screen_x, t_game *game)
 {
 	int		color;
-	// int		end_y;
-	// int		start_y;
 	int		line_height;
 	t_line	line;
 
@@ -28,21 +26,13 @@ void	draw_line(int screen_x, t_game *game)
 	if (line.end < 0)
 		line.end = 0;
 	draw_line_loop(screen_x, line, line_height, game);
-	// while (start_y <= end_y)
-	// {
-	// 	color = 0x0000FF;
-	// 	if (game->hero.ray.side)
-	// 		color /= 2;
-	// 	put_pixel(screen_x, start_y, color, game);
-	// 	start_y++;
-	// }
 }
 
 void	draw_walls(t_game *game)
 {
-	int			i;
-	t_ray		*ray;
-	t_hero		*hero;
+	int		i;
+	t_ray	*ray;
+	t_hero	*hero;
 
 	hero = &game->hero;
 	ray = &hero->ray;
@@ -76,14 +66,12 @@ void	draw_beam(double dir, t_game *game)
 
 void	draw_radar(t_game *game)
 {
-	t_hero		*hero;
-	double		dir;
-	double		delta_dir;
-	// double		fov;
-	int			i;
+	t_hero	*hero;
+	double	dir;
+	double	delta_dir;
+	int		i;
 
 	hero = &game->mini_hero;
-	// fov = 2 * atan(fabs(hero->plane.x + hero->plane.y) / fabs(hero->dir.x + hero->dir.y));
 	dir = atan2(hero->dir.y, hero->dir.x) - (hero->fov / 2);
 	delta_dir = hero->fov / ((double)game->w_width / 2);
 	i = -1;

@@ -16,7 +16,8 @@
 // {
 // 	// game->hero.plane.x -= 0.01;
 // 	// game->mini_hero.plane.x -= 0.01;
-// 	// printf("\tFOV = %i%%\n", (int)(fabs(game->hero.plane.x/game->hero.dir.y)*100));
+// 	// printf("\tFOV = %i%%\n",
+//	(int)(fabs(game->hero.plane.x/game->hero.dir.y)*100));
 // 	game->hero.move_speed /= 1.1;
 // 	game->hero.turn_speed /= 1.04;
 // 	game->mini_hero.move_speed /= 1.1;
@@ -33,7 +34,8 @@
 // {
 // 	// game->hero.plane.x += 0.01;
 // 	// game->mini_hero.plane.x += 0.01;
-// 	// printf("\tFOV = %i%%\n", (int)(fabs(game->hero.plane.x/game->hero.dir.y)*100));
+// 	// printf("\tFOV = %i%%\n",
+//		(int)(fabs(game->hero.plane.x/game->hero.dir.y)*100));
 // 	game->hero.move_speed *= 1.1;
 // 	game->hero.turn_speed *= 1.04;
 // 	game->mini_hero.move_speed *= 1.1;

@@ -31,7 +31,7 @@ void	free_all_textures(t_game *game)
 }
 
 void	free_map(t_game *game)
-	{
+{
 	if (game->map.grid)
 	{
 		free(game->map.grid);
