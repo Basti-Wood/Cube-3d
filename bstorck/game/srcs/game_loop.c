@@ -75,8 +75,8 @@ void	move_hero(t_hero *h, double move_x, double move_y, t_map *map)
 
 void	hero_action(t_hero *hero, t_map *map)
 {
-	double	cos_dir;
-	double	sin_dir;
+	double		cos_dir;
+	double		sin_dir;
 
 	cos_dir = cos(atan2(hero->dir.y, hero->dir.x));
 	sin_dir = sin(atan2(hero->dir.y, hero->dir.x));

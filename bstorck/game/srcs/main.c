@@ -23,7 +23,7 @@ static void	ft_swap(t_texture *a, t_texture *b)
 
 t_hero	init_hero(bool mini, t_game *g)
 {
-	t_hero	h;
+	t_hero		h;
 
 	h.mini = mini;
 	h.pos.x = 11;
@@ -94,6 +94,24 @@ int	main(void)
 		free_game_resources(&game);
 		return (1);
 	}
+	// init_presenter_window(&game);
+	// mlx_loop_hook(game.mlx, presenter_loop, &game);
+	// mlx_loop(game.mlx);
+	// ft_swap(&game.texture[0], &game.texture[1]);
+	// init_presenter_window(&game);
+	// mlx_loop_hook(game.mlx, presenter_loop, &game);
+	// mlx_loop(game.mlx);
+	// ft_swap(&game.texture[0], &game.texture[2]);
+	// init_presenter_window(&game);
+	// mlx_loop_hook(game.mlx, presenter_loop, &game);
+	// mlx_loop(game.mlx);
+	// ft_swap(&game.texture[0], &game.texture[3]);
+	// init_presenter_window(&game);
+	// mlx_loop_hook(game.mlx, presenter_loop, &game);
+	// mlx_loop(game.mlx);
+	// ft_swap(&game.texture[0], &game.texture[1]);
+	// ft_swap(&game.texture[1], &game.texture[2]);
+	// ft_swap(&game.texture[2], &game.texture[3]);
 	init_walker_window(&game);
 	mlx_loop_hook(game.mlx, walker_loop, &game);
 	mlx_loop(game.mlx);

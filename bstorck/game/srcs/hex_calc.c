@@ -14,8 +14,9 @@
 
 int	ft_isxdigit(int c)
 {
-	return (('0' <= c && c <= '9') || ('A' <= c && c <= 'Z') || ('a' <= c
-			&& c <= 'z'));
+	return (('0' <= c && c <= '9')
+		|| ('A' <= c && c <= 'Z')
+		|| ('a' <= c && c <= 'z'));
 }
 
 int	hex_char_to_int(char c)
