@@ -29,9 +29,13 @@ typedef enum e_dimensions
 	WIN_WIDTH = 1600,
 	WIN_HEIGHT = 1000,
 	NUM_TEXTURES = 4,
+	NUM_COLOR_SYMBOLS = 95,
 	TEXEL_SIZE = 16,
 	TILE_SIZE = 32,
-	BLOCK_SIZE = 16
+	BLOCK_SIZE = 16,
+	MAX_NODE_WIDTH = WIN_WIDTH - 40,
+	MAX_NODE_HEIGHT = WIN_HEIGHT - 40,
+	NUM_CARDINAL_DIRECTIONS = 4
 }	t_dimensions;
 
 typedef enum e_key_codes
@@ -39,6 +43,8 @@ typedef enum e_key_codes
 	WIN_X_BTN = 17,
 	KEY_ESC = 65307,
 	KEY_TAB = 65289,
+	KEY_SHIFT_L = 65505,
+	KEY_SHIFT_R = 65506,
 	// KEY_Q = 113,
 	KEY_W = 119,
 	KEY_E = 101,
@@ -70,7 +76,7 @@ typedef enum e_key_codes
 	KEY_LEFT = 65361,
 	// KEY_DOWN = 65364,
 	KEY_RIGHT = 65363,
-	KEY_SPACE = 32,
+	// KEY_SPACE = 32,
 	// MOUSE_WHEEL_UP = 4,
 	// MOUSE_WHEEL_DOWN = 5
 }	t_key_codes;
@@ -99,7 +105,7 @@ typedef struct s_texture
 	int	width;
 	int	height;
 	int	color_count;
-	int	color_table[95];
+	int	color_table[NUM_COLOR_SYMBOLS];
 	int	*pixel_map;
 }	t_texture;
 
@@ -146,7 +152,7 @@ typedef struct s_walker
 	t_square	start;
 	t_square	first;
 	t_square	last;
-	t_square	dir_set[4];
+	t_square	dir_set[NUM_CARDINAL_DIRECTIONS];
 	int			prev;
 }	t_walker;
 
@@ -155,6 +161,8 @@ typedef struct s_map
 	int			*grid;
 	int			width;
 	int			height;
+	int			tile_size;
+	t_square	node_size;
 }	t_map;
 
 typedef struct s_img
@@ -179,6 +187,7 @@ typedef struct s_game
 	double		half_screen;
 	t_map		map;
 	t_texture	texture[NUM_TEXTURES];
+	int			present_num;
 	t_walker	walker;
 	t_hero		hero;
 	t_hero		mini_hero;
@@ -186,6 +195,7 @@ typedef struct s_game
 
 t_texture	parse_xpm_file(const char *filename, t_game *game);
 int			get_fd(const char *filename);
+void		free_tokens(void **token);
 int			parse_color_table_line(char *line, t_texture *texture);
 int			parse_hex_color(const char *line);
 int			init_xpm_pixel_map(t_texture *texture);
@@ -198,6 +208,7 @@ void		init_walker_window(t_game *g);
 t_walker	init_walker(t_game *game);
 int			get_walker_start(t_game *game);
 int			move_walker(t_game *game);
+t_hero		init_hero(bool mini, t_game *g);
 int			walker_loop(t_game *game);
 void		draw_map(bool intro, t_game *game);
 t_square	get_offset(bool intro, t_game *game);
@@ -205,10 +216,12 @@ void		draw_walker(int x, int y, t_game *game);
 void		draw_filled_square(t_square s, int size, int color, t_game *game);
 void		ft_usleep(int usec);
 void		init_game_window(t_game *g);
-int			game_loop(t_game *game);
+void		set_node_size(t_game *game);
 int			key_press(int keycode, t_game *game);
 int			key_release(int keycode, t_game *game);
 int			hero_sonar(t_hero *hero, t_map *map);
+int			game_loop(t_game *game);
+void		hero_action(t_hero *hero, t_map *map);
 bool		collision(int x, int y, t_map *map);
 void		draw_floor_and_ceiling(t_game *game);
 void		draw_hero(bool intro, t_vector pos, int size, t_game *game);

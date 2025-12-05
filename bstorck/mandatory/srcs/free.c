@@ -12,6 +12,20 @@
 
 #include "../incs/game.h"
 
+void	free_tokens(void **token)
+{
+	int	i;
+
+	i = -1;
+	while (token[++i])
+	{
+		free(token[i]);
+		token[i] = NULL;
+	}
+	free(token);
+	token = NULL;
+}
+
 void	free_texture(t_texture *texture)
 {
 	if (texture->pixel_map)
@@ -59,11 +73,4 @@ void	free_game_resources(t_game *game)
 	}
 	free_all_textures(game);
 	free_map(game);
-}
-
-int	close_game(t_game *game)
-{
-	free_game_resources(game);
-	exit(0);
-	return (0);
 }

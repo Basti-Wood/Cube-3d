@@ -44,6 +44,7 @@ int	get_walker_start(t_game *game)
 			}
 		}
 	}
+	printf("Error\nWalker: Could not retrieve start tile");
 	return (1);
 }
 
@@ -55,12 +56,51 @@ t_square	get_offset(bool intro, t_game *game)
 	offset.y = 0;
 	if (!intro)
 	{
-		offset.x = (game->img.width - (game->map.width * TILE_SIZE)) / 2;
+		offset.x = (game->img.width - game->map.node_size.x) / 2;
 		if (offset.x < 0)
 			offset.x = 0;
-		offset.y = (game->img.height - (game->map.height * TILE_SIZE)) / 2;
+		offset.y = (game->img.height - game->map.node_size.y) / 2;
 		if (offset.y < 0)
 			offset.y = 0;
 	}
 	return (offset);
 }
+
+void	set_node_size(t_game *game)
+{
+	t_map	*m;
+
+	m = &game->map;
+	m->node_size.x = MAX_NODE_WIDTH;
+	m->node_size.y = MAX_NODE_HEIGHT;
+	if (m->width > (m->height * game->img.aspect_ratio))
+	{
+		m->tile_size = m->node_size.x / m->width;
+		m->node_size.x = m->tile_size * m->width;
+		m->node_size.y = m->tile_size * m->height;
+	}
+	else
+	{
+		m->tile_size = m->node_size.y / m->height;
+		m->node_size.x = m->tile_size * m->width;
+		m->node_size.y = m->tile_size * m->height;
+	}
+}
+
+// t_square	get_offset(bool intro, t_game *game)
+// {
+// 	t_square	offset;
+//
+// 	offset.x = 0;
+// 	offset.y = 0;
+// 	if (!intro)
+// 	{
+// 		offset.x = (game->img.width - (game->map.width * TILE_SIZE)) / 2;
+// 		if (offset.x < 0)
+// 			offset.x = 0;
+// 		offset.y = (game->img.height - (game->map.height * TILE_SIZE)) / 2;
+// 		if (offset.y < 0)
+// 			offset.y = 0;
+// 	}
+// 	return (offset);
+// }

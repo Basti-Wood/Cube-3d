@@ -43,7 +43,7 @@ int	key_press(int key, t_game *game)
 {
 	if (key == KEY_ESC)
 		close_game(game);
-	if (key == KEY_SPACE)
+	if (key == KEY_SHIFT_L || key == KEY_SHIFT_R)
 		game->skip_intro = true;
 	if (key == KEY_TAB)
 		game->display_map = true;
@@ -58,7 +58,7 @@ int	key_press(int key, t_game *game)
 		game->mini_hero.turn_dextral = true;
 	}
 	if (key == KEY_W || key == KEY_A || key == KEY_S || key == KEY_D)
-		key_press_extended(key, game);
+		return (key_press_extended(key, game));
 	return (0);
 }
 
@@ -91,7 +91,7 @@ int	key_release_extended(int key, t_game *game)
 
 int	key_release(int key, t_game *game)
 {
-	if (key == KEY_SPACE)
+	if (key == KEY_SHIFT_L || key == KEY_SHIFT_R)
 		game->skip_intro = false;
 	if (key == KEY_TAB)
 		game->display_map = false;
@@ -106,6 +106,6 @@ int	key_release(int key, t_game *game)
 		game->mini_hero.turn_dextral = false;
 	}
 	if (key == KEY_W || key == KEY_A || key == KEY_S || key == KEY_D)
-		key_release_extended(key, game);
+		return (key_release_extended(key, game));
 	return (0);
 }

@@ -42,7 +42,7 @@ void	draw_walker(int x, int y, t_game *game)
 	pos.y = y + 0.5;
 	clear_image(game);
 	draw_map(true, game);
-	draw_hero(true, pos, (TILE_SIZE / 2), game);
+	draw_hero(true, pos, (TILE_SIZE / 2) - 1, game);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.ptr, 0, 0);
 	ft_usleep(10000);
 }
@@ -52,16 +52,16 @@ void	draw_empty_square(t_square square, int size, int color, t_game *game)
 	int	i;
 
 	i = -1;
-	while (++i < size)
+	while (++i <= size)
 		put_pixel(square.x + i, square.y, color, game);
 	i = -1;
-	while (++i < size)
-		put_pixel(square.x + size - 1, square.y + i, color, game);
+	while (++i <= size)
+		put_pixel(square.x + size, square.y + i, color, game);
 	i = size;
-	while (--i)
-		put_pixel(square.x + i, square.y + size - 1, color, game);
+	while (i--)
+		put_pixel(square.x + i, square.y + size, color, game);
 	i = size;
-	while (--i)
+	while (i--)
 		put_pixel(square.x, square.y + i, color, game);
 }
 
@@ -71,10 +71,10 @@ void	draw_filled_square(t_square square, int size, int color, t_game *game)
 	int	j;
 
 	i = -1;
-	while (++i < size)
+	while (++i <= size)
 	{
 		j = -1;
-		while (++j < size)
+		while (++j <= size)
 			put_pixel(square.x + i, square.y + j, color, game);
 	}
 }
@@ -82,24 +82,22 @@ void	draw_filled_square(t_square square, int size, int color, t_game *game)
 void	draw_map(bool intro, t_game *game)
 {
 	t_square	square;
+	t_square	map;
 	t_square	offset;
-	int			x;
-	int			y;
 
 	offset = get_offset(intro, game);
-	y = -1;
-	while (++y < game->map.height)
+	map.y = -1;
+	while (++map.y < game->map.height)
 	{
-		x = -1;
-		while (++x < game->map.width)
+		map.x = -1;
+		while (++map.x < game->map.width)
 		{
-			if (collision(x, y, &game->map))
+			if (collision(map.x, map.y, &game->map))
 			{
-				square.x = x * TILE_SIZE + offset.x;
-				square.y = y * TILE_SIZE + offset.y;
-				if (intro)
-					draw_filled_square(square, TILE_SIZE, 0x0000FF, game);
-				draw_empty_square(square, TILE_SIZE, 0xFFFFFF, game);
+				square.x = map.x * game->map.tile_size + offset.x;
+				square.y = map.y * game->map.tile_size + offset.y;
+				draw_filled_square(square, game->map.tile_size, 0x007FAA, game);
+				draw_empty_square(square, game->map.tile_size, 0xFFFFFF, game);
 			}
 		}
 	}

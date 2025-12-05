@@ -60,8 +60,6 @@ t_square	get_offset(bool intro, t_game *game)
 		if (offset.x < 0 || game->img.width < offset.x)
 			offset.x = 0;
 		offset.y = 20;
-		if (offset.y < 0 || game->img.height < offset.y)
-			offset.y = 0;
 	}
 	return (offset);
 }
@@ -79,7 +77,7 @@ void	set_node_size(t_game *game)
 		m->node_size.x = m->tile_size * m->width;
 		m->node_size.y = m->tile_size * m->height;
 	}
-	else if (m->width < m->height)
+	else
 	{
 		m->tile_size = m->node_size.y / m->height;
 		m->node_size.x = m->tile_size * m->width;

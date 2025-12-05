@@ -33,7 +33,7 @@ void	draw_texture(t_game *g)
 	int			size;
 	t_texture	*t;
 
-	t = g->texture;
+	t = &g->texture[g->present_num];
 	size = TEXEL_SIZE;
 	p.x = 0;
 	p.y = 0;

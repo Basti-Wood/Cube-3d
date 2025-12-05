@@ -31,7 +31,7 @@ int	get_orientation(t_ray *ray)
 	return (0);
 }
 
-int	get_color(int o, t_square tx, t_game *g)
+static int	get_color(int o, t_square tx, t_game *g)
 {
 	return (g->texture[o].pixel_map[tx.y * g->texture[o].width + tx.x]);
 }

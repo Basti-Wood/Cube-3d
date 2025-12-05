@@ -48,10 +48,10 @@ int	hero_sonar(t_hero *hero, t_map *map)
 	int			i;
 
 	dir = atan2(hero->dir.y, hero->dir.x);
-	delta_dir = PI / 90;
+	delta_dir = PI / 45;
 	col = 0;
 	i = -1;
-	while (++i < 180)
+	while (++i < 90)
 	{
 		tmp_pos = sonar_pulse(dir, hero);
 		tmp_pos.x /= BLOCK_SIZE;

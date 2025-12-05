@@ -75,13 +75,11 @@ int	init_map(t_game *game)
 	int	x;
 	int	y;
 
+	game->map.width = 30;
+	game->map.height = 30;
 	game->map.grid = malloc(game->map.width * game->map.height * sizeof(int));
 	if (!game->map.grid)
-	{
-		free(game->map.grid);
-		game->map.grid = NULL;
 		return (1);
-	}
 	y = -1;
 	while (++y < game->map.height)
 	{

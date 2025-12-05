@@ -19,6 +19,7 @@ void	init_walker_window(t_game *g)
 	i = &g->img;
 	i->width = g->map.width * TILE_SIZE;
 	i->height = g->map.height * TILE_SIZE;
+	g->map.tile_size = TILE_SIZE;
 	g->win = mlx_new_window(g->mlx, i->width, i->height, "Map Checker");
 	i->ptr = mlx_new_image(g->mlx, i->width, i->height);
 	i->data = mlx_get_data_addr(i->ptr, &i->bpp, &i->size_line, &i->endian);
@@ -50,8 +51,6 @@ t_walker	init_walker(t_game *game)
 	walker.dir.x = 0;
 	walker.dir.y = 0;
 	walker.prev = 0;
-	get_walker_start(game);
-	move_walker(game);
 	walker.first = walker.dir_set[walker.prev];
 	return (walker);
 }
@@ -88,6 +87,7 @@ int	move_walker(t_game *game)
 			return (0);
 		}
 	}
+	printf("Error\nWalker: No vaild move");
 	return (1);
 }
 

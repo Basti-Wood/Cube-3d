@@ -59,9 +59,9 @@ void	draw_filled_square(t_square square, int size, int color, t_game *game)
 
 void	draw_map(bool intro, t_game *game)
 {
-	t_square	offset;
 	t_square	square;
 	t_square	map;
+	t_square	offset;
 
 	offset = get_offset(intro, game);
 	map.y = -1;

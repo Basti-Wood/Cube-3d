@@ -29,15 +29,15 @@ int	parse_xpm_header(int xpm_fd, t_texture *texture)
 		return (1);
 	token = ft_split(header, ' ');
 	free(header);
-	if (!token)
+	if (!token || !token[0] || !token[1] || !token[2])
+	{
+		free_tokens((void **)token);
 		return (1);
+	}
 	texture->width = ft_atoi(token[0]);
 	texture->height = ft_atoi(token[1]);
 	texture->color_count = ft_atoi(token[2]);
-	i = -1;
-	while (token[++i])
-		free(token[i]);
-	free(token);
+	free_tokens((void **)token);
 	return (0);
 }
 
@@ -53,7 +53,11 @@ int	parse_xpm_color_table(int xpm_fd, t_texture *texture)
 		if (line == NULL)
 			return (1);
 		if (parse_color_table_line(line, texture))
+		{
+			free(line);
+			line = NULL;
 			return (1);
+		}
 		line_count++;
 	}
 	return (0);
@@ -92,7 +96,7 @@ static void	handle_xpm_error(int xpm_fd, const char *message, t_game *game)
 	printf("Error\n%s\n", message);
 	if (xpm_fd != -1)
 		close(xpm_fd);
-	close_game(game);
+	free_game_resources(game);
 	exit(1);
 }
 

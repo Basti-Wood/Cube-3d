@@ -54,6 +54,7 @@ int	parse_color_table_line(char *line, t_texture *texture)
 		return (1);
 	color = parse_hex_color(&line[i]);
 	free(line);
+	line = NULL;
 	if (color == -1)
 		return (1);
 	texture->color_table[index] = color;
@@ -68,6 +69,8 @@ int	parse_pixel_map_line(char *line, int y, t_texture *tx)
 	x = -1;
 	while (++x < tx->width)
 	{
+		if (!line[x])
+			return (1);
 		index = (int)(line[x + 1]) - 32;
 		if (index < 0 || index >= 94)
 			return (1);

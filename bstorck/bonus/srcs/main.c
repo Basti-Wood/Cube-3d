@@ -49,8 +49,6 @@ int	init_game_resources(t_game *game)
 	game->img.ptr = NULL;
 	game->win = NULL;
 	game->mlx = NULL;
-	game->map.width = 27;
-	game->map.height = 32;
 	if (init_map(game))
 		return (1);
 	load_textures(game);

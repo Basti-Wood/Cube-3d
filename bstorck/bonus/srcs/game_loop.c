@@ -15,14 +15,12 @@
 void	init_game_window(t_game *g)
 {
 	t_img	*i;
-	t_map	*m;
 
-	m = &g->map;
 	i = &g->img;
 	i->width = WIN_WIDTH;
 	i->height = WIN_HEIGHT;
-	set_node_size(g);
 	i->aspect_ratio = (double)i->width / (double)i->height;
+	set_node_size(g);
 	g->half_screen = (double)i->height / 2;
 	g->win = mlx_new_window(g->mlx, i->width, i->height, "Picostein No D");
 	i->ptr = mlx_new_image(g->mlx, i->width, i->height);

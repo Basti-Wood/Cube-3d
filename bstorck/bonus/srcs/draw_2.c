@@ -53,8 +53,8 @@ void	draw_beam(double dir, t_game *game)
 	t_square	offset;
 	double		tile_size;
 
-	offset = get_offset(false, game);
 	tile_size = game->map.tile_size;
+	offset = get_offset(false, game);
 	beam.x = game->mini_hero.pos.x * tile_size;
 	beam.y = game->mini_hero.pos.y * tile_size;
 	while (!collision(beam.x / tile_size, beam.y / tile_size, &game->map))
