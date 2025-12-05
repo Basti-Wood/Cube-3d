@@ -20,14 +20,14 @@ void	draw_floor_and_ceiling(t_game *game)
 
 	color = 0x303030;
 	if (game->display_map)
-		color = (color >> 1) & 8355711;
+		color = (color >> 1) & 0x7F7F7F;
 	y = -1;
 	while (++y <= WIN_HEIGHT)
 	{
 		if (y >= WIN_HEIGHT / 2)
 			color = 0x707070;
 		if (game->display_map)
-			color = (color >> 1) & 8355711;
+			color = (color >> 1) & 0x7F7F7F;
 		x = -1;
 		while (++x < WIN_WIDTH)
 			put_pixel(x, y, color, game);
@@ -96,8 +96,8 @@ void	draw_map(bool intro, t_game *game)
 			{
 				square.x = map.x * game->map.tile_size + offset.x;
 				square.y = map.y * game->map.tile_size + offset.y;
-				draw_filled_square(square, game->map.tile_size, 0x007FAA, game);
-				draw_empty_square(square, game->map.tile_size, 0xFFFFFF, game);
+				draw_filled_square(square, game->map.tile_size, TILE_CLR, game);
+				draw_empty_square(square, game->map.tile_size, WHITE, game);
 			}
 		}
 	}

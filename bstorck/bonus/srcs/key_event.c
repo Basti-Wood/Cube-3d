@@ -58,7 +58,7 @@ int	key_press(int key, t_game *game)
 {
 	if (key == KEY_ESC)
 		close_game(game);
-	if (key == KEY_TAB)
+	if (key == KEY_SHIFT_L || key == KEY_SHIFT_R)
 		game->skip_intro = true;
 	if (key == KEY_LEFT || key == KEY_J)
 	{
@@ -104,7 +104,7 @@ int	key_release_extended(int key, t_game *game)
 
 int	key_release(int key, t_game *game)
 {
-	if (key == KEY_TAB)
+	if (key == KEY_SHIFT_L || key == KEY_SHIFT_R)
 		game->skip_intro = false;
 	if (key == KEY_LEFT || key == KEY_J)
 	{

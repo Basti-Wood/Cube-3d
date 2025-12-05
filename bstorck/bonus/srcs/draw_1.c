@@ -74,8 +74,8 @@ void	draw_map(bool intro, t_game *game)
 			{
 				square.x = map.x * game->map.tile_size + offset.x;
 				square.y = map.y * game->map.tile_size + offset.y;
-				draw_filled_square(square, game->map.tile_size, 0x007FAA, game);
-				draw_empty_square(square, game->map.tile_size, 0xFFFFFF, game);
+				draw_filled_square(square, game->map.tile_size, TILE_CLR, game);
+				draw_empty_square(square, game->map.tile_size, WHITE, game);
 			}
 		}
 	}

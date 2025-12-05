@@ -50,13 +50,13 @@ static int	get_color(int x, int y, int tex_num, t_game *game)
 		& (game->texture[tex_num].height - 1);
 	color = game->texture[tex_num].pixel_map[f->tex.y
 		* game->texture[tex_num].width + f->tex.x];
-	color = (color >> 1) & 8355711;
+	color = (color >> 1) & 0x7F7F7F;
 	if (tex_num == 5
 		&& ((game->img.width - game->map.node_size.x - 20) <= x)
 		&& (x <= (game->img.width - 20))
 		&& (game->img.height - game->map.node_size.y - 21) <= y
 		&& (y <= (game->img.height - 21)))
-		color = (color >> 1) & 8355711;
+		color = (color >> 1) & 0x7F7F7F;
 	return (color);
 }
 
@@ -80,7 +80,7 @@ static void	set_floor_values(int y, t_game *game)
 	f->pos.y = game->hero.pos.y + f->dist_row * f->ray_dir_start.y;
 }
 
-void	draw_floor_and_ceiling(t_game *game)
+static void	draw_ceiling(t_game *game)
 {
 	int		x;
 	int		y;
@@ -88,7 +88,30 @@ void	draw_floor_and_ceiling(t_game *game)
 	t_floor	*f;
 
 	f = &game->floor;
-	y = -1;
+	y = game->half_screen;
+	while (++y < game->img.height)
+	{
+		set_floor_values(y, game);
+		x = -1;
+		while (++x < game->img.width)
+		{
+			color = get_color(x, y, 5, game);
+			put_pixel(x, game->img.height - y - 1, color, game);
+			f->pos.x += f->step.x;
+			f->pos.y += f->step.y;
+		}
+	}
+}
+
+static void	draw_floor(t_game *game)
+{
+	int		x;
+	int		y;
+	int		color;
+	t_floor	*f;
+
+	f = &game->floor;
+	y = game->half_screen;
 	while (++y < game->img.height)
 	{
 		set_floor_values(y, game);
@@ -97,13 +120,33 @@ void	draw_floor_and_ceiling(t_game *game)
 		{
 			color = get_color(x, y, 1, game);
 			put_pixel(x, y, color, game);
-			color = get_color(x, y, 5, game);
-			put_pixel(x, game->img.height - y - 1, color, game);
 			f->pos.x += f->step.x;
 			f->pos.y += f->step.y;
 		}
 	}
 }
+
+void	draw_floor_and_ceiling(t_game *game)
+{
+	draw_floor(game);
+	draw_ceiling(game);
+}
+	// y = -1;
+	// while (++y < game->img.height)
+	// {
+	// 	set_floor_values(y, game);
+	// 	x = -1;
+	// 	while (++x < game->img.width)
+	// 	{
+	// 		color = get_color(x, y, 1, game);
+	// 		put_pixel(x, y, color, game);
+	// 		color = get_color(x, y, 5, game);
+	// 		put_pixel(x, game->img.height - y - 1, color, game);
+	// 		f->pos.x += f->step.x;
+	// 		f->pos.y += f->step.y;
+	// 	}
+	// }
+// }
 
 //	 f->tex.x = (int)(game->texture[4].width * (f->pos.x - (int)f->pos.x))
 //		& (game->texture[4].width - 1);
@@ -122,5 +165,5 @@ void	draw_floor_and_ceiling(t_game *game)
 //		&& (x <= (game->img.width - 20))
 //		&& (game->img.height - game->map.node_size.y - 21) <= y
 //		&& (y <= (game->img.height - 21)))
-//		color = (color >> 1) & 8355711;
+//		color = (color >> 1) & 0x7F7F7F;
 //	 put_pixel(x, game->img.height - y - 1, color, game);

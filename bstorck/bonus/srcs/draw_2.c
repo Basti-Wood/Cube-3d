@@ -59,7 +59,7 @@ void	draw_beam(double dir, t_game *game)
 	beam.y = game->mini_hero.pos.y * tile_size;
 	while (!collision(beam.x / tile_size, beam.y / tile_size, &game->map))
 	{
-		put_pixel(beam.x + offset.x, beam.y + offset.y, 0xC8C800, game);
+		put_pixel(beam.x + offset.x, beam.y + offset.y, BEAM_CLR, game);
 		beam.x += cos(dir);
 		beam.y += sin(dir);
 	}
@@ -85,18 +85,22 @@ void	draw_radar(t_game *game)
 
 void	draw_hero(bool intro, t_vector pos, int size, t_game *game)
 {
+	int			color;
 	t_square	square;
 	t_square	offset;
 
+	color = HERO_CLR;
+	if (intro)
+		color = WALKER_CLR;
 	offset = get_offset(intro, game);
 	square.x = pos.x * game->map.tile_size + offset.x;
 	square.y = pos.y * game->map.tile_size + offset.y;
-	draw_filled_square(square, size, 0x00FF7F, game);
+	draw_filled_square(square, size, color, game);
 	square.x = pos.x * game->map.tile_size + offset.x - size;
-	draw_filled_square(square, size, 0x00FF7F, game);
+	draw_filled_square(square, size, color, game);
 	square.x = pos.x * game->map.tile_size + offset.x;
 	square.y = pos.y * game->map.tile_size + offset.y - size;
-	draw_filled_square(square, size, 0x00FF7F, game);
+	draw_filled_square(square, size, color, game);
 	square.x = pos.x * game->map.tile_size + offset.x - size;
-	draw_filled_square(square, size, 0x00FF7F, game);
+	draw_filled_square(square, size, color, game);
 }

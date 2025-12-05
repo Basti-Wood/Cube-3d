@@ -41,9 +41,9 @@ int	game_loop(t_game *game)
 	draw_walls(game);
 	if (game->display_map)
 	{
+		draw_radar(game);
 		draw_map(false, game);
 		draw_hero(false, game->mini_hero.pos, game->map.tile_size / 6, game);
-		draw_radar(game);
 	}
 	mlx_put_image_to_window(game->mlx, game->win, game->img.ptr, 0, 0);
 	return (0);

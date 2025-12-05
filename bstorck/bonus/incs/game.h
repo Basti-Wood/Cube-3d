@@ -24,16 +24,27 @@
 # include <sys/time.h>
 # include <fcntl.h>
 
+typedef enum e_colors
+{
+	HERO_CLR = 0X00FFFF,
+	//HERO_CLR = 0x00FF7F,
+	WALKER_CLR = 0xC8C800,
+	TILE_CLR = 0x007777,
+	//TILE_CLR = 0x007FAA,
+	WHITE = 0xFFFFFF,
+	BEAM_CLR = 0xC8C800
+}	t_colors;
+
 typedef enum e_dimensions
 {
-	WIN_WIDTH = 640,
-	WIN_HEIGHT = 400,
+	WIN_WIDTH = 1280,
+	WIN_HEIGHT = 800,
 	NUM_TEXTURES = 6,
 	NUM_COLOR_SYMBOLS = 95,
 	TEXEL_SIZE = 16,
 	TILE_SIZE = 32,
 	BLOCK_SIZE = 16,
-	MAX_NODE_SIZE = 160,
+	MAX_NODE_SIZE = WIN_HEIGHT * 33/100,
 	NUM_CARDINAL_DIRECTIONS = 4
 }	t_dimensions;
 
@@ -41,7 +52,9 @@ typedef enum e_key_codes
 {
 	WIN_X_BTN = 17,
 	KEY_ESC = 65307,
-	KEY_TAB = 65289,
+	// KEY_TAB = 65289,
+	KEY_SHIFT_L = 65505,
+	KEY_SHIFT_R = 65506,
 	// KEY_Q = 113,
 	KEY_W = 119,
 	KEY_E = 101,
@@ -234,7 +247,6 @@ int			game_loop(t_game *game);
 void		hero_action(t_hero *hero, t_map *map);
 bool		collision(int x, int y, t_map *map);
 void		draw_floor_and_ceiling(t_game *game);
-// void		draw_floor(t_game *game);
 void		draw_hero(bool intro, t_vector pos, int size, t_game *game);
 void		draw_radar(t_game *game);
 void		init_ray(int i, t_hero *hero);

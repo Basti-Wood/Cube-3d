@@ -24,6 +24,17 @@
 # include <sys/time.h>
 # include <fcntl.h>
 
+typedef enum e_colors
+{
+	HERO_CLR = 0X00FFFF,
+	//HERO_CLR = 0x00FF7F,
+	WALKER_CLR = 0xC8C800,
+	TILE_CLR = 0x007777,
+	//TILE_CLR = 0x007FAA,
+	WHITE = 0xFFFFFF,
+	BEAM_CLR = 0xC8C800
+}	t_colors;
+
 typedef enum e_dimensions
 {
 	WIN_WIDTH = 1600,

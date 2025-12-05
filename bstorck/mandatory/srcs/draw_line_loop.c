@@ -70,9 +70,9 @@ void	draw_line_loop(int screen_x, double h2, t_line line, t_game *game)
 		tex.y = (int)tx_pos & (game->texture->height - 1);
 		color = get_color(orientation, tex, game);
 		if (game->display_map)
-			color = (color >> 1) & 8355711;
+			color = (color >> 1) & 0x7F7F7F;
 		if (game->hero.ray.side)
-			color = (color >> 1) & 8355711;
+			color = (color >> 1) & 0x7F7F7F;
 		put_pixel(screen_x, line.start, color, game);
 		tx_pos += step;
 		line.start++;
