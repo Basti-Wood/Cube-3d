@@ -18,13 +18,13 @@ static int	open_and_validate_file(const char *filename)
 	return (fd);
 }
 
-static int	parse_config_and_validate(int fd, t_config *config,
+static int	parse_config_and_validate(int fd, t_game *game,
 	char **first_map_line)
 {
 	int	result;
 
-	result = parse_config_section(fd, config, first_map_line);
-	if (result == -2 || !config_complete(config))
+	result = parse_config_section(fd, game, first_map_line);
+	if (result == -2 || !config_complete(game))
 	{
 		printf("Error: Incomplete configuration\n");
 		if (*first_map_line)
@@ -39,20 +39,19 @@ static int	parse_config_and_validate(int fd, t_config *config,
 	return (1);
 }
 
-static int	setup_and_validate_map(int fd, char *first_line, t_config *config,
-	t_map *map)
+static int	setup_and_validate_map(int fd, char *first_line, t_game *game)
 {
-	if (!setup_map(fd, first_line, map))
+	if (!setup_map(fd, first_line, &game->map))
 	{
-		free_config(config);
-		if (map->grid)
-			free_map(map);
+		free_texture_paths(game);
+		if (game->map.grid)
+			free_map(&game->map);
 		return (0);
 	}
 	return (1);
 }
 
-int	parse_cub_file(const char *filename, t_config *config, t_map *map)
+int	parse_cub_file(const char *filename, t_game *game)
 {
 	int		fd;
 	char	*first_map_line;
@@ -60,14 +59,14 @@ int	parse_cub_file(const char *filename, t_config *config, t_map *map)
 	fd = open_and_validate_file(filename);
 	if (fd < 0)
 		return (0);
-	init_config(config);
-	if (!parse_config_and_validate(fd, config, &first_map_line))
+	init_game_for_parsing(game);
+	if (!parse_config_and_validate(fd, game, &first_map_line))
 	{
 		close(fd);
-		free_config(config);
+		free_texture_paths(game);
 		return (0);
 	}
-	if (!setup_and_validate_map(fd, first_map_line, config, map))
+	if (!setup_and_validate_map(fd, first_map_line, game))
 	{
 		close(fd);
 		return (0);

@@ -2,20 +2,14 @@
 
 static void	convert_spaces_to_zeros(t_map *map)
 {
-	int	y;
-	int	x;
+	int	i;
 
-	y = 0;
-	while (y < map->height)
+	i = 0;
+	while (i < map->height * map->width)
 	{
-		x = 0;
-		while (x < map->width)
-		{
-			if (map->grid[y][x] == (int)' ')
-				map->grid[y][x] = (int)'0';
-			x++;
-		}
-		y++;
+		if (map->grid[i] == (int)' ')
+			map->grid[i] = 0;
+		i++;
 	}
 }
 
@@ -37,7 +31,7 @@ static void	copy_temp_to_grid(char **temp_lines, t_map *map)
 	i = 0;
 	while (i < map->height)
 	{
-		copy_line_to_grid(temp_lines[i], map->grid[i]);
+		copy_line_to_grid(temp_lines[i], &map->grid[i * map->width]);
 		i++;
 	}
 }

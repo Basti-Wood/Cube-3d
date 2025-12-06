@@ -7,13 +7,13 @@ void	print_map_row(const int *row, int width)
 	x = 0;
 	while (x < width)
 	{
-		if (row[x] == (int)'1')
+		if (row[x] == 1)
 			printf("█");
-		else if (row[x] == (int)'0')
+		else if (row[x] == 0)
 			printf("·");
-		else if (row[x] == (int)'N' || row[x] == (int)'S' || row[x] == (int)'E' || row[x] == (int)'W')
+		else if (row[x] == 'N' || row[x] == 'S' || row[x] == 'E' || row[x] == 'W')
 			printf("\033[1;32m%c\033[0m", (char)row[x]);
-		else if (row[x] == (int)' ')
+		else if (row[x] == ' ')
 			printf(" ");
 		else
 			printf("?");
@@ -21,7 +21,7 @@ void	print_map_row(const int *row, int width)
 	}
 }
 
-void	display_map(t_map *map, t_config *config)
+void	display_map(t_game *game)
 {
 	int	y;
 
@@ -31,26 +31,25 @@ void	display_map(t_map *map, t_config *config)
 	printf("╚════════════════════════════════════════════════════════════╝\n\n");
 	
 	printf("📁 Textures:\n");
-	printf("   North: %s\n", config->north_tex);
-	printf("   South: %s\n", config->south_tex);
-	printf("   East:  %s\n", config->east_tex);
-	printf("   West:  %s\n", config->west_tex);
+	printf("   North: %s\n", game->texture_paths[0]);
+	printf("   South: %s\n", game->texture_paths[1]);
+	printf("   West:  %s\n", game->texture_paths[2]);
+	printf("   East:  %s\n", game->texture_paths[3]);
 	
 	printf("\n🎨 Colors:\n");
-	printf("   Floor:   RGB(%d, %d, %d)\n", config->floor_r, config->floor_g, config->floor_b);
-	printf("   Ceiling: RGB(%d, %d, %d)\n", config->ceiling_r, config->ceiling_g, config->ceiling_b);
+	printf("   Floor:   0x%06X\n", game->floor_color);
+	printf("   Ceiling: 0x%06X\n", game->ceiling_color);
 	
-	printf("\n🗺️  Map: %dx%d\n", map->width, map->height);
-	printf("   Player at (%d, %d) facing '%c'\n", map->player.x, map->player.y, map->player_dir);
+	printf("\n🗺️  Map: %dx%d\n", game->map.width, game->map.height);
+	printf("   Player at (%d, %d) facing '%c'\n", game->map.player.x, game->map.player.y, game->map.player_dir);
 	
 	printf("\n   Legend: █ = Wall  · = Floor  \033[1;32mN/S/E/W\033[0m = Player\n\n");
 	
 	y = 0;
-	while (y < map->height)
+	while (y < game->map.height)
 	{
 		printf("   ");
-		if (map->grid[y])
-			print_map_row(map->grid[y], map->width);
+		print_map_row(&game->map.grid[y * game->map.width], game->map.width);
 		printf("\n");
 		y++;
 	}

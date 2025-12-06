@@ -6,9 +6,9 @@ static int	get_cell(t_map *map, int x, int y)
 		return ((int)' ');
 	if (x < 0 || x >= map->width)
 		return ((int)' ');
-	if (!map->grid[y])
+	if (!map->grid)
 		return ((int)' ');
-	return (map->grid[y][x]);
+	return (map->grid[y * map->width + x]);
 }
 
 static int	check_direction_x(t_map *map, int x, int y, int dx)
@@ -20,7 +20,7 @@ static int	check_direction_x(t_map *map, int x, int y, int dx)
 	while (nx >= 0 && nx < map->width)
 	{
 		cell = get_cell(map, nx, y);
-		if (cell == (int)'1')
+		if (cell == 1)
 			return (1);
 		nx += dx;
 	}
@@ -36,7 +36,7 @@ static int	check_direction_y(t_map *map, int x, int y, int dy)
 	while (ny >= 0 && ny < map->height)
 	{
 		cell = get_cell(map, x, ny);
-		if (cell == (int)'1')
+		if (cell == 1)
 			return (1);
 		ny += dy;
 	}
@@ -58,7 +58,7 @@ static int	check_zero_enclosed(t_map *map, int x, int y)
 
 static int	is_player_or_empty(int cell)
 {
-	return (cell == (int)'0' || cell == (int)'N' || cell == (int)'S'
+	return (cell == 0 || cell == (int)'N' || cell == (int)'S'
 		|| cell == (int)'E' || cell == (int)'W');
 }
 

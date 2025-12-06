@@ -1,22 +1,43 @@
 #include "../../includes/cub3d.h"
 
-void	init_config(t_config *config)
+static void	init_config(t_game *game)
 {
-	config->north_tex = NULL;
-	config->south_tex = NULL;
-	config->east_tex = NULL;
-	config->west_tex = NULL;
-	config->floor_color = -1;
-	config->ceiling_color = -1;
+	int	i;
+
+	i = 0;
+	while (i < NUM_TEXTURES)
+	{
+		game->texture[i].pixel_map = NULL;
+		game->texture_paths[i] = NULL;
+		i++;
+	}
+	game->floor_color = -1;
+	game->ceiling_color = -1;
 }
 
-int	config_complete(t_config *config)
+void	init_game_for_parsing(t_game *game)
 {
-	if (!config->north_tex || !config->south_tex)
-		return (0);
-	if (!config->east_tex || !config->west_tex)
-		return (0);
-	if (config->floor_color < 0 || config->ceiling_color < 0)
+	init_config(game);
+	game->map.grid = NULL;
+	game->map.width = 0;
+	game->map.height = 0;
+	game->map.player.x = -1;
+	game->map.player.y = -1;
+	game->map.player_dir = '\0';
+}
+
+int	config_complete(t_game *game)
+{
+	int	i;
+
+	i = 0;
+	while (i < NUM_TEXTURES)
+	{
+		if (!game->texture_paths[i])
+			return (0);
+		i++;
+	}
+	if (game->floor_color < 0 || game->ceiling_color < 0)
 		return (0);
 	return (1);
 }

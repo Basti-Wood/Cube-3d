@@ -1,47 +1,27 @@
 #include "../../includes/cub3d.h"
 
-static void	init_map_array(int **map, int height, int width)
+static void	init_map_array(int *map, int height, int width)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	while (i < height)
+	while (i < height * width)
 	{
-		map[i] = malloc(sizeof(int) * (width + 1));
-		if (!map[i])
-		{
-			while (--i >= 0)
-				free(map[i]);
-			return ;
-		}
-		j = 0;
-		while (j < width)
-		{
-			map[i][j] = (int)' ';
-			j++;
-		}
-		map[i][width] = (int) '\0';
+		map[i] = (int)' ';
 		i++;
 	}
-	map[i] = NULL;
 }
 
-int	**allocate_map(int height, int width)
+int	*allocate_map(int height, int width)
 {
-	int	**map;
+	int	*map;
 
 	if (height <= 0 || width <= 0)
 		return (NULL);
-	map = malloc(sizeof(int *) * (height + 1));
+	map = malloc(sizeof(int) * (height * width));
 	if (!map)
 		return (NULL);
 	init_map_array(map, height, width);
-	if (!map[0])
-	{
-		free(map);
-		return (NULL);
-	}
 	return (map);
 }
 

@@ -1,40 +1,44 @@
 #include "../../includes/cub3d.h"
 
-static int	handle_floor_color(char *value, t_config *config)
+static int	handle_floor_color(char *value, t_game *game)
 {
-	if (config->floor_color != -1)
+	int	r;
+	int	g;
+	int	b;
+
+	if (game->floor_color != -1)
 	{
 		printf("Error: Duplicate F identifier\n");
 		return (0);
 	}
-	if (!parse_color(value, &config->floor_r,
-			&config->floor_g, &config->floor_b))
+	if (!parse_color(value, &r, &g, &b))
 		return (0);
-	config->floor_color = rgb_to_int(config->floor_r,
-			config->floor_g, config->floor_b);
+	game->floor_color = rgb_to_int(r, g, b);
 	return (1);
 }
 
-static int	handle_ceiling_color(char *value, t_config *config)
+static int	handle_ceiling_color(char *value, t_game *game)
 {
-	if (config->ceiling_color != -1)
+	int	r;
+	int	g;
+	int	b;
+
+	if (game->ceiling_color != -1)
 	{
 		printf("Error: Duplicate C identifier\n");
 		return (0);
 	}
-	if (!parse_color(value, &config->ceiling_r,
-			&config->ceiling_g, &config->ceiling_b))
+	if (!parse_color(value, &r, &g, &b))
 		return (0);
-	config->ceiling_color = rgb_to_int(config->ceiling_r,
-			config->ceiling_g, config->ceiling_b);
+	game->ceiling_color = rgb_to_int(r, g, b);
 	return (1);
 }
 
-int	parse_color_identifier(char *id, char *value, t_config *config)
+int	parse_color_identifier(char *id, char *value, t_game *game)
 {
 	if (ft_strncmp(id, "F", 2) == 0)
-		return (handle_floor_color(value, config));
+		return (handle_floor_color(value, game));
 	else if (ft_strncmp(id, "C", 2) == 0)
-		return (handle_ceiling_color(value, config));
+		return (handle_ceiling_color(value, game));
 	return (-1);
 }

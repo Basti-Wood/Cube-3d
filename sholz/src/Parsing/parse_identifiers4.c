@@ -1,6 +1,8 @@
 #include "../../includes/cub3d.h"
 
-int	parse_identifier(char *line, t_config *config)
+int	process_identifier_value(char *id, char *value, t_game *game);
+
+int	parse_identifier(char *line, t_game *game)
 {
 	char	*line_copy;
 	char	*id;
@@ -24,7 +26,7 @@ int	parse_identifier(char *line, t_config *config)
 		printf("Error: Missing value for identifier: %s\n", id);
 		return (0);
 	}
-	result = process_identifier_value(id, value, config);
+	result = process_identifier_value(id, value, game);
 	free(line_copy);
 	return (result);
 }

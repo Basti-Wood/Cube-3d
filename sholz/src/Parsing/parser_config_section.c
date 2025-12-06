@@ -1,6 +1,6 @@
 #include "../../includes/cub3d.h"
 
-static int	handle_config_line(char *line, t_config *config)
+static int	handle_config_line(char *line, t_game *game)
 {
 	char	*trimmed;
 
@@ -9,7 +9,7 @@ static int	handle_config_line(char *line, t_config *config)
 		return (1);
 	if (is_map_line(trimmed))
 		return (-1);
-	if (!parse_identifier(trimmed, config))
+	if (!parse_identifier(trimmed, game))
 	{
 		printf("Error: Failed to parse configuration line\n");
 		return (0);
@@ -17,12 +17,12 @@ static int	handle_config_line(char *line, t_config *config)
 	return (1);
 }
 
-static int	process_config_line(char *line, t_config *config, int *found_map,
+static int	process_config_line(char *line, t_game *game, int *found_map,
 	char **first_map_line)
 {
 	int	result;
 
-	result = handle_config_line(line, config);
+	result = handle_config_line(line, game);
 	if (result == -1)
 	{
 		*found_map = 1;
@@ -38,7 +38,7 @@ static int	process_config_line(char *line, t_config *config, int *found_map,
 	return (1);
 }
 
-int	parse_config_section(int fd, t_config *config, char **first_map_line)
+int	parse_config_section(int fd, t_game *game, char **first_map_line)
 {
 	char	*line;
 	int		result;
@@ -49,7 +49,7 @@ int	parse_config_section(int fd, t_config *config, char **first_map_line)
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		result = process_config_line(line, config, &found_map, first_map_line);
+		result = process_config_line(line, game, &found_map, first_map_line);
 		if (result == -1 || result == -2)
 			break ;
 		line = get_next_line(fd);

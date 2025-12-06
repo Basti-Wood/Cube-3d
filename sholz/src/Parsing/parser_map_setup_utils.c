@@ -7,7 +7,12 @@ void	copy_line_to_grid(char *cleaned, int *grid_row)
 	j = 0;
 	while (cleaned[j])
 	{
-		grid_row[j] = (int)cleaned[j];
+		if (cleaned[j] == '0')
+			grid_row[j] = 0;
+		else if (cleaned[j] == '1')
+			grid_row[j] = 1;
+		else
+			grid_row[j] = (int)cleaned[j];
 		j++;
 	}
 }

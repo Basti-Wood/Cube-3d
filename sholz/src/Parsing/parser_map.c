@@ -20,7 +20,7 @@ static int	process_map_line(t_map *map, char *line, int *i, int *max_width)
 	j = 0;
 	while (cleaned[j])
 	{
-		map->grid[*i][j] = (int)cleaned[j];
+		map->grid[(*i) * map->width + j] = (int)cleaned[j];
 		j++;
 	}
 	free(cleaned);

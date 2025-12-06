@@ -1,5 +1,12 @@
 #include "../includes/cub3d.h"
 
+int	close_game(t_game *game)
+{
+	free_game_resources(game);
+	exit(0);
+	return (0);
+}
+
 int	main(int argc, char **argv)
 {
 	t_game		game;
@@ -9,27 +16,26 @@ int	main(int argc, char **argv)
 		printf("Usage: ./cub3d <map.cub>\n");
 		return (1);
 	}
-	init_game(&game);
-	if (!parse_cub_file(argv[1], &game.config, &game.map))
+	if (!parse_cub_file(argv[1], &game))
 	{
 		printf("Error: Failed to parse map\n");
 		return (1);
 	}
-	if (!init_mlx(&game))
+	
+	// Display parsed map information
+	display_map(&game);
+	
+	// Start the raycasting game
+	if (start_game(&game))
 	{
-		free_config(&game.config);
+		printf("Error: Failed to start game\n");
+		free_texture_paths(&game);
 		free_map(&game.map);
 		return (1);
 	}
-	if (!init_image(&game))
-	{
-		close_game(&game);
-		return (1);
-	}
-	display_map(&game.map, &game.config);
-	init_player(&game);
-	init_game_logic(&game);
-	setup_hooks(&game);
-	mlx_loop(game.mlx);
+	
+	// Cleanup
+	free_texture_paths(&game);
+	free_map(&game.map);
 	return (0);
 }

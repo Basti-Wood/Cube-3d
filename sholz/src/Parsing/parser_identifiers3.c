@@ -44,13 +44,13 @@ char	*get_value(char *rest)
 	return (trim_whitespace(start));
 }
 
-int	process_identifier_value(char *id, char *value, t_config *config)
+int	process_identifier_value(char *id, char *value, t_game *game)
 {
 	int	result;
 
-	result = parse_texture_identifier(id, value, config);
+	result = parse_texture_identifier(id, value, game);
 	if (result == -1)
-		result = parse_color_identifier(id, value, config);
+		result = parse_color_identifier(id, value, game);
 	if (result == -1)
 	{
 		printf("Error: Unknown identifier: %s\n", id);

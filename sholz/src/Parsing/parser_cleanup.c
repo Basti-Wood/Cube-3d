@@ -1,6 +1,6 @@
 #include "../../includes/cub3d.h"
 
-static void	free_texture(char **texture)
+static void	free_texture_path_internal(char **texture)
 {
 	if (*texture)
 	{
@@ -9,33 +9,16 @@ static void	free_texture(char **texture)
 	}
 }
 
-void	free_config(t_config *config)
-{
-	if (!config)
-		return ;
-	free_texture(&config->north_tex);
-	free_texture(&config->south_tex);
-	free_texture(&config->east_tex);
-	free_texture(&config->west_tex);
-}
-
-static void	free_grid_row(int **row)
-{
-	if (*row)
-	{
-		free(*row);
-		*row = NULL;
-	}
-}
-
-static void	free_grid_rows(t_map *map)
+void	free_texture_paths(t_game *game)
 {
 	int	i;
 
+	if (!game)
+		return ;
 	i = 0;
-	while (i < map->height && map->grid[i])
+	while (i < NUM_TEXTURES)
 	{
-		free_grid_row(&map->grid[i]);
+		free_texture_path_internal(&game->texture_paths[i]);
 		i++;
 	}
 }
@@ -44,7 +27,6 @@ void	free_map(t_map *map)
 {
 	if (!map || !map->grid)
 		return ;
-	free_grid_rows(map);
 	free(map->grid);
 	map->grid = NULL;
 }

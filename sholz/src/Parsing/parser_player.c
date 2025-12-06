@@ -31,10 +31,10 @@ static void	search_row(t_map *map, int y)
 	x = 0;
 	while (x < map->width)
 	{
-		if (is_player_char((char)map->grid[y][x]))
+		if (is_player_char((char)map->grid[y * map->width + x]))
 		{
 			if (check_duplicate_player(map))
-				set_player_position(map, x, y, (char)map->grid[y][x]);
+				set_player_position(map, x, y, (char)map->grid[y * map->width + x]);
 		}
 		x++;
 	}
@@ -54,5 +54,5 @@ void	find_player(t_map *map)
 		y++;
 	}
 	if (map->player.x != -1 && map->player.y != -1)
-		map->grid[map->player.y][map->player.x] = (int)'0';
+		map->grid[map->player.y * map->width + map->player.x] = 0;
 }
