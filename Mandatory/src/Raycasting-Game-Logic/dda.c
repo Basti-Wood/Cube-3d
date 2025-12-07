@@ -23,8 +23,17 @@ double	get_delta_dist(double dir)
 	return (delta_dist);
 }
 
-static void	init_ray_step_and_side_dist(t_ray *ray, t_hero *hero)
+void	init_ray(t_hero *hero)
 {
+	t_ray	*ray;
+
+	ray = &hero->ray;
+	ray->map.x = (int)hero->pos.x;
+	ray->map.y = (int)hero->pos.y;
+	ray->dir.x = hero->dir.x + hero->plane.x * hero->scan_x;
+	ray->dir.y = hero->dir.y + hero->plane.y * hero->scan_x;
+	ray->delta_dist.x = get_delta_dist(ray->dir.x);
+	ray->delta_dist.y = get_delta_dist(ray->dir.y);
 	if (ray->dir.x < 0)
 		ray->step.x = -1;
 	else
@@ -41,21 +50,6 @@ static void	init_ray_step_and_side_dist(t_ray *ray, t_hero *hero)
 		ray->side_dist.y = (hero->pos.y - ray->map.y) * ray->delta_dist.y;
 	else
 		ray->side_dist.y = (ray->map.y + 1.0 - hero->pos.y) * ray->delta_dist.y;
-}
-
-void	init_ray(int i, t_hero *hero)
-{
-	t_ray	*ray;
-
-	(void)i;
-	ray = &hero->ray;
-	ray->map.x = (int)hero->pos.x;
-	ray->map.y = (int)hero->pos.y;
-	ray->dir.x = hero->dir.x + hero->plane.x * hero->scan_x;
-	ray->dir.y = hero->dir.y + hero->plane.y * hero->scan_x;
-	ray->delta_dist.x = get_delta_dist(ray->dir.x);
-	ray->delta_dist.y = get_delta_dist(ray->dir.y);
-	init_ray_step_and_side_dist(ray, hero);
 }
 
 void	dda(t_game *game)

@@ -20,7 +20,7 @@ static void	init_config(t_game *game)
 	while (i < NUM_TEXTURES)
 	{
 		game->texture[i].pixel_map = NULL;
-		game->texture_paths[i] = NULL;
+		game->texture_path[i] = NULL;
 		i++;
 	}
 	game->floor_color = -1;
@@ -45,7 +45,7 @@ int	config_complete(t_game *game)
 	i = 0;
 	while (i < NUM_TEXTURES)
 	{
-		if (!game->texture_paths[i])
+		if (!game->texture_path[i])
 			return (0);
 		i++;
 	}

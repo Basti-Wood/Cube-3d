@@ -14,42 +14,42 @@
 
 static int	handle_north_texture(char *value, t_game *game)
 {
-	if (game->texture_paths[0])
+	if (game->texture_path[NORTH])
 	{
 		printf("Error: Duplicate NO identifier\n");
 		return (0);
 	}
-	return (parse_texture(value, &game->texture_paths[0]));
+	return (parse_texture(value, &game->texture_path[NORTH]));
 }
 
 static int	handle_south_texture(char *value, t_game *game)
 {
-	if (game->texture_paths[1])
+	if (game->texture_path[SOUTH])
 	{
 		printf("Error: Duplicate SO identifier\n");
 		return (0);
 	}
-	return (parse_texture(value, &game->texture_paths[1]));
+	return (parse_texture(value, &game->texture_path[SOUTH]));
 }
 
 static int	handle_west_texture(char *value, t_game *game)
 {
-	if (game->texture_paths[2])
+	if (game->texture_path[WEST])
 	{
 		printf("Error: Duplicate WE identifier\n");
 		return (0);
 	}
-	return (parse_texture(value, &game->texture_paths[2]));
+	return (parse_texture(value, &game->texture_path[WEST]));
 }
 
 static int	handle_east_texture(char *value, t_game *game)
 {
-	if (game->texture_paths[3])
+	if (game->texture_path[EAST])
 	{
 		printf("Error: Duplicate EA identifier\n");
 		return (0);
 	}
-	return (parse_texture(value, &game->texture_paths[3]));
+	return (parse_texture(value, &game->texture_path[EAST]));
 }
 
 int	parse_texture_identifier(char *id, char *value, t_game *game)

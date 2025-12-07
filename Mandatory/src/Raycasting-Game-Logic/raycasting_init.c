@@ -12,20 +12,20 @@
 
 #include "../../includes/cub3d.h"
 
-void	load_textures(t_game *game)
-{
-	game->texture[0] = parse_xpm_file("texs/bluestone.xpm", game);
-	game->texture[1] = parse_xpm_file("texs/greystone.xpm", game);
-	game->texture[2] = parse_xpm_file("texs/redbrick.xpm", game);
-	game->texture[3] = parse_xpm_file("texs/mossy.xpm", game);
-}
+// void	load_textures(t_game *game)
+// {
+// 	game->texture[0] = parse_xpm_file("texs/bluestone.xpm", game);
+// 	game->texture[1] = parse_xpm_file("texs/greystone.xpm", game);
+// 	game->texture[2] = parse_xpm_file("texs/redbrick.xpm", game);
+// 	game->texture[3] = parse_xpm_file("texs/mossy.xpm", game);
+// }
 
 void	load_textures_from_paths(t_game *game)
 {
-	game->texture[0] = parse_xpm_file(game->texture_paths[0], game);
-	game->texture[1] = parse_xpm_file(game->texture_paths[1], game);
-	game->texture[2] = parse_xpm_file(game->texture_paths[2], game);
-	game->texture[3] = parse_xpm_file(game->texture_paths[3], game);
+	game->texture[NORTH] = parse_xpm_file(game->texture_path[NORTH], game);
+	game->texture[EAST] = parse_xpm_file(game->texture_path[EAST], game);
+	game->texture[SOUTH] = parse_xpm_file(game->texture_path[SOUTH], game);
+	game->texture[WEST] = parse_xpm_file(game->texture_path[WEST], game);
 }
 
 static void	init_helper(t_game *game)

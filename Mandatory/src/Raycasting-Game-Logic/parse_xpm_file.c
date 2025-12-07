@@ -12,6 +12,27 @@
 
 #include "../../includes/game.h"
 
+int	parse_xpm_header(int xpm_fd, t_texture *texture)
+{
+	char	*line;
+	char	**token;
+
+	line = skip_lines(xpm_fd);
+	if (!line)
+		return (1);
+	token = parse_header_line(line);
+	if (!token || !token[0] || !token[1] || !token[2])
+	{
+		free_tokens((void **)token);
+		return (1);
+	}
+	texture->width = ft_atoi(token[0]);
+	texture->height = ft_atoi(token[1]);
+	texture->color_count = ft_atoi(token[2]);
+	free_tokens((void **)token);
+	return (0);
+}
+
 int	parse_xpm_color_table(int xpm_fd, t_texture *texture)
 {
 	char	*line;
@@ -21,7 +42,7 @@ int	parse_xpm_color_table(int xpm_fd, t_texture *texture)
 	while (line_count < texture->color_count)
 	{
 		line = skip_lines(xpm_fd);
-		if (line == NULL)
+		if (!line)
 			return (1);
 		if (parse_color_table_line(line, texture))
 		{
@@ -40,9 +61,9 @@ int	parse_xpm_pixel_map(int xpm_fd, t_texture *tx)
 	char	*line;
 
 	line = skip_lines(xpm_fd);
-	if (init_xpm_pixel_map(tx))
-		return (1);
 	if (!line)
+		return (1);
+	if (init_xpm_pixel_map(tx))
 		return (1);
 	y = -1;
 	while (++y < tx->height)

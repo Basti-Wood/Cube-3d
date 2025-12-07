@@ -30,7 +30,7 @@ void	free_texture_paths(t_game *game)
 	i = 0;
 	while (i < NUM_TEXTURES)
 	{
-		free_texture_path_internal(&game->texture_paths[i]);
+		free_texture_path_internal(&game->texture_path[i]);
 		i++;
 	}
 }

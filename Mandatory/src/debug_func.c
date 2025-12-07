@@ -37,10 +37,10 @@ void	print_map_row(const int *row, int width)
 void	display_text(t_game *game)
 {
 	printf("📁 Textures:\n");
-	printf("   North: %s\n", game->texture_paths[0]);
-	printf("   South: %s\n", game->texture_paths[1]);
-	printf("   West:  %s\n", game->texture_paths[2]);
-	printf("   East:  %s\n", game->texture_paths[3]);
+	printf("   North: %s\n", game->texture_path[NORTH]);
+	printf("   South: %s\n", game->texture_path[SOUTH]);
+	printf("   West:  %s\n", game->texture_path[WEST]);
+	printf("   East:  %s\n", game->texture_path[EAST]);
 	printf("\n🎨 Colors:\n");
 	printf("   Floor:   0x%06X\n", game->floor_color);
 	printf("   Ceiling: 0x%06X\n", game->ceiling_color);

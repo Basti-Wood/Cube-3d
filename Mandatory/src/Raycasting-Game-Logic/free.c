@@ -71,6 +71,7 @@ void	free_game_resources(t_game *game)
 		free(game->mlx);
 		game->mlx = NULL;
 	}
+	free_texture_paths(game);
 	free_all_textures(game);
 	free_game_map(game);
 }

@@ -38,7 +38,7 @@ void	draw_walls(t_game *game)
 	while (++i < WIN_WIDTH)
 	{
 		game->hero.scan_x = (2.0 * i) / (double)WIN_WIDTH - 1.0;
-		init_ray(i, &game->hero);
+		init_ray(&game->hero);
 		dda(game);
 		if (game->hero.ray.perp_dist < 1e-10)
 			game->hero.ray.perp_dist = 1e-10;
