@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/game.h"
+#include "../../includes/game.h"
 
 static int	get_color(int x, int y, int tex_id, t_game *game)
 {
@@ -104,10 +104,6 @@ static void	draw_floor(t_game *game)
 
 void	draw_floor_and_ceiling(t_game *game)
 {
-	int	x;
-	int	y;
-	int	color;
-
 	if (!(game->dev_mode.render_floor && game->dev_mode.render_ceiling))
 		legacy_floor_and_ceiling(game);
 	if (game->dev_mode.render_floor)

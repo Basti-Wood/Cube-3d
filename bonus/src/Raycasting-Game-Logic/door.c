@@ -36,7 +36,7 @@ void	set_door_counter(t_door *door, t_map *map)
 	}
 }
 
-static void	open_door(t_door *door, t_map *map)
+static void	open_door(t_door *door)
 {
 	door->state = OPENING;
 	door->start = get_current_time();
@@ -74,7 +74,7 @@ void	handle_door(t_hero *hero, t_map *map)
 		if (door->state == OPEN || door->state == OPENING)
 			close_door(hero, door, map);
 		else
-			open_door(door, map);
+			open_door(door);
 	}
 }
 

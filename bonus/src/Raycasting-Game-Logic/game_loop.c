@@ -12,14 +12,14 @@
 
 #include "../../includes/game.h"
 
-static int	init_door(int x, int y, int i, t_door *door)
+static void	init_door(int x, int y, int i, t_door *door)
 {
 	door->pos.x = x;
 	door->pos.y = y;
 	door->id = i;
 	door->state = CLOSED;
 	door->interrupt = false;
-	door->animation_start = 0;
+	door->start = 0;
 	door->counter = 0;
 	door->last_check = get_current_time();
 	door->last_opened = 0;

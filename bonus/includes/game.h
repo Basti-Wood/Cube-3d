@@ -295,7 +295,7 @@ void		init_walker_window(t_game *g);
 t_walker	init_walker(void);
 // int			set_walker_start_tile(t_game *game);
 int			move_walker(t_game *game);
-t_hero		init_hero(bool mini, t_game *g);
+t_hero		init_hero(bool mini);
 int			walker_loop(t_game *game);
 void		draw_map(bool intro, t_game *game);
 void		draw_filled_square(t_square s, int size, int color, t_game *game);
