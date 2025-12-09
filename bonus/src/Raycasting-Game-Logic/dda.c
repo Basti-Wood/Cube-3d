@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ray.c                                              :+:      :+:    :+:   */
+/*   dda.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bstorck <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -60,23 +60,20 @@ static int	hit(int object, t_game *g)
 	{
 		if (g->hero.ray.side)
 		{
-			dist = g->hero.ray.side_dist.y - g->hero.ray.delta_dist.y * 0.6;//Doors have 10% thickness
+			dist = g->hero.ray.side_dist.y - g->hero.ray.delta_dist.y * 0.6;
 			if (g->hero.ray.side_dist.x < dist)
 				return (0);
 			g->hero.ray.perp_dist = dist;
-			return(get_texture_x(DOOR, g));
-				// return (0);
+			return (get_texture_x(DOOR, g));
 		}
 		else
 		{
-			dist = g->hero.ray.side_dist.x - g->hero.ray.delta_dist.x * 0.6;//0.5 + 0.1
+			dist = g->hero.ray.side_dist.x - g->hero.ray.delta_dist.x * 0.6;
 			if (g->hero.ray.side_dist.y < dist)
 				return (0);
 			g->hero.ray.perp_dist = dist;
-			return(get_texture_x(DOOR, g));
-				// return (0);
+			return (get_texture_x(DOOR, g));
 		}
-		// return (1);
 	}
 	else
 		return (1);
@@ -96,10 +93,8 @@ static int	hit(int object, t_game *g)
 
 void	dda(t_game *g)
 {
-	// t_ray	*ray;
 	int	object;
 
-	// ray = &game->hero.ray;
 	g->hero.ray.side = false;
 	while (true)
 	{

@@ -6,11 +6,19 @@
 /*   By: bstorck <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 15:24:18 by bstorck           #+#    #+#             */
-/*   Updated: 2025/12/04 00:31:48 by bstorck          ###   ########.fr       */
+/*   Updated: 2025/12/09 07:35:13 by bstorck          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/game.h"
+
+void	set_dev_mode(t_dev_mode *dev_mode)
+{
+	dev_mode->render_ceiling = true;
+	dev_mode->render_floor = true;
+	dev_mode->render_walls = true;
+	dev_mode->render_map = true;
+}
 
 void	put_pixel(int x, int y, int color, t_game *game)
 {

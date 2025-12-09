@@ -16,7 +16,6 @@ t_hero	init_hero(bool mini, t_game *g)
 {
 	t_hero		h;
 
-	(void)g;
 	h.mini = mini;
 	h.pos.x = 3;
 	h.pos.y = 23;

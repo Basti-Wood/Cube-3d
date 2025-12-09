@@ -12,6 +12,19 @@
 
 #include "../../includes/game.h"
 
+static int	init_door(int x, int y, int i, t_door *door)
+{
+	door->pos.x = x;
+	door->pos.y = y;
+	door->id = i;
+	door->state = CLOSED;
+	door->interrupt = false;
+	door->animation_start = 0;
+	door->counter = 0;
+	door->last_check = get_current_time();
+	door->last_opened = 0;
+}
+
 int	init_doors(t_game *game)
 {
 	int			x;
@@ -30,20 +43,10 @@ int	init_doors(t_game *game)
 				i++;
 				if (i == MAX_DOORS)
 				{
-					printf("Error: Number of doors exceeds the maximum allowed (16 doors)\n");
+					printf("Error: Number of doors exceeds threshold\n");
 					return (1);
 				}
-				game->map.door[i].pos.x = x;
-				game->map.door[i].pos.y = y;
-				game->map.door[i].id = i;
-				game->map.door[i].state = CLOSED;
-				game->map.door[i].interrupt = false;
-				game->map.door[i].animation_start = 0;//get_current_time();
-				game->map.door[i].counter = 0;
-				game->map.door[i].last_check = get_current_time();
-				game->map.door[i].last_opened = 0;//get_current_time();
-				// printf("\t%li\tsetting door%i at %i, %i\n", get_current_time(), i, x, y);
-				// printf("\t\tdoor%i\tat x=%i y=%i\n\n", i, game->map.door[i].x, game->map.door[i].y);
+				init_door(x, y, i, &game->map.door[i]);
 			}
 		}
 	}
@@ -108,67 +111,8 @@ int	game_loop(t_game *game)
 	{
 		draw_radar(game);
 		draw_map(false, game);
-		// draw_sonar(game);
 		draw_hero(false, game->mini_hero.pos, game->map.tile_size / 6, game);
 	}
 	mlx_put_image_to_window(game->mlx, game->win, game->img.ptr, 0, 0);
 	return (0);
 }
-
-// static double	pulse_distance(t_vector start, t_vector pulse, double dir)
-// {
-// 	return (fabs((pulse.y - start.y) / sin(dir)));
-// }
-
-// void	draw_pulse(double dir, t_game *game)
-// {
-// 	t_vector	pulse;
-// 	t_vector	start;
-// 	t_square	offset;
-// 	double		tile_size;
-//
-// 	tile_size = game->map.tile_size;
-// 	offset = get_offset(false, game);
-// 	pulse.x = game->mini_hero.pos.x * tile_size;
-// 	pulse.y = game->mini_hero.pos.y * tile_size;
-// 	start.x = pulse.x;
-// 	start.y = pulse.y;
-// 	// while (/*!collision(pulse.x / BLOCK_SIZE, pulse.y / BLOCK_SIZE, game->map) && */ (sqrt(pow((pulse.x - start.x), 2) + pow((pulse.y - start.y), 2)) < 7))
-// 	// while (sqrt(pow((pulse.x - start.x), 2) + pow((pulse.y - start.y), 2)) <= game->hero.collision_radius)
-// 	while (pulse_distance(start, pulse, dir) <= (0.15625 * tile_size))
-// 	{
-// 		// printf("\tpulse=%f\n", sqrt(powf((pulse.x - start.x), 2) +  powf((pulse.y - start.y), 2)));
-// 		// put_pixel(pulse.x + WIN_WIDTH / 2, pulse.y, 0x00FF00, game);
-// 		pulse.x += cos(dir);
-// 		pulse.y += sin(dir);
-// 	}
-// 	put_pixel(pulse.x + offset.x, pulse.y + offset.y, 0x00FF00, game);
-// 	// printf("\tpulse.len=%f", sqrt(powf((pulse.x - start.x), 2) +  powf((pulse.y - start.y), 2)));
-// 	// printf("\tpulse.x=%i\tpulse.y=%i\n", (int)(pulse.x / BLOCK_SIZE), (int)(pulse.y / BLOCK_SIZE));
-// 	// while (sqrt(pow((pulse.x - start.x), 2) + pow((pulse.y - start.y), 2)) <= 2.5)
-// 	// {
-// 	// 	// printf("\tpulse=%f\n", sqrt(powf((pulse.x - start.x), 2) +  powf((pulse.y - start.y), 2)));
-// 	// 	// put_pixel(pulse.x + WIN_WIDTH / 2, pulse.y, 0x00FF00, game);
-// 	// 	pulse.x += cos(dir);
-// 	// 	pulse.y += sin(dir);
-// 	// }
-// 	// put_pixel(pulse.x + (double)WIN_WIDTH / 2, pulse.y, 0xFF00FF, game);
-// }
-//
-// void	draw_sonar(t_game *game)
-// {
-// 	int			i;
-// 	double		dir;
-// 	double		delta_dir;
-// 	t_hero		*hero;
-//
-// 	hero = &game->hero;
-// 	delta_dir = PI / 45;
-// 	dir = atan2(hero->dir.y, hero->dir.x);
-// 	i = -1;
-// 	while (++i < 90)
-// 	{
-// 		draw_pulse(dir, game);
-// 		dir += delta_dir;
-// 	}
-// }

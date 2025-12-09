@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   floor+ceiling.c                                    :+:      :+:    :+:   */
+/*   draw_floor_and_ceiling.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bstorck <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,33 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/game.h"
-
-// void	draw_floor_and_ceiling(t_game *game)
-// {
-// 	int	x;
-// 	int	y;
-// 	int	color;
-//
-// 	color = 0x303030;
-// 	y = -1;
-// 	while (++y <= WIN_HEIGHT)
-// 	{
-// 		x = -1;
-// 		while (++x < WIN_WIDTH)
-// 		{
-// 			if (((game->img.width - game->map.node_size.x - 20) <= x)
-// 				&& (x <= (game->img.width - 20))
-// 				&& (20 <= y && y < game->map.node_size.y + 20))
-// 				color = 0x181818;
-// 			else
-// 				color = 0x303030;
-// 			if (y >= WIN_HEIGHT / 2)
-// 				color = 0x707070;
-// 			put_pixel(x, y, color, game);
-// 		}
-// 	}
-// }
+#include "../incs/game.h"
 
 static int	get_color(int x, int y, int tex_id, t_game *game)
 {
@@ -98,7 +72,6 @@ static void	draw_ceiling(t_game *game)
 		{
 			color = get_color(x, y, CEILING, game);
 			color = (color >> 1) & 0x7F7F7F;
-			// color = (color >> 1) & 0x7F7F7F;
 			put_pixel(x, game->img.height - y - 1, color, game);
 			h->pos.x += h->step.x;
 			h->pos.y += h->step.y;
@@ -136,26 +109,7 @@ void	draw_floor_and_ceiling(t_game *game)
 	int	color;
 
 	if (!(game->dev_mode.render_floor && game->dev_mode.render_ceiling))
-	{
-		y = -1;
-		while (++y <= WIN_HEIGHT)
-		{
-			x = -1;
-			while (++x < WIN_WIDTH)
-			{
-				color = 0x303030;
-				if (((game->img.width - game->map.node_size.x - 20) <= x)
-				&& (x <= (game->img.width - 20))
-				&& (20 <= y)
-				&& (y <= (game->map.node_size.y + 20))
-				&& game->dev_mode.render_map)
-					color = (0x303030 >> 1) & 0x7F7F7F;
-				if (y >= WIN_HEIGHT / 2)
-					color = 0x707070;
-				put_pixel(x, y, color, game);
-			}
-		}
-	}
+		legacy_floor_and_ceiling(game);
 	if (game->dev_mode.render_floor)
 		draw_floor(game);
 	if (game->dev_mode.render_ceiling)

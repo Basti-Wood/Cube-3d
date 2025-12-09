@@ -20,15 +20,6 @@
 // 	game->texture[3] = parse_xpm_file("texs/mossy.xpm", game);
 // }
 
-
-static void	set_dev_mode(t_dev_mode *dev_mode)
-{
-	dev_mode->render_ceiling = true;
-	dev_mode->render_floor = true;
-	dev_mode->render_walls = true;
-	dev_mode->render_map = true;
-}
-
 static void	init_helper(t_game *game)
 {
 	game->walker.first = game->walker.dir_set[game->walker.prev];

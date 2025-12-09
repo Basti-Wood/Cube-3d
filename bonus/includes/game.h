@@ -276,6 +276,8 @@ typedef struct s_game
 	time_t		last_check;
 }	t_game;
 
+void		set_dev_mode(t_dev_mode *dev_mode);
+
 t_texture	parse_xpm_file(const char *filename, t_game *game);
 int			get_fd(const char *filename);
 char		**parse_header_line(char *line);
