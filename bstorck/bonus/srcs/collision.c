@@ -14,7 +14,12 @@
 
 bool	collision(int x, int y, t_map *map)
 {
-	return (map->grid[y * map->width + x] == 1);
+	return (map->grid[y * map->width + x] != 0);
+}
+
+int	get_texture_id(int x, int y, t_map *map)
+{
+	return (map->grid[y * map->width + x]);
 }
 
 double	pulse_distance(t_vector start, t_vector pulse, double dir)

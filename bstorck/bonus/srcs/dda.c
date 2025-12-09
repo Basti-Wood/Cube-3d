@@ -23,7 +23,7 @@ double	get_delta_dist(double dir)
 	return (delta_dist);
 }
 
-void	init_ray(int i, t_hero *hero)
+void	init_ray(t_hero *hero)
 {
 	t_ray	*ray;
 
@@ -52,29 +52,74 @@ void	init_ray(int i, t_hero *hero)
 		ray->side_dist.y = (ray->map.y + 1.0 - hero->pos.y) * ray->delta_dist.y;
 }
 
-void	dda(t_game *game)
+static int	hit(int object, t_game *g)
 {
-	t_ray	*ray;
+	double	dist;
 
-	ray = &game->hero.ray;
-	ray->side = false;
-	while (true)
+	if (object == DOOR)
 	{
-		if (ray->side_dist.x < ray->side_dist.y)
+		if (g->hero.ray.side)
 		{
-			ray->map.x += ray->step.x;
-			ray->perp_dist = ray->side_dist.x;
-			ray->side_dist.x += ray->delta_dist.x;
-			ray->side = false;
+			dist = g->hero.ray.side_dist.y - g->hero.ray.delta_dist.y * 0.6;//Doors have 10% thickness
+			if (g->hero.ray.side_dist.x < dist)
+				return (0);
+			g->hero.ray.perp_dist = dist;
+			return(get_texture_x(DOOR, g));
+				// return (0);
 		}
 		else
 		{
-			ray->map.y += ray->step.y;
-			ray->perp_dist = ray->side_dist.y;
-			ray->side_dist.y += ray->delta_dist.y;
-			ray->side = true;
+			dist = g->hero.ray.side_dist.x - g->hero.ray.delta_dist.x * 0.6;//0.5 + 0.1
+			if (g->hero.ray.side_dist.y < dist)
+				return (0);
+			g->hero.ray.perp_dist = dist;
+			return(get_texture_x(DOOR, g));
+				// return (0);
 		}
-		if (collision(ray->map.x, ray->map.y, &game->map))
-			break ;
+		// return (1);
+	}
+	else
+		return (1);
+	return (0);
+}
+
+// static int	hit(int object, t_game *g)
+// {
+// 	double	dist;
+//
+// 	if (object == DOOR)
+// 		return (hit_door(g));
+// 	else
+// 		return (1);
+// 	return (0);
+// }
+
+void	dda(t_game *g)
+{
+	// t_ray	*ray;
+	int	object;
+
+	// ray = &game->hero.ray;
+	g->hero.ray.side = false;
+	while (true)
+	{
+		if (g->hero.ray.side_dist.x < g->hero.ray.side_dist.y)
+		{
+			g->hero.ray.map.x += g->hero.ray.step.x;
+			g->hero.ray.perp_dist = g->hero.ray.side_dist.x;
+			g->hero.ray.side_dist.x += g->hero.ray.delta_dist.x;
+			g->hero.ray.side = false;
+		}
+		else
+		{
+			g->hero.ray.map.y += g->hero.ray.step.y;
+			g->hero.ray.perp_dist = g->hero.ray.side_dist.y;
+			g->hero.ray.side_dist.y += g->hero.ray.delta_dist.y;
+			g->hero.ray.side = true;
+		}
+		object = get_texture_id(g->hero.ray.map.x, g->hero.ray.map.y, &g->map);
+		if (object != 0)
+			if (hit(object, g))
+				break ;
 	}
 }

@@ -17,16 +17,16 @@ int	get_orientation(t_ray *ray)
 	if (ray->side)
 	{
 		if (ray->dir.y > 0)
-			return (0);
+			return (NORTH);
 		else
-			return (2);
+			return (SOUTH);
 	}
 	else
 	{
 		if (ray->dir.x < 0)
-			return (1);
+			return (EAST);
 		else
-			return (3);
+			return (WEST);
 	}
 	return (0);
 }

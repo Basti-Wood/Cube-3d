@@ -92,6 +92,14 @@ typedef enum e_key_codes
 	// MOUSE_WHEEL_DOWN = 5
 }	t_key_codes;
 
+typedef enum e_cardinal_directions
+{
+	NORTH = 0,
+	EAST = 1,
+	SOUTH = 2,
+	WEST = 3
+}	t_cardinal_directions;
+
 typedef struct s_square
 {
 	int			x;
@@ -206,6 +214,7 @@ typedef struct s_game
 
 t_texture	parse_xpm_file(const char *filename, t_game *game);
 int			get_fd(const char *filename);
+char		**parse_header_line(char *line);
 void		free_tokens(void **token);
 int			parse_color_table_line(char *line, t_texture *texture);
 int			parse_hex_color(const char *line);
@@ -237,7 +246,7 @@ bool		collision(int x, int y, t_map *map);
 void		draw_floor_and_ceiling(t_game *game);
 void		draw_hero(bool intro, t_vector pos, int size, t_game *game);
 void		draw_radar(t_game *game);
-void		init_ray(int i, t_hero *hero);
+void		init_ray(t_hero *hero);
 void		dda(t_game *game);
 void		draw_walls(t_game *game);
 void		draw_line_loop(int i, double d, t_line line, t_game *game);

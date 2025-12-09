@@ -12,23 +12,33 @@
 
 #include "../incs/game.h"
 
+// static char	**parse_header_line(char *line)
+// {
+// 	int		i;
+// 	char	*header;
+// 	char	**token;
+//
+// 	i = 0;
+// 	while (line[i] && !ft_isdigit(line[i]))
+// 		i++;
+// 	header = ft_strdup(&line[i]);
+// 	free(line);
+// 	if (!header)
+// 		return (NULL);
+// 	token = ft_split(header, ' ');
+// 	free(header);
+// 	return (token);
+// }
+
 int	parse_xpm_header(int xpm_fd, t_texture *texture)
 {
-	int		i;
 	char	*line;
-	char	*header;
 	char	**token;
 
 	line = skip_lines(xpm_fd);
-	i = 0;
-	while (!ft_isdigit(line[i]))
-		i++;
-	header = ft_strdup(&line[i]);
-	free(line);
-	if (!header)
+	if (!line)
 		return (1);
-	token = ft_split(header, ' ');
-	free(header);
+	token = parse_header_line(line);
 	if (!token || !token[0] || !token[1] || !token[2])
 	{
 		free_tokens((void **)token);
@@ -40,6 +50,35 @@ int	parse_xpm_header(int xpm_fd, t_texture *texture)
 	free_tokens((void **)token);
 	return (0);
 }
+
+// int	parse_xpm_header(int xpm_fd, t_texture *texture)
+// {
+// 	int		i;
+// 	char	*line;
+// 	char	*header;
+// 	char	**token;
+//
+// 	line = skip_lines(xpm_fd);
+// 	i = 0;
+// 	while (!ft_isdigit(line[i]))
+// 		i++;
+// 	header = ft_strdup(&line[i]);
+// 	free(line);
+// 	if (!header)
+// 		return (1);
+// 	token = ft_split(header, ' ');
+// 	free(header);
+// 	if (!token || !token[0] || !token[1] || !token[2])
+// 	{
+// 		free_tokens((void **)token);
+// 		return (1);
+// 	}
+// 	texture->width = ft_atoi(token[0]);
+// 	texture->height = ft_atoi(token[1]);
+// 	texture->color_count = ft_atoi(token[2]);
+// 	free_tokens((void **)token);
+// 	return (0);
+// }
 
 int	parse_xpm_color_table(int xpm_fd, t_texture *texture)
 {
@@ -69,9 +108,9 @@ int	parse_xpm_pixel_map(int xpm_fd, t_texture *tx)
 	char	*line;
 
 	line = skip_lines(xpm_fd);
-	if (init_xpm_pixel_map(tx))
-		return (1);
 	if (!line)
+		return (1);
+	if (init_xpm_pixel_map(tx))
 		return (1);
 	y = -1;
 	while (++y < tx->height)

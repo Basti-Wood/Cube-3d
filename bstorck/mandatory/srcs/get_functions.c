@@ -19,7 +19,7 @@ int	get_fd(const char *filename)
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 	{
-		perror("Error\n");
+		perror("Error");
 		return (-1);
 	}
 	return (fd);

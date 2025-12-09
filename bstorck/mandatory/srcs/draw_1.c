@@ -25,9 +25,11 @@ void	draw_floor_and_ceiling(t_game *game)
 	while (++y <= WIN_HEIGHT)
 	{
 		if (y >= WIN_HEIGHT / 2)
+		{
 			color = 0x707070;
-		if (game->display_map)
-			color = (color >> 1) & 0x7F7F7F;
+			if (game->display_map)
+				color = (color >> 1) & 0x7F7F7F;
+		}
 		x = -1;
 		while (++x < WIN_WIDTH)
 			put_pixel(x, y, color, game);

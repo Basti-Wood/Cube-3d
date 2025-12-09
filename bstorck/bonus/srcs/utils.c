@@ -38,7 +38,13 @@ void	clear_image(t_game *game)
 	}
 }
 
-static time_t	get_current_time(void)
+// bool	is_open(t_door *door)
+// {
+// 	// printf("\t%li\tcheckin door%i at %i, %i\n", get_current_time(), door->id, door->pos.x, door->pos.y);
+// 	return (door->state == OPEN);
+// }
+
+time_t	get_current_time(void)
 {
 	struct timeval	time;
 

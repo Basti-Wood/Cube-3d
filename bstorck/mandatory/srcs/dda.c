@@ -23,7 +23,7 @@ double	get_delta_dist(double dir)
 	return (delta_dist);
 }
 
-void	init_ray(int i, t_hero *hero)
+void	init_ray(t_hero *hero)
 {
 	t_ray	*ray;
 

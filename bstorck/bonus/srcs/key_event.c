@@ -12,20 +12,18 @@
 
 #include "../incs/game.h"
 
-// static int	key_press_dev_mode(int key, t_game *game)
-// {
-// 	if (key == KEY_I)
-// 	{
-// 		game->map.max_node_size *= 1.2;
-// 		set_node_size(game);
-// 	}
-// 	if (key == KEY_K)
-// 	{
-// 		game->map.max_node_size /= 1.2;
-// 		set_node_size(game);
-// 	}
-// 	return (0);
-// }
+static int	key_press_dev_mode(int key, t_game *game)
+{
+	if (key == KEY_1)
+		game->dev_mode.render_ceiling = !game->dev_mode.render_ceiling;
+	if (key == KEY_2)
+		game->dev_mode.render_floor = !game->dev_mode.render_floor;
+	if (key == KEY_3)
+		game->dev_mode.render_walls = !game->dev_mode.render_walls;
+	if (key == KEY_4)
+		game->dev_mode.render_map = !game->dev_mode.render_map;
+	return (0);
+}
 
 int	key_press_extended(int key, t_game *game)
 {
@@ -58,6 +56,8 @@ int	key_press(int key, t_game *game)
 {
 	if (key == KEY_ESC)
 		close_game(game);
+	if (key == KEY_SPACE)
+		handle_door(&game->hero, &game->map);
 	if (key == KEY_SHIFT_L || key == KEY_SHIFT_R)
 		game->skip_intro = true;
 	if (key == KEY_LEFT || key == KEY_J)
@@ -72,6 +72,8 @@ int	key_press(int key, t_game *game)
 	}
 	if (key == KEY_W || key == KEY_A || key == KEY_S || key == KEY_D)
 		return (key_press_extended(key, game));
+	if (key == '1' || key == '2' || key == '3' || key == '4')
+		return (key_press_dev_mode(key, game));
 	return (0);
 }
 

@@ -28,14 +28,45 @@ int	close_game(t_game *game)
 	return (0);
 }
 
+static void	set_dev_mode(t_dev_mode *dev_mode)
+{
+	dev_mode->render_ceiling = true;
+	dev_mode->render_floor = true;
+	dev_mode->render_walls = true;
+	dev_mode->render_map = true;
+}
+
+static int	set_walker_start_tile(t_game *game)
+{
+	t_walker	*walker;
+
+	walker = &game->walker;
+	walker->pos.y = -1;
+	while (++walker->pos.y < game->map.height)
+	{
+		walker->pos.x = -1;
+		while (++walker->pos.x < game->map.width)
+		{
+			if (collision(walker->pos.x, walker->pos.y, &game->map))
+			{
+				walker->start.x = walker->pos.x;
+				walker->start.y = walker->pos.y;
+				return (0);
+			}
+		}
+	}
+	printf("Error\nWalker: Could not retrieve start tile");
+	return (1);
+}
+
 void	load_textures(t_game *game)
 {
-	game->texture[0] = parse_xpm_file("texs/bluestone.xpm", game);
-	game->texture[1] = parse_xpm_file("texs/greystone.xpm", game);
-	game->texture[2] = parse_xpm_file("texs/redbrick.xpm", game);
-	game->texture[3] = parse_xpm_file("texs/mossy.xpm", game);
-	game->texture[4] = parse_xpm_file("texs/colorstone.xpm", game);
-	game->texture[5] = parse_xpm_file("texs/wood.xpm", game);
+	game->texture[FLOOR] = parse_xpm_file("texs/greystone.xpm", game);
+	game->texture[WALL] = parse_xpm_file("texs/redbrick.xpm", game);
+	game->texture[DOOR] = parse_xpm_file("texs/door.xpm", game);
+	game->texture[CEILING] = parse_xpm_file("texs/wood.xpm", game);
+	// game->texture[4] = parse_xpm_file("texs/colorstone.xpm", game);
+	// game->texture[5] = parse_xpm_file("texs/mossy.xpm", game);
 }
 
 int	init_game_resources(t_game *game)
@@ -53,7 +84,7 @@ int	init_game_resources(t_game *game)
 		return (1);
 	load_textures(game);
 	game->walker = init_walker(game);
-	if (get_walker_start(game))
+	if (set_walker_start_tile(game))
 		return (1);
 	if (move_walker(game))
 		return (1);
@@ -61,6 +92,8 @@ int	init_game_resources(t_game *game)
 	game->skip_intro = false;
 	game->hero = init_hero(false, game);
 	game->mini_hero = init_hero(true, game);
+	game->last_check = get_current_time();
+	set_dev_mode(&game->dev_mode);
 	game->mlx = mlx_init();
 	return (0);
 }
