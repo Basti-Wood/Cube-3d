@@ -26,14 +26,14 @@
 
 typedef enum e_colors
 {
-	HERO_CLR = 0X00FFFF,
+	HERO_COLOR = 0X00FFFF,
 	//HERO_CLR = 0x00FF7F,
-	WALKER_CLR = 0xC8C800,
-	TILE_CLR = 0x007777,
+	WALKER_COLOR = 0xC8C800,
+	TILE_COLOR = 0x007777,
 	//TILE_CLR = 0x007FAA,
-	DOOR_CLR = 0xCC884D,
+	DOOR_COLOR = 0xCC884D,
 	WHITE = 0xFFFFFF,
-	BEAM_CLR = 0xC8C800
+	BEAM_COLOR = 0xC8C800
 }	t_colors;
 
 typedef enum e_dimensions
@@ -50,7 +50,8 @@ typedef enum e_dimensions
 	MAX_DOORS = 16,
 	CHECK_AFTER = 420,
 	CLOSE_AFTER = 4200,
-	ANIMATION_STEP = 210
+	ANIMATION_STEP = 210,
+	STEP = 8400000
 }	t_dimensions;
 
 typedef enum e_texture_id
@@ -216,7 +217,7 @@ typedef struct s_door
 	int			id;
 	int			state;
 	bool		interrupt;
-	time_t		animation_start;
+	time_t		start;
 	double		counter;
 	time_t		last_check;
 	time_t		last_opened;
@@ -316,6 +317,7 @@ void		reset_doors(t_hero *hero, t_map *map);
 void		hero_action(t_hero *hero, t_map *map);
 bool		collision(int x, int y, t_map *map);
 void		draw_floor_and_ceiling(t_game *game);
+void		legacy_floor_and_ceiling(t_game *game);
 void		draw_hero(bool intro, t_vector pos, int size, t_game *game);
 void		draw_radar(t_game *game);
 void		init_ray(t_hero *hero);
@@ -324,6 +326,8 @@ int			get_texture_id(int x, int y, t_map *map);
 void		draw_walls(t_game *game);
 // void		draw_line(int i, double d, t_line line, t_game *game);
 int			get_texture_x(int id, t_game *g);
+int			door_opening(int tex_x, int tex_width, t_door *door, t_map *map);
+int			door_closing(int tex_x, int tex_width, t_door *door, t_map *map);
 void		set_door_counter(t_door *door, t_map *map);
 int			get_texel_color(t_square tex, t_texture *texture);
 void		put_pixel(int x, int y, int color, t_game *game);
