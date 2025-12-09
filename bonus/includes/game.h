@@ -394,4 +394,7 @@ void		load_textures_from_paths(t_game *game);
 // Debug functions
 void		display_map(t_game *game);
 
+//Mouse functions
+int			mouse_move(int x, int y, t_game *game);
+
 #endif

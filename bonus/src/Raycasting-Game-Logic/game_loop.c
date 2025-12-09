@@ -90,6 +90,7 @@ void	init_game_window(t_game *g)
 	i->data = mlx_get_data_addr(i->ptr, &i->bpp, &i->size_line, &i->endian);
 	mlx_hook(g->win, 2, 1L << 0, key_press, g);
 	mlx_hook(g->win, 3, 1L << 1, key_release, g);
+	mlx_hook(g->win, 6, 1L << 6, mouse_move, g);
 	mlx_hook(g->win, WIN_X_BTN, 0, close_game, g);
 }
 
@@ -114,5 +115,6 @@ int	game_loop(t_game *game)
 		draw_hero(false, game->mini_hero.pos, game->map.tile_size / 6, game);
 	}
 	mlx_put_image_to_window(game->mlx, game->win, game->img.ptr, 0, 0);
+	mlx_mouse_move(game->mlx, game->win, WIN_WIDTH / 2, WIN_HEIGHT / 2);
 	return (0);
 }
