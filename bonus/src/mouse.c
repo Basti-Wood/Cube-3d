@@ -12,35 +12,53 @@
 
 #include "../includes/game.h"
 
+static void	wrap_mouse_position(int *x, int *y, t_game *game)
+{
+	int	margin;
+
+	(void) y;
+	margin = 50;
+	if (*x > WIN_WIDTH - margin)
+	{
+		*x = margin;
+		mlx_mouse_move(game->mlx, game->win, *x,  WIN_HEIGHT/2);
+	}
+	else if (*x < margin)
+	{
+		*x = WIN_WIDTH - margin;
+		mlx_mouse_move(game->mlx, game->win, *x,  WIN_HEIGHT/2);
+	}
+}
+
 int	mouse_move(int x, int y, t_game *game)
 {
-	static int	center_x = WIN_WIDTH / 2;
-	static int	center_y = WIN_HEIGHT / 2;
-	int			delta_x;
+	static int	old_x;
 
-	(void)y;
-	delta_x = x - center_x;
-	if (delta_x < 0)
+	if (old_x == 0)
+		old_x = x;
+	wrap_mouse_position(&x, &y, game);
+	if (x == old_x)
+	{
+		game->hero.turn_dextral = false;
+		game->mini_hero.turn_dextral = false;
+		game->hero.turn_sinistral = false;
+		game->mini_hero.turn_sinistral = false;
+		return (0);
+	}
+	else if (x < old_x)
 	{
 		game->hero.turn_sinistral = true;
 		game->mini_hero.turn_sinistral = true;
 		game->hero.turn_dextral = false;
 		game->mini_hero.turn_dextral = false;
 	}
-	else if (delta_x > 0)
+	else if (x > old_x)
 	{
 		game->hero.turn_dextral = true;
 		game->mini_hero.turn_dextral = true;
 		game->hero.turn_sinistral = false;
 		game->mini_hero.turn_sinistral = false;
 	}
-	else
-	{
-		game->hero.turn_dextral = false;
-		game->mini_hero.turn_dextral = false;
-		game->hero.turn_sinistral = false;
-		game->mini_hero.turn_sinistral = false;
-	}
-	mlx_mouse_move(game->mlx, game->win, center_x, center_y);
+	old_x = x;
 	return (0);
 }
