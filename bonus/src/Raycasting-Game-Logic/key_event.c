@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/game.h"
-
+/*
 static int	key_press_dev_mode(int key, t_game *game)
 {
 	if (key == KEY_1)
@@ -23,7 +23,7 @@ static int	key_press_dev_mode(int key, t_game *game)
 	if (key == KEY_4)
 		game->dev_mode.render_map = !game->dev_mode.render_map;
 	return (0);
-}
+}*/
 
 int	key_press_extended(int key, t_game *game)
 {
@@ -58,6 +58,11 @@ int	key_press(int key, t_game *game)
 		close_game(game);
 	if (key == KEY_SPACE)
 		handle_door(&game->hero, &game->map);
+	if (key == KEY_CTRL_L || key == KEY_CTRL_R)
+	{
+		game->hero.mouse_control = !game->hero.mouse_control;
+		game->mini_hero.mouse_control = !game->mini_hero.mouse_control;
+	}
 	if (key == KEY_SHIFT_L || key == KEY_SHIFT_R)
 		game->skip_intro = true;
 	if (key == KEY_LEFT || key == KEY_J)
@@ -72,8 +77,6 @@ int	key_press(int key, t_game *game)
 	}
 	if (key == KEY_W || key == KEY_A || key == KEY_S || key == KEY_D)
 		return (key_press_extended(key, game));
-	if (key == '1' || key == '2' || key == '3' || key == '4')
-		return (key_press_dev_mode(key, game));
 	return (0);
 }
 

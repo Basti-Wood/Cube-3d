@@ -85,6 +85,8 @@ typedef enum e_key_codes
 	// KEY_TAB = 65289,
 	KEY_SHIFT_L = 65505,
 	KEY_SHIFT_R = 65506,
+	KEY_CTRL_L = 65507,
+	KEY_CTRL_R = 65508,
 	KEY_1 = 49,
 	KEY_2 = 50,
 	KEY_3 = 51,
@@ -198,6 +200,7 @@ typedef struct s_hero
 	double		turn_speed;
 	int			axes_of_travel;
 	double		collision_radius;
+	bool		mouse_control;
 }	t_hero;
 
 typedef struct s_walker

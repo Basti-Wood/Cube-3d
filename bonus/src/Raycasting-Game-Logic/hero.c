@@ -37,6 +37,7 @@ t_hero	init_hero(bool mini)
 	h.turn_speed = PI / 75;
 	h.axes_of_travel = 0;
 	h.collision_radius = 0.15625 * BLOCK_SIZE;
+	h.mouse_control = false;
 	return (h);
 }
 
@@ -99,6 +100,6 @@ void	hero_action(t_hero *hero, t_map *map)
 		move_hero(hero, +sin_dir, -cos_dir, map);
 	if (hero->move_starboard)
 		move_hero(hero, -sin_dir, +cos_dir, map);
-	if (hero->turn_sinistral || hero->turn_dextral)
+	if ((hero->turn_sinistral || hero->turn_dextral) && !hero->mouse_control)
 		turn_hero(hero->dir.x, hero->plane.x, hero);
 }

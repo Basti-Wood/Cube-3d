@@ -115,6 +115,5 @@ int	game_loop(t_game *game)
 		draw_hero(false, game->mini_hero.pos, game->map.tile_size / 6, game);
 	}
 	mlx_put_image_to_window(game->mlx, game->win, game->img.ptr, 0, 0);
-	mlx_mouse_move(game->mlx, game->win, WIN_WIDTH / 2, WIN_HEIGHT / 2);
 	return (0);
 }
