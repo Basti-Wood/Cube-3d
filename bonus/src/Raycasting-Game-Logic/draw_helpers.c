@@ -62,27 +62,27 @@ int	door_opening(int tex_x, int tex_width, t_door *door, t_map *map)
 	return (tex_x);
 }
 
-void	legacy_floor_and_ceiling(t_game *game)
-{
-	int	x;
-	int	y;
-	int	color;
-
-	y = -1;
-	while (++y <= WIN_HEIGHT)
-	{
-		x = -1;
-		while (++x < WIN_WIDTH)
-		{
-			color = 0x303030;
-			if (((game->img.width - game->map.node_size.x - 20) <= x)
-				&& (x <= (game->img.width - 20)) && (20 <= y)
-				&& (y <= (game->map.node_size.y + 20))
-				&& game->dev_mode.render_map)
-				color = (0x303030 >> 1) & 0x7F7F7F;
-			if (y >= WIN_HEIGHT / 2)
-				color = 0x707070;
-			put_pixel(x, y, color, game);
-		}
-	}
-}
+// void	legacy_floor_and_ceiling(t_game *game)
+// {
+// 	int	x;
+// 	int	y;
+// 	int	color;
+//
+// 	y = -1;
+// 	while (++y <= WIN_HEIGHT)
+// 	{
+// 		x = -1;
+// 		while (++x < WIN_WIDTH)
+// 		{
+// 			color = 0x303030;
+// 			if (((game->img.width - game->map.node_size.x - 20) <= x)
+// 				&& (x <= (game->img.width - 20)) && (20 <= y)
+// 				&& (y <= (game->map.node_size.y + 20))
+// 				&& game->dev_mode.render_map)
+// 				color = (0x303030 >> 1) & 0x7F7F7F;
+// 			if (y >= WIN_HEIGHT / 2)
+// 				color = 0x707070;
+// 			put_pixel(x, y, color, game);
+// 		}
+// 	}
+// }
