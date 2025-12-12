@@ -35,6 +35,8 @@ char	*get_identifier(char *line, char **rest)
 	if (!*start)
 		return (NULL);
 	end = find_end_of_word(start);
+	if (*end == '\0')
+		return (NULL);
 	if (end > start)
 		*end = '\0';
 	*rest = end + 1;
