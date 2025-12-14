@@ -1,10 +1,15 @@
-NO ./textures/north.xpm
-SO ./textures/south.xpm
-WE ./textures/west.xpm
-EA ./textures/east.xpm
-
-F 220,100,0
-C 0,100,255
+FLOOR ./textures/wood.xpm
+CEILING ./textures/colorstone.xpm
+WALL ./textures/redbrick.xpm
+DOOR ./textures/door.xpm
+BARREL ./textures/barrel.xpm
+PILLAR ./textures/pillar.xpm
+LIGHT ./textures/greenlight.xpm
+TREE1 ./textures/eagle.xpm
+TREE2 ./textures/bluestone.xpm
+TREE3 ./textures/purplestone.xpm
+TREE4 ./textures/greystone.xpm
+TREE5 ./textures/mossy.xpm
 
         1111111111111111111111111
         1000000000110000000000001

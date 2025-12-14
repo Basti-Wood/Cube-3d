@@ -67,7 +67,6 @@ int	mouse_move(int x, int y, t_game *game)
 
 int	mouse_move(int x, int y, t_game *game)
 {
-	static int	last_x;
 	double		angle;
 	double		plane_mag;
 
@@ -75,9 +74,6 @@ int	mouse_move(int x, int y, t_game *game)
 	if (!game->hero.mouse_control)
 		return (0);
 	wrap_mouse_position(&x, &y, game);
-	if (last_x == x)
-		return (0);
-	last_x = x;
 	angle = ((double)x / WIN_WIDTH) * 2.0 * PI;
 	game->hero.dir.x = sin(angle);
 	game->hero.dir.y = -cos(angle);

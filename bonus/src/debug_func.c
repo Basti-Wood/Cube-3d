@@ -39,13 +39,21 @@ void	print_map_row(const int *row, int width)
 void	display_text(t_game *game)
 {
 	printf("📁 Textures:\n");
-	printf("   North: %s\n", game->texture_path[FLOOR]);
-	printf("   South: %s\n", game->texture_path[DOOR]);
-	printf("   West:  %s\n", game->texture_path[WALL]);
-	printf("   East:  %s\n", game->texture_path[CEILING]);
-	printf("\n🎨 Colors:\n");
-	printf("   Floor:   0x%06X\n", game->floor_color);
-	printf("   Ceiling: 0x%06X\n", game->ceiling_color);
+	printf("   Floor:   %s\n", game->texture_path[FLOOR]);
+	printf("   Ceiling: %s\n", game->texture_path[CEILING]);
+	printf("   Wall:    %s\n", game->texture_path[WALL]);
+	printf("   Door:    %s\n", game->texture_path[DOOR]);
+	printf("   Barrel:  %s\n", game->texture_path[BARREL]);
+	printf("   Pillar:  %s\n", game->texture_path[PILLAR]);
+	printf("   Light:   %s\n", game->texture_path[LIGHT]);
+	printf("\n🎬 Animated Sprites:\n");
+	printf("   Tree1:   %s\n", game->asprite_path[TREE1]);
+	printf("   Tree2:   %s\n", game->asprite_path[TREE2]);
+	printf("   Tree3:   %s\n", game->asprite_path[TREE3]);
+	printf("   Tree4:   %s\n", game->asprite_path[TREE4]);
+	printf("   Tree5:   %s\n", game->asprite_path[TREE5]);
+	printf("\n🎮 Sprites: %d regular, %d trees\n",
+		game->sprites.count, game->sprites.tree_count);
 	printf("\n🗺️  Map: %dx%d\n", game->map.width, game->map.height);
 	printf("Player at (%d, %d) facing '%c'\n",
 		game->map.player.x, game->map.player.y, game->map.player_dir);

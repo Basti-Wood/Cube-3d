@@ -40,7 +40,9 @@ typedef enum e_dimensions
 {
 	WIN_WIDTH = 1280,
 	WIN_HEIGHT = 800,
-	NUM_TEXTURES = 4,
+	NUM_TEXTURES = 7,
+	NUM_ASPRITE_FRAMES = 5,
+	NUM_SPRITE_TEXTURES = 8,
 	NUM_COLOR_SYMBOLS = 95,
 	TEXEL_SIZE = 16,
 	TILE_SIZE = 32,
@@ -48,6 +50,7 @@ typedef enum e_dimensions
 	MAX_NODE_SIZE = WIN_HEIGHT * 33/100,
 	NUM_DIR = 4,
 	MAX_DOORS = 16,
+	MAX_SPRITES = 16,
 	CHECK_AFTER = 420,
 	CLOSE_AFTER = 4200,
 	ANIMATION_STEP = 210,
@@ -59,16 +62,20 @@ typedef enum e_texture_id
 	FLOOR = 0,
 	WALL = 1,
 	DOOR = 2,
-	CEILING = 3
+	CEILING = 3,
+	BARREL = 4,
+	PILLAR = 5,
+	LIGHT = 6
 }	t_texture_id;
 
-// typedef enum e_cardinal_directions
-// {
-// 	NORTH = 0,
-// 	EAST = 1,
-// 	SOUTH = 2,
-// 	WEST = 3
-// }	t_cardinal_directions;
+typedef enum e_asprite
+{
+	TREE1 = 0,
+	TREE2 = 1,
+	TREE3 = 2,
+	TREE4 = 3,
+	TREE5 = 4
+}	t_asprite;
 
 typedef enum e_door_states
 {
@@ -226,6 +233,32 @@ typedef struct s_door
 	time_t		last_opened;
 }	t_door;
 
+typedef struct s_tree
+{
+	t_vector		pos;
+	int				current_frame;
+	time_t			last_frame_time;
+	int				animation_speed;
+	t_texture		*frames[NUM_ASPRITE_FRAMES];
+}	t_tree;
+
+typedef struct s_sprite
+{
+	t_vector		pos;
+	int				type;
+	double			distance;
+	bool			visible;
+	t_texture		*texture;
+}	t_sprite;
+
+typedef struct s_sprite_manager
+{
+	t_sprite		sprites[MAX_SPRITES];
+	int				count;
+	t_tree			trees[MAX_SPRITES];
+	int				tree_count;
+}	t_sprite_manager;
+
 typedef struct s_map
 {
 	int			*grid;
@@ -261,23 +294,24 @@ typedef struct s_dev_mode
 
 typedef struct s_game
 {
-	t_dev_mode	dev_mode;
-	bool		skip_intro;
-	void		*mlx;
-	void		*win;
-	t_img		img;
-	double		half_screen;
-	t_map		map;
-	t_texture	texture[NUM_TEXTURES];
-	char		*texture_path[NUM_TEXTURES];
-	int			floor_color;
-	int			ceiling_color;
-	int			present_num;
-	t_walker	walker;
-	t_hero		hero;
-	t_hero		mini_hero;
-	t_horizon	horizon;
-	time_t		last_check;
+	t_dev_mode			dev_mode;
+	bool				skip_intro;
+	void				*mlx;
+	void				*win;
+	t_img				img;
+	double				half_screen;
+	t_map				map;
+	t_texture			texture[NUM_TEXTURES];
+	char				*texture_path[NUM_TEXTURES];
+	t_texture			asprite_texture[NUM_ASPRITE_FRAMES];
+	char				*asprite_path[NUM_ASPRITE_FRAMES];
+	t_sprite_manager	sprites;
+	int					present_num;
+	t_walker			walker;
+	t_hero				hero;
+	t_hero				mini_hero;
+	t_horizon			horizon;
+	time_t				last_check;
 }	t_game;
 
 void		set_dev_mode(t_dev_mode *dev_mode);
@@ -374,7 +408,7 @@ int			config_complete(t_game *game);
 int			parse_config_section(int fd, t_game *game, char **first_map_line);
 int			parse_identifier(char *line, t_game *game);
 int			parse_texture_identifier(char *id, char *value, t_game *game);
-int			parse_color_identifier(char *id, char *value, t_game *game);
+int			parse_sprite_identifier(char *value, t_game *game);
 int			parse_texture(char *line, char **texture_path);
 
 // Map validation functions

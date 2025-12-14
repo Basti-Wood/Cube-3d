@@ -23,8 +23,15 @@ static void	init_config(t_game *game)
 		game->texture_path[i] = NULL;
 		i++;
 	}
-	game->floor_color = -1;
-	game->ceiling_color = -1;
+	i = 0;
+	while (i < NUM_ASPRITE_FRAMES)
+	{
+		game->asprite_texture[i].pixel_map = NULL;
+		game->asprite_path[i] = NULL;
+		i++;
+	}
+	game->sprites.count = 0;
+	game->sprites.tree_count = 0;
 }
 
 void	init_game_for_parsing(t_game *game)
@@ -49,7 +56,12 @@ int	config_complete(t_game *game)
 			return (0);
 		i++;
 	}
-	if (game->floor_color < 0 || game->ceiling_color < 0)
-		return (0);
+	i = 0;
+	while (i < NUM_ASPRITE_FRAMES)
+	{
+		if (!game->asprite_path[i])
+			return (0);
+		i++;
+	}
 	return (1);
 }
