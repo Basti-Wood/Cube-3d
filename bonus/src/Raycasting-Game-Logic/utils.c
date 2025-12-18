@@ -18,6 +18,7 @@ void	set_dev_mode(t_dev_mode *dev_mode)
 	dev_mode->render_floor = true;
 	dev_mode->render_walls = true;
 	dev_mode->render_map = true;
+	dev_mode->render_sprites = true;
 }
 
 void	put_pixel(int x, int y, int color, t_game *game)
@@ -64,41 +65,3 @@ void	ft_usleep(int usec)
 	while (get_current_time() < time_to_awake)
 		continue ;
 }
-
-// int	ft_strcmp(char const *s1, char const *s2)
-// {
-// 	while ((*s1 && *s2) && (*s1 == *s2))
-// 	{
-// 		s1++;
-// 		s2++;
-// 	}
-// 	return ((unsigned char)*s1 - (unsigned char)*s2);
-// }
-
-// double	distance(double x, double y)
-// {
-	// return (sqrt(x * x + y * y));
-// }
-
-// double	fixed_dist(double x1, double y1, double x2, double y2, t_game *game)
-// {
-// 	double	dir_angle = atan2(game->hero.dir.y, game->hero.dir.x);
-// 	double	delta_x = x2 - x1;
-// 	double	delta_y = y2 - y1;
-// 	double	angle = atan2(delta_y, delta_x) - dir_angle;
-// 	double	fix_dist = distance(delta_x, delta_y) * cos(angle);
-// 	return (fix_dist);
-// }
-
-// if(hero->mini == false)
-// {
-// 	double	dist = fixed_dist(hero->pos.x, hero->pos.y, ray_x, ray_y, game);
-// 	double	height = (BLOCK_SIZE / dist) * (((double)FRM_WIDTH) / 2);
-// 	int	start_y = (SCRN_HEIGHT - height) / 2;
-// 	int	end = start_y + height;
-// 	while(start_y < end)
-// 	{
-// 		put_pixel(i, start_y, 255, game);
-// 		start_y++;
-// 	}
-// }

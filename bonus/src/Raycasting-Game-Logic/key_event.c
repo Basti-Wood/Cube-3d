@@ -21,6 +21,8 @@ static int	key_press_dev_mode(int key, t_game *game)
 	if (key == KEY_3)
 		game->dev_mode.render_walls = !game->dev_mode.render_walls;
 	if (key == KEY_4)
+		game->dev_mode.render_sprites = !game->dev_mode.render_sprites;
+	if (key == KEY_5)
 		game->dev_mode.render_map = !game->dev_mode.render_map;
 	return (0);
 }*/

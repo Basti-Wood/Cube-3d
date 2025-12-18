@@ -84,7 +84,8 @@ void	init_game_window(t_game *g)
 	i->height = WIN_HEIGHT;
 	i->aspect_ratio = (double)i->width / (double)i->height;
 	set_node_size(g);
-	g->half_screen = (double)i->height / 2;
+	g->half_screen_height = (double)i->height / 2;
+	g->half_screen_width = (double)i->width / 2;
 	g->win = mlx_new_window(g->mlx, i->width, i->height, "Picostein: Zero D");
 	i->ptr = mlx_new_image(g->mlx, i->width, i->height);
 	i->data = mlx_get_data_addr(i->ptr, &i->bpp, &i->size_line, &i->endian);
@@ -94,7 +95,6 @@ void	init_game_window(t_game *g)
 	mlx_hook(g->win, WIN_X_BTN, 0, close_game, g);
 }
 
-//0.15625 * game->map.tile_size
 int	game_loop(t_game *game)
 {
 	if (get_current_time() > (game->last_check + CHECK_AFTER))
@@ -108,6 +108,8 @@ int	game_loop(t_game *game)
 	draw_floor_and_ceiling(game);
 	if (game->dev_mode.render_walls)
 		draw_walls(game);
+	if (game->dev_mode.render_sprites)
+		draw_sprites(game);
 	if (game->dev_mode.render_map)
 	{
 		draw_radar(game);

@@ -20,13 +20,17 @@ void	draw_beam(double dir, t_game *game)
 
 	tile_size = game->map.tile_size;
 	offset = get_offset(false, game);
-	beam.x = game->mini_hero.pos.x * tile_size;
-	beam.y = game->mini_hero.pos.y * tile_size;
-	while (!collision(beam.x / tile_size, beam.y / tile_size, &game->map))
+	beam.x = game->mini_hero.pos.x;
+	beam.y = game->mini_hero.pos.y;
+	while (!wall_collision(beam.x, beam.y, &game->map))
 	{
+		beam.x *= tile_size;
+		beam.y *= tile_size;
 		put_pixel(beam.x + offset.x, beam.y + offset.y, BEAM_COLOR, game);
 		beam.x += cos(dir);
 		beam.y += sin(dir);
+		beam.x /= tile_size;
+		beam.y /= tile_size;
 	}
 }
 

@@ -40,21 +40,23 @@ typedef enum e_dimensions
 {
 	WIN_WIDTH = 1280,
 	WIN_HEIGHT = 800,
-	NUM_TEXTURES = 7,
+	// NUM_TEXTURES = 7,
 	NUM_ASPRITE_FRAMES = 5,
 	NUM_SPRITE_TEXTURES = 8,
-	NUM_COLOR_SYMBOLS = 95,
-	TEXEL_SIZE = 16,
-	TILE_SIZE = 32,
-	BLOCK_SIZE = 16,
 	MAX_NODE_SIZE = WIN_HEIGHT * 33/100,
+	MAX_TEXTURES = 12,
+	MAX_SPRITES	= 15,
+	MAX_CELLS = 5,
+	MAX_DOORS = 20,
+	BLOCK_SIZE = 16,
+	TILE_SIZE = 32,
+	TEXEL_SIZE = 16,
+	NUM_COLOR_SYMBOLS = 95,
 	NUM_DIR = 4,
-	MAX_DOORS = 16,
-	MAX_SPRITES = 16,
-	CHECK_AFTER = 420,
+	CHECK_AFTER = 840,
 	CLOSE_AFTER = 4200,
 	ANIMATION_STEP = 210,
-	STEP = 8400000
+	STEP_SIZE = 8400
 }	t_dimensions;
 
 typedef enum e_texture_id
@@ -65,7 +67,12 @@ typedef enum e_texture_id
 	CEILING = 3,
 	BARREL = 4,
 	PILLAR = 5,
-	LIGHT = 6
+	LIGHT = 6,
+	TREE_0 = 7,
+	TREE_1 = 8,
+	TREE_2 = 9,
+	TREE_3 = 10,
+	TREE_4 = 11
 }	t_texture_id;
 
 typedef enum e_asprite
@@ -98,6 +105,7 @@ typedef enum e_key_codes
 	KEY_2 = 50,
 	KEY_3 = 51,
 	KEY_4 = 52,
+	KEY_5 = 53,
 	// KEY_Q = 113,
 	KEY_W = 119,
 	KEY_E = 101,
@@ -158,6 +166,25 @@ typedef struct s_horizon
 	t_square	tex;
 }	t_horizon;
 
+typedef struct s_line
+{
+	double	start;
+	double	end;
+	double	length;
+}	t_line;
+
+typedef struct s_shape
+{
+	int		x;
+	double	start_x;
+	double	end_x;
+	double	width;
+	int		y;
+	double	start_y;
+	double	end_y;
+	double	height;
+}	t_shape;
+
 typedef struct s_texture
 {
 	int	width;
@@ -167,12 +194,15 @@ typedef struct s_texture
 	int	*pixel_map;
 }	t_texture;
 
-typedef struct s_line
+typedef struct sprite
 {
-	double	start;
-	double	end;
-	double	height;
-}	t_line;
+	t_vector	pos;
+	double		dist;
+	bool		impermeable;
+	bool		animated;
+	time_t		last_shift;
+	int			tex_id[MAX_CELLS];
+}	t_sprite;
 
 typedef struct s_ray
 {
@@ -197,6 +227,7 @@ typedef struct s_hero
 	double		fov;
 	t_ray		ray;
 	double		z_buffer[WIN_WIDTH];
+	bool		mouse_control;
 	bool		move_forward;
 	bool		move_backward;
 	bool		move_port;
@@ -207,7 +238,6 @@ typedef struct s_hero
 	double		turn_speed;
 	int			axes_of_travel;
 	double		collision_radius;
-	bool		mouse_control;
 }	t_hero;
 
 typedef struct s_walker
@@ -227,7 +257,7 @@ typedef struct s_door
 	int			id;
 	int			state;
 	bool		interrupt;
-	time_t		start;
+	time_t		animation_start;
 	double		counter;
 	time_t		last_check;
 	time_t		last_opened;
@@ -269,7 +299,10 @@ typedef struct s_map
 	t_square	player;
 	char		player_dir;
 	t_door		door[MAX_DOORS];
-	int			number_of_doors;
+	t_sprite	sprite[MAX_SPRITES];
+	int			render_order[MAX_SPRITES];
+	int			num_doors;
+	int			num_sprites;
 }	t_map;
 
 typedef struct s_img
@@ -290,6 +323,7 @@ typedef struct s_dev_mode
 	bool		render_floor;
 	bool		render_walls;
 	bool		render_map;
+	bool		render_sprites;
 }	t_dev_mode;
 
 typedef struct s_game
@@ -299,10 +333,11 @@ typedef struct s_game
 	void				*mlx;
 	void				*win;
 	t_img				img;
-	double				half_screen;
+	double		half_screen_width;
+	double		half_screen_height;
 	t_map				map;
-	t_texture			texture[NUM_TEXTURES];
-	char				*texture_path[NUM_TEXTURES];
+	t_texture			texture[MAX_TEXTURES];
+	char				*texture_path[MAX_TEXTURES];
 	t_texture			asprite_texture[NUM_ASPRITE_FRAMES];
 	char				*asprite_path[NUM_ASPRITE_FRAMES];
 	t_sprite_manager	sprites;
@@ -323,16 +358,17 @@ void		free_tokens(void **token);
 int			parse_color_table_line(char *line, t_texture *texture);
 int			parse_hex_color(const char *line);
 int			init_xpm_pixel_map(t_texture *texture);
-int			parse_pixel_map_line(char *line, int y, t_texture *tx);
+int			parse_pixel_map_line(char *line, int y, t_texture *texture);
 char		*skip_lines(int xpm_fd);
-void		init_presenter_window(t_game *g);
+void		init_presenter_window(t_game *game);
 int			presenter_loop(t_game *game);
-// int			init_map(t_game *game);
-void		init_walker_window(t_game *g);
+int			init_map(t_game *game);
+void		init_sprites(t_game *game);
 t_walker	init_walker(void);
 // int			set_walker_start_tile(t_game *game);
 int			move_walker(t_game *game);
 t_hero		init_hero(bool mini);
+void		init_walker_window(t_game *g);
 int			walker_loop(t_game *game);
 void		draw_map(bool intro, t_game *game);
 void		draw_filled_square(t_square s, int size, int color, t_game *game);
@@ -344,17 +380,19 @@ void		init_game_window(t_game *g);
 // void		set_node_size(t_game *game);
 int			key_press(int keycode, t_game *game);
 int			key_release(int keycode, t_game *game);
+int			mouse_move(int x, int y, t_game *game);
 void		handle_door(t_hero *hero, t_map *map);
 // bool		is_open(t_door *door);
 t_door		*get_door(int x, int y, t_map *map);
 time_t		get_current_time(void);
-int			hero_sonar(t_hero *hero, t_map *map);
 int			game_loop(t_game *game);
 void		reset_doors(t_hero *hero, t_map *map);
 void		hero_action(t_hero *hero, t_map *map);
-bool		collision(int x, int y, t_map *map);
+bool		hero_sonar(t_hero *hero, t_map *map);
+bool		wall_collision(int x, int y, t_map *map);
+bool		sprite_collision(t_vector pos, double collision_radius, t_map *map);
 void		draw_floor_and_ceiling(t_game *game);
-void		legacy_floor_and_ceiling(t_game *game);
+// void		legacy_floor_and_ceiling(t_game *game);
 void		draw_hero(bool intro, t_vector pos, int size, t_game *game);
 void		draw_radar(t_game *game);
 void		init_ray(t_hero *hero);
@@ -362,11 +400,14 @@ void		dda(t_game *game);
 int			get_texture_id(int x, int y, t_map *map);
 void		draw_walls(t_game *game);
 // void		draw_line(int i, double d, t_line line, t_game *game);
-int			get_texture_x(int id, t_game *g);
-int			door_opening(int tex_x, int tex_width, t_door *door, t_map *map);
-int			door_closing(int tex_x, int tex_width, t_door *door, t_map *map);
-void		set_door_counter(t_door *door, t_map *map);
+int			get_texture_x(int id, t_game *game);
 int			get_texel_color(t_square tex, t_texture *texture);
+void		draw_sprites(t_game *game);
+double		get_distance(t_vector hero, t_vector sprite);
+t_vector	get_projection(t_sprite *sprite, t_hero *hero);
+t_shape		get_dimensions(int screen_x, t_vector transform, t_game *game);
+void		set_door_counter(t_door *door, t_map *map);
+// int			get_texel_color(t_square tex, t_texture *texture);
 void		put_pixel(int x, int y, int color, t_game *game);
 void		clear_image(t_game *game);
 void		free_game_resources(t_game *game);

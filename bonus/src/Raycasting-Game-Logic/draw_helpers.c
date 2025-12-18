@@ -44,45 +44,47 @@ void	draw_filled_square(t_square square, int size, int color, t_game *game)
 	}
 }
 
-int	door_closing(int tex_x, int tex_width, t_door *door, t_map *map)
+double	get_distance(t_vector hero, t_vector sprite)
 {
-	set_door_counter(door, map);
-	tex_x += tex_width - door->counter * tex_width;
-	if (tex_x < 0 || tex_width <= tex_x)
-		return (0);
-	return (tex_x);
+	double	dx;
+	double	dy;
+
+	dx = hero.x - sprite.x;
+	dy = hero.y - sprite.y;
+	return ((dx * dx) + (dy * dy));
 }
 
-int	door_opening(int tex_x, int tex_width, t_door *door, t_map *map)
+t_vector	get_projection(t_sprite *sprite, t_hero *hero)
 {
-	set_door_counter(door, map);
-	tex_x += door->counter * tex_width;
-	if (tex_x < 0 || tex_width <= tex_x)
-		return (0);
-	return (tex_x);
+	t_vector	trans;
+	t_vector	dist;
+	double		inv_det;
+
+	inv_det = 1.0 / (hero->plane.x * hero->dir.y - hero->dir.x * hero->plane.y);
+	dist.x = sprite->pos.x - hero->pos.x;
+	dist.y = sprite->pos.y - hero->pos.y;
+	trans.x = inv_det * (hero->dir.y * dist.x - hero->dir.x * dist.y);
+	trans.y = inv_det * (-hero->plane.y * dist.x + hero->plane.x * dist.y);
+	return (trans);
 }
 
-// void	legacy_floor_and_ceiling(t_game *game)
-// {
-// 	int	x;
-// 	int	y;
-// 	int	color;
-//
-// 	y = -1;
-// 	while (++y <= WIN_HEIGHT)
-// 	{
-// 		x = -1;
-// 		while (++x < WIN_WIDTH)
-// 		{
-// 			color = 0x303030;
-// 			if (((game->img.width - game->map.node_size.x - 20) <= x)
-// 				&& (x <= (game->img.width - 20)) && (20 <= y)
-// 				&& (y <= (game->map.node_size.y + 20))
-// 				&& game->dev_mode.render_map)
-// 				color = (0x303030 >> 1) & 0x7F7F7F;
-// 			if (y >= WIN_HEIGHT / 2)
-// 				color = 0x707070;
-// 			put_pixel(x, y, color, game);
-// 		}
-// 	}
-// }
+t_shape	get_dimensions(int screen_x, t_vector transform, t_game *game)
+{
+	t_shape	shape;
+
+	shape.height = abs((int)((double)WIN_HEIGHT / transform.y));
+	shape.start_y = game->half_screen_height - (shape.height / 2);
+	if (shape.start_y < 0)
+		shape.start_y = 0;
+	shape.end_y = game->half_screen_height + (shape.height / 2);
+	if (shape.end_y >= WIN_HEIGHT)
+		shape.end_y = WIN_HEIGHT - 1;
+	shape.width = abs((int)((double)WIN_HEIGHT / (transform.y)));
+	shape.start_x = screen_x - (shape.width / 2);
+	if (shape.start_x < 0)
+		shape.start_x = 0;
+	shape.end_x = screen_x + (shape.width / 2);
+	if (shape.end_x >= WIN_WIDTH)
+		shape.end_x = WIN_WIDTH - 1;
+	return (shape);
+}

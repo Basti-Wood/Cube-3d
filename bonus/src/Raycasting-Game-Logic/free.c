@@ -40,7 +40,7 @@ void	free_all_textures(t_game *game)
 	int	i;
 
 	i = -1;
-	while (++i < NUM_TEXTURES)
+	while (++i < MAX_TEXTURES)
 		free_texture(&game->texture[i]);
 	i = -1;
 	while (++i < NUM_ASPRITE_FRAMES)

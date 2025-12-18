@@ -27,6 +27,7 @@ t_hero	init_hero(bool mini)
 	h.plane.y = 0;
 	h.scan_x = 0;
 	h.fov = 2 * atan(fabs(h.plane.x));
+	h.mouse_control = false;
 	h.move_forward = false;
 	h.move_backward = false;
 	h.move_port = false;
@@ -36,8 +37,7 @@ t_hero	init_hero(bool mini)
 	h.turn_dextral = false;
 	h.turn_speed = PI / 75;
 	h.axes_of_travel = 0;
-	h.collision_radius = 0.15625 * BLOCK_SIZE;
-	h.mouse_control = false;
+	h.collision_radius = 0.15625;
 	return (h);
 }
 
@@ -72,13 +72,13 @@ void	move_hero(t_hero *h, double move_x, double move_y, t_map *map)
 		speed /= sqrt(2);
 	h->probe = h->pos;
 	h->probe.x = h->pos.x + move_x * speed;
-	if (hero_sonar(h, map) == 0)
+	if (!hero_sonar(h, map))
 		new_pos.x = h->probe.x;
 	else
 		new_pos.x = h->pos.x - move_x / 100000;
 	h->probe = h->pos;
 	h->probe.y = h->pos.y + move_y * speed;
-	if (hero_sonar(h, map) == 0)
+	if (!hero_sonar(h, map))
 		new_pos.y = h->probe.y;
 	else
 		new_pos.y = h->pos.y - move_y / 100000;

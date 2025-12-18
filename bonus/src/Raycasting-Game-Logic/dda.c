@@ -80,17 +80,6 @@ static int	hit(int object, t_game *g)
 	return (0);
 }
 
-// static int	hit(int object, t_game *g)
-// {
-// 	double	dist;
-//
-// 	if (object == DOOR)
-// 		return (hit_door(g));
-// 	else
-// 		return (1);
-// 	return (0);
-// }
-
 void	dda(t_game *g)
 {
 	int	object;
