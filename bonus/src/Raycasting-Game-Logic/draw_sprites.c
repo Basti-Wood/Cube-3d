@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/game.h"
+#include "../../includes/game.h"
 
 static void	sort_sprites_by_distance(t_map *map)
 {
@@ -70,8 +70,7 @@ static void	draw_line(t_sprite *sprite, t_shape shape, t_square t, t_game *game)
 		if (((game->img.width - game->map.node_size.x - 20) <= shape.x)
 			&& (shape.x <= (game->img.width - 20))
 			&& (20 <= shape.y)
-			&& (shape.y <= (game->map.node_size.y + 20))
-			&& (game->dev_mode.render_map))
+			&& (shape.y <= (game->map.node_size.y + 20)))
 			color = (color >> 1) & 0x7F7F7F;
 		if (color != 0x000000)
 			put_pixel(shape.x, shape.y, color, game);

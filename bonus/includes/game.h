@@ -40,7 +40,6 @@ typedef enum e_dimensions
 {
 	WIN_WIDTH = 1280,
 	WIN_HEIGHT = 800,
-	// NUM_TEXTURES = 7,
 	NUM_ASPRITE_FRAMES = 5,
 	NUM_SPRITE_TEXTURES = 8,
 	MAX_NODE_SIZE = WIN_HEIGHT * 33/100,
@@ -75,14 +74,14 @@ typedef enum e_texture_id
 	TREE_4 = 11
 }	t_texture_id;
 
-typedef enum e_asprite
-{
-	TREE1 = 0,
-	TREE2 = 1,
-	TREE3 = 2,
-	TREE4 = 3,
-	TREE5 = 4
-}	t_asprite;
+// typedef enum e_asprite
+// {
+// 	TREE1 = 0,
+// 	TREE2 = 1,
+// 	TREE3 = 2,
+// 	TREE4 = 3,
+// 	TREE5 = 4
+// }	t_asprite;
 
 typedef enum e_door_states
 {
@@ -204,6 +203,32 @@ typedef struct sprite
 	int			tex_id[MAX_CELLS];
 }	t_sprite;
 
+// typedef struct s_sprite
+// {
+// 	t_vector		pos;
+// 	int				type;
+// 	double			distance;
+// 	bool			visible;
+// 	t_texture		*texture;
+// }	t_sprite;
+
+// typedef struct s_tree
+// {
+// 	t_vector		pos;
+// 	int				current_frame;
+// 	time_t			last_frame_time;
+// 	int				animation_speed;
+// 	t_texture		*frames[NUM_ASPRITE_FRAMES];
+// }	t_tree;
+
+// typedef struct s_sprite_manager
+// {
+// 	t_sprite		sprites[MAX_SPRITES];
+// 	int				count;
+// 	t_tree			trees[MAX_SPRITES];
+// 	int				tree_count;
+// }	t_sprite_manager;
+
 typedef struct s_ray
 {
 	t_vector	dir;
@@ -254,7 +279,6 @@ typedef struct s_walker
 typedef struct s_door
 {
 	t_square	pos;
-	int			id;
 	int			state;
 	bool		interrupt;
 	time_t		animation_start;
@@ -262,32 +286,6 @@ typedef struct s_door
 	time_t		last_check;
 	time_t		last_opened;
 }	t_door;
-
-typedef struct s_tree
-{
-	t_vector		pos;
-	int				current_frame;
-	time_t			last_frame_time;
-	int				animation_speed;
-	t_texture		*frames[NUM_ASPRITE_FRAMES];
-}	t_tree;
-
-typedef struct s_sprite
-{
-	t_vector		pos;
-	int				type;
-	double			distance;
-	bool			visible;
-	t_texture		*texture;
-}	t_sprite;
-
-typedef struct s_sprite_manager
-{
-	t_sprite		sprites[MAX_SPRITES];
-	int				count;
-	t_tree			trees[MAX_SPRITES];
-	int				tree_count;
-}	t_sprite_manager;
 
 typedef struct s_map
 {
@@ -317,40 +315,39 @@ typedef struct s_img
 	double		aspect_ratio;
 }	t_img;
 
-typedef struct s_dev_mode
-{
-	bool		render_ceiling;
-	bool		render_floor;
-	bool		render_walls;
-	bool		render_map;
-	bool		render_sprites;
-}	t_dev_mode;
+// typedef struct s_dev_mode
+// {
+// 	bool		render_ceiling;
+// 	bool		render_floor;
+// 	bool		render_walls;
+// 	bool		render_map;
+// 	bool		render_sprites;
+// }	t_dev_mode;
 
 typedef struct s_game
 {
-	t_dev_mode			dev_mode;
-	bool				skip_intro;
-	void				*mlx;
-	void				*win;
-	t_img				img;
+	// t_dev_mode	dev_mode;
+	bool		skip_intro;
+	void		*mlx;
+	void		*win;
+	t_img		img;
 	double		half_screen_width;
 	double		half_screen_height;
-	t_map				map;
-	t_texture			texture[MAX_TEXTURES];
-	char				*texture_path[MAX_TEXTURES];
-	t_texture			asprite_texture[NUM_ASPRITE_FRAMES];
-	char				*asprite_path[NUM_ASPRITE_FRAMES];
-	t_sprite_manager	sprites;
-	int					present_num;
-	t_walker			walker;
-	t_hero				hero;
-	t_hero				mini_hero;
-	t_horizon			horizon;
-	time_t				last_check;
+	t_map		map;
+	char		*texture_path[MAX_TEXTURES];
+	t_texture	texture[MAX_TEXTURES];
+	// t_texture		asprite_texture[NUM_ASPRITE_FRAMES];
+	// char				*asprite_path[NUM_ASPRITE_FRAMES];
+	// t_sprite_manager	sprites;
+	int			present_num;
+	t_walker	walker;
+	t_hero		hero;
+	t_hero		mini_hero;
+	t_horizon	horizon;
+	time_t		last_check;
 }	t_game;
 
-void		set_dev_mode(t_dev_mode *dev_mode);
-
+// void		set_dev_mode(t_dev_mode *dev_mode);
 t_texture	parse_xpm_file(const char *filename, t_game *game);
 int			get_fd(const char *filename);
 char		**parse_header_line(char *line);

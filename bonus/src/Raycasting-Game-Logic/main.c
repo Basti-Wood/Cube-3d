@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/game.h"
+#include "../../includes/game.h"
 
 int	close_game(t_game *game)
 {
@@ -97,7 +97,7 @@ int	main(void)
 		free_game_resources(&game);
 		return (1);
 	}
-	set_dev_mode(&game.dev_mode);
+	// set_dev_mode(&game.dev_mode);
 	// game.present_num = -1;
 	// while (++game.present_num < MAX_TEXTURES)
 	// {

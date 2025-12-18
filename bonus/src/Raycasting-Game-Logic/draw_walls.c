@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/game.h"
+#include "../../includes/game.h"
 
 static int	adjust_color(int color, int screen_x, t_line line, t_game *game)
 {
@@ -19,8 +19,7 @@ static int	adjust_color(int color, int screen_x, t_line line, t_game *game)
 	if (((game->img.width - game->map.node_size.x - 20) <= screen_x)
 		&& (screen_x <= (game->img.width - 20))
 		&& (20 <= (int)line.start)
-		&& ((int)line.start <= (game->map.node_size.y + 20))
-		&& game->dev_mode.render_map)
+		&& ((int)line.start <= (game->map.node_size.y + 20)))
 		color = (color >> 1) & 0x7F7F7F;
 	return (color);
 }

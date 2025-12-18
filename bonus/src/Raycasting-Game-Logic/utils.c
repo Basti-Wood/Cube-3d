@@ -12,14 +12,14 @@
 
 #include "../../includes/game.h"
 
-void	set_dev_mode(t_dev_mode *dev_mode)
-{
-	dev_mode->render_ceiling = true;
-	dev_mode->render_floor = true;
-	dev_mode->render_walls = true;
-	dev_mode->render_map = true;
-	dev_mode->render_sprites = true;
-}
+// void	set_dev_mode(t_dev_mode *dev_mode)
+// {
+// 	dev_mode->render_ceiling = true;
+// 	dev_mode->render_floor = true;
+// 	dev_mode->render_walls = true;
+// 	dev_mode->render_map = true;
+// 	dev_mode->render_sprites = true;
+// }
 
 void	put_pixel(int x, int y, int color, t_game *game)
 {

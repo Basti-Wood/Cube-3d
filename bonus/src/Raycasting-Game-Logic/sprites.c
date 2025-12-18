@@ -1,4 +1,4 @@
-#include "../incs/game.h"
+#include "../../includes/game.h"
 
 void	init_sprites(t_game *game)
 {

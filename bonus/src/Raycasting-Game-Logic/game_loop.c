@@ -12,48 +12,6 @@
 
 #include "../../includes/game.h"
 
-static void	init_door(int x, int y, int i, t_door *door)
-{
-	door->pos.x = x;
-	door->pos.y = y;
-	door->id = i;
-	door->state = CLOSED;
-	door->interrupt = false;
-	door->start = 0;
-	door->counter = 0;
-	door->last_check = get_current_time();
-	door->last_opened = 0;
-}
-
-int	init_doors(t_game *game)
-{
-	int			x;
-	int			y;
-	int			i;
-
-	i = -1;
-	y = -1;
-	while (++y < game->map.height)
-	{
-		x = -1;
-		while (++x < game->map.width)
-		{
-			if (game->map.grid[y * game->map.width + x] == DOOR)
-			{
-				i++;
-				if (i == MAX_DOORS)
-				{
-					printf("Error: Number of doors exceeds threshold\n");
-					return (1);
-				}
-				init_door(x, y, i, &game->map.door[i]);
-			}
-		}
-	}
-	game->map.number_of_doors = i + 1;
-	return (0);
-}
-
 static void	set_node_size(t_game *game)
 {
 	t_map	*m;
@@ -106,16 +64,16 @@ int	game_loop(t_game *game)
 	hero_action(&game->mini_hero, &game->map);
 	clear_image(game);
 	draw_floor_and_ceiling(game);
-	if (game->dev_mode.render_walls)
-		draw_walls(game);
-	if (game->dev_mode.render_sprites)
-		draw_sprites(game);
-	if (game->dev_mode.render_map)
-	{
-		draw_radar(game);
-		draw_map(false, game);
-		draw_hero(false, game->mini_hero.pos, game->map.tile_size / 6, game);
-	}
+	// if (game->dev_mode.render_walls)
+	draw_walls(game);
+	// if (game->dev_mode.render_sprites)
+	draw_sprites(game);
+	// if (game->dev_mode.render_map)
+	// {
+	draw_radar(game);
+	draw_map(false, game);
+	draw_hero(false, game->mini_hero.pos, game->map.tile_size / 6, game);
+	// }
 	mlx_put_image_to_window(game->mlx, game->win, game->img.ptr, 0, 0);
 	return (0);
 }

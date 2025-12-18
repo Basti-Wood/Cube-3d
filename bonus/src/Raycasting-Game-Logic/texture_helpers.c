@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/game.h"
+#include "../../includes/game.h"
 
 int	get_texture_id(int x, int y, t_map *map)
 {

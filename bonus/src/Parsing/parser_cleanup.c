@@ -28,17 +28,17 @@ void	free_texture_paths(t_game *game)
 	if (!game)
 		return ;
 	i = 0;
-	while (i < NUM_TEXTURES)
+	while (i < MAX_TEXTURES)
 	{
 		free_texture_path_internal(&game->texture_path[i]);
 		i++;
 	}
-	i = 0;
-	while (i < NUM_ASPRITE_FRAMES)
-	{
-		free_texture_path_internal(&game->asprite_path[i]);
-		i++;
-	}
+	// i = 0;
+	// while (i < NUM_ASPRITE_FRAMES)
+	// {
+	// 	free_texture_path_internal(&game->asprite_path[i]);
+	// 	i++;
+	// }
 }
 
 void	free_map(t_map *map)

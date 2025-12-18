@@ -29,7 +29,7 @@ static void	init_helper(t_game *game)
 	game->mini_hero = game->hero;
 	game->mini_hero.mini = true;
 	game->last_check = get_current_time();
-	set_dev_mode(&game->dev_mode);
+	// set_dev_mode(&game->dev_mode);
 }
 
 static int	set_walker_start_tile(t_game *game)
@@ -43,7 +43,7 @@ static int	set_walker_start_tile(t_game *game)
 		walker->pos.x = -1;
 		while (++walker->pos.x < game->map.width)
 		{
-			if (collision(walker->pos.x, walker->pos.y, &game->map))
+			if (wall_collision(walker->pos.x, walker->pos.y, &game->map))
 			{
 				walker->start.x = walker->pos.x;
 				walker->start.y = walker->pos.y;
@@ -55,48 +55,53 @@ static int	set_walker_start_tile(t_game *game)
 	return (1);
 }
 
-static void	assign_sprite_textures(t_game *game)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (i < game->sprites.count)
-	{
-		game->sprites.sprites[i].texture = &game->texture[game->sprites.sprites[i].type];
-		i++;
-	}
-	i = 0;
-	while (i < game->sprites.tree_count)
-	{
-		j = 0;
-		while (j < NUM_ASPRITE_FRAMES)
-		{
-			game->sprites.trees[i].frames[j] = &game->asprite_texture[j];
-			j++;
-		}
-		i++;
-	}
-}
+// static void	assign_sprite_textures(t_game *game)
+// {
+// 	int	i;
+// 	int	j;
+//
+// 	i = 0;
+// 	while (i < game->sprites.count)
+// 	{
+// 		game->sprites.sprites[i].texture = &game->texture[game->sprites.sprites[i].type];
+// 		i++;
+// 	}
+// 	i = 0;
+// 	while (i < game->sprites.tree_count)
+// 	{
+// 		j = 0;
+// 		while (j < NUM_ASPRITE_FRAMES)
+// 		{
+// 			game->sprites.trees[i].frames[j] = &game->asprite_texture[j];
+// 			j++;
+// 		}
+// 		i++;
+// 	}
+// }
 
 void	load_textures_from_paths(t_game *game)
 {
-	int	i;
-
+	// int	i;
+//
 	game->texture[FLOOR] = parse_xpm_file(game->texture_path[FLOOR], game);
-	game->texture[CEILING] = parse_xpm_file(game->texture_path[CEILING], game);
 	game->texture[WALL] = parse_xpm_file(game->texture_path[WALL], game);
 	game->texture[DOOR] = parse_xpm_file(game->texture_path[DOOR], game);
+	game->texture[CEILING] = parse_xpm_file(game->texture_path[CEILING], game);
 	game->texture[BARREL] = parse_xpm_file(game->texture_path[BARREL], game);
 	game->texture[PILLAR] = parse_xpm_file(game->texture_path[PILLAR], game);
 	game->texture[LIGHT] = parse_xpm_file(game->texture_path[LIGHT], game);
-	i = 0;
-	while (i < NUM_ASPRITE_FRAMES)
-	{
-		game->asprite_texture[i] = parse_xpm_file(game->asprite_path[i], game);
-		i++;
-	}
-	assign_sprite_textures(game);
+	game->texture[TREE_0] = parse_xpm_file(game->texture_path[TREE_0], game);
+	game->texture[TREE_1] = parse_xpm_file(game->texture_path[TREE_1], game);
+	game->texture[TREE_2] = parse_xpm_file(game->texture_path[TREE_2], game);
+	game->texture[TREE_3] = parse_xpm_file(game->texture_path[TREE_3], game);
+	game->texture[TREE_4] = parse_xpm_file(game->texture_path[TREE_4], game);
+	// i = 0;
+	// while (i < NUM_ASPRITE_FRAMES)
+	// {
+	// 	game->asprite_texture[i] = parse_xpm_file(game->asprite_path[i], game);
+	// 	i++;
+	// }
+	// assign_sprite_textures(game);
 }
 
 int	init_game_for_raycasting(t_game *game)
@@ -112,18 +117,20 @@ int	init_game_for_raycasting(t_game *game)
 		return (1);
 	}
 	i = -1;
-	while (++i < NUM_TEXTURES)
+	while (++i < MAX_TEXTURES)
 		game->texture[i].pixel_map = NULL;
-	i = -1;
-	while (++i < NUM_ASPRITE_FRAMES)
-		game->asprite_texture[i].pixel_map = NULL;
+	// i = -1;
+	// while (++i < NUM_ASPRITE_FRAMES)
+	// 	game->asprite_texture[i].pixel_map = NULL;
 	load_textures_from_paths(game);
+	// if (init_sprites(game))
+		// return (1);
+	if (init_doors(game))
+		return (1);
 	game->walker = init_walker();
 	if (set_walker_start_tile(game))
 		return (1);
 	if (move_walker(game))
-		return (1);
-	if (init_doors(game))
 		return (1);
 	init_helper(game);
 	return (0);
