@@ -12,10 +12,18 @@
 
 #include "../../includes/cub3d.h"
 
+static void	helper_sprites(t_sprite *sprite)
+{
+	int	j;
+
+	j = -1;
+	while (++j < MAX_CELLS)
+		sprite->tex_id[j] = 0;
+}
+
 static void	init_config(t_game *game)
 {
 	int			i;
-	int			j;
 	t_sprite	*sprite;
 
 	sprite = game->map.sprite;
@@ -36,19 +44,8 @@ static void	init_config(t_game *game)
 		sprite[i].impermeable = true;
 		sprite[i].animated = false;
 		sprite[i].last_shift = 0;
-		j = -1;
-		while (++j < MAX_CELLS)
-			sprite[i].tex_id[j] = 0;
+		helper_sprites(&sprite[i]);
 	}
-	// i = 0;
-	// while (i < NUM_ASPRITE_FRAMES)
-	// {
-	// 	game->asprite_texture[i].pixel_map = NULL;
-	// 	game->asprite_path[i] = NULL;
-	// 	i++;
-	// }
-	// game->sprites.count = 0;
-	// game->sprites.tree_count = 0;
 }
 
 void	init_game_for_parsing(t_game *game)
@@ -78,12 +75,5 @@ int	config_complete(t_game *game)
 			return (0);
 		i++;
 	}
-	// i = 0;
-	// while (i < NUM_ASPRITE_FRAMES)
-	// {
-	// 	if (!game->asprite_path[i])
-	// 		return (0);
-	// 	i++;
-	// }
 	return (1);
 }

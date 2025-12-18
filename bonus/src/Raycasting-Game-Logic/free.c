@@ -42,9 +42,6 @@ void	free_all_textures(t_game *game)
 	i = -1;
 	while (++i < MAX_TEXTURES)
 		free_texture(&game->texture[i]);
-	// i = -1;
-	// while (++i < NUM_ASPRITE_FRAMES)
-	// 	free_texture(&game->asprite_texture[i]);
 }
 
 void	free_game_map(t_game *game)

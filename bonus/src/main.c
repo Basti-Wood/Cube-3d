@@ -23,6 +23,7 @@ int	main(int argc, char **argv)
 {
 	t_game		game;
 
+	ft_bzero(&game, sizeof(t_game));
 	if (argc < 2)
 	{
 		printf("Usage: ./cub3d <map.cub>\n");

@@ -64,16 +64,11 @@ int	game_loop(t_game *game)
 	hero_action(&game->mini_hero, &game->map);
 	clear_image(game);
 	draw_floor_and_ceiling(game);
-	// if (game->dev_mode.render_walls)
 	draw_walls(game);
-	// if (game->dev_mode.render_sprites)
 	draw_sprites(game);
-	// if (game->dev_mode.render_map)
-	// {
 	draw_radar(game);
 	draw_map(false, game);
 	draw_hero(false, game->mini_hero.pos, game->map.tile_size / 6, game);
-	// }
 	mlx_put_image_to_window(game->mlx, game->win, game->img.ptr, 0, 0);
 	return (0);
 }
