@@ -1,16 +1,16 @@
 /* XPM */
-static const char *wood[] = {
+static const char *wood1764105845[] = {
 /* columns rows colors chars-per-pixel */
 "64 64 9 1 ",
-"  c #0A0803",
-". c #0E0B05",
-"X c #100C06",
-"o c #120E06",
-"O c #150F07",
-"+ c #171008",
-"@ c #1B1209",
-"# c #1D130A",
-"$ c #24170D",
+"  c #28200C",
+". c #382C14",
+"X c #403018",
+"o c #483818",
+"O c #543C1C",
+"+ c #5C4020",
+"@ c #6C4824",
+"# c #744C28",
+"$ c #905C34",
 /* pixels */
 "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",

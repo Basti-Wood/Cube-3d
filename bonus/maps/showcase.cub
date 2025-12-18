@@ -5,11 +5,11 @@ DOOR ./textures/door.xpm
 BARREL ./textures/barrel.xpm
 PILLAR ./textures/pillar.xpm
 LIGHT ./textures/greenlight.xpm
-TREE1 ./textures/eagle.xpm
-TREE2 ./textures/bluestone.xpm
-TREE3 ./textures/purplestone.xpm
-TREE4 ./textures/greystone.xpm
-TREE5 ./textures/mossy.xpm
+TREE1 ./textures/tree_0.xpm
+TREE2 ./textures/tree_1.xpm
+TREE3 ./textures/tree_2.xpm
+TREE4 ./textures/tree_3.xpm
+TREE5 ./textures/tree_4.xpm
 
 SP 6.5 23.5 BARREL
 SP 9.5 23.5 PILLAR
@@ -22,7 +22,7 @@ SP 5.5 15.5 BARREL
 SP 6.5 14.5 BARREL
 SP 7.5 13.5 BARREL
 SP 8.5 12.5 BARREL
-SP 21.5 14.5 TREE
+SP 21.5 14.9 TREE
 SP 28.5 15.5 PILLAR
 SP 14.5 15.5 PILLAR
 SP 1.5 20.5 TREE
