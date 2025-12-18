@@ -12,7 +12,7 @@
 
 #include "../../includes/game.h"
 
-static void	init_door(int x, int y, int i, t_door *door)
+static void	init_door(int x, int y, t_door *door)
 {
 	door->pos.x = x;
 	door->pos.y = y;
@@ -45,7 +45,7 @@ int	init_doors(t_game *game)
 					printf("Error: Number of doors exceeds threshold\n");
 					return (1);
 				}
-				init_door(x, y, i, &game->map.door[i]);
+				init_door(x, y, &game->map.door[i]);
 			}
 		}
 	}

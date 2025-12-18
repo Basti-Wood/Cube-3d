@@ -16,7 +16,6 @@ static void	sort_sprites_by_distance(t_map *map)
 {
 	int	i;
 	int	j;
-	int	k;
 	int	tmp;
 
 	i = 1;

@@ -60,7 +60,7 @@ void	init_hero_from_map(t_hero *hero, t_map *map)
 		set_direction_west(hero);
 	hero->scan_x = 0;
 	hero->fov = 2 * atan(fabs(hero->plane.x));
-	hero->collision_radius = 0.15625 * BLOCK_SIZE;
+	hero->collision_radius = 0.15625;
 	hero->axes_of_travel = 0;
 	hero->move_speed = sqrt(2) * 0.04;
 	hero->turn_speed = PI / 75;
