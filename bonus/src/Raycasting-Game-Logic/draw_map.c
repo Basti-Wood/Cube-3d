@@ -42,8 +42,8 @@ void	draw_radar(t_game *game)
 	t_hero		*hero;
 
 	hero = &game->mini_hero;
-	delta_dir = (hero->fov / (double)WIN_WIDTH);
 	dir = atan2(hero->dir.y, hero->dir.x) - (hero->fov / 2);
+	delta_dir = (hero->fov / (double)WIN_WIDTH);
 	i = -1;
 	while (++i < WIN_WIDTH)
 	{

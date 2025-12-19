@@ -447,6 +447,7 @@ int			parse_config_section(int fd, t_game *game, char **first_map_line);
 int			parse_identifier(char *line, t_game *game);
 int			parse_texture_identifier(char *id, char *value, t_game *game);
 int			parse_sprite_identifier(char *value, t_game *game);
+double		ft_atod(const char *str);
 int			parse_texture(char *line, char **texture_path);
 
 // Map validation functions

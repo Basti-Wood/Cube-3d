@@ -59,7 +59,7 @@ void	init_hero_from_map(t_hero *hero, t_map *map)
 	else if (map->player_dir == 'W')
 		set_direction_west(hero);
 	hero->scan_x = 0;
-	hero->fov = 2 * atan(fabs(hero->plane.x));
+	hero->fov = 2 * atan(fabs(hero->plane.x - hero->plane.y));
 	hero->collision_radius = 0.15625;
 	hero->axes_of_travel = 0;
 	hero->move_speed = sqrt(2) * 0.04;

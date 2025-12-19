@@ -1,5 +1,5 @@
-FLOOR ./textures/wood.xpm
-CEILING ./textures/colorstone.xpm
+FLOOR ./textures/wood_light.xpm
+CEILING ./textures/wood.xpm
 WALL ./textures/redbrick.xpm
 DOOR ./textures/door.xpm
 BARREL ./textures/barrel.xpm

@@ -35,6 +35,9 @@ t_vector	sonar_pulse(double dir, t_hero *hero)
 	{
 		pulse.x += cos(dir);
 		pulse.y += sin(dir);
+		if ((pulse.x < -10000 || 10000 < pulse.x)
+			|| (pulse.y < -10000 || 10000 < pulse.y))
+			break ;
 	}
 	return (pulse);
 }
@@ -47,7 +50,7 @@ int	hero_sonar(t_hero *hero, t_map *map)
 	int			col;
 	int			i;
 
-	dir = atan2(hero->dir.y, hero->dir.x);
+	dir = atan2(fabs(hero->dir.y), fabs(hero->dir.x));
 	delta_dir = PI / 45;
 	col = 0;
 	i = -1;

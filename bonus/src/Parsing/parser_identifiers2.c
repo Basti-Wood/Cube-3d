@@ -12,8 +12,6 @@
 
 #include "../../includes/cub3d.h"
 
-double	ft_atod(const char *str);
-
 static int	get_sprite_type(char *type_str)
 {
 	if (ft_strncmp(type_str, "BARREL", 7) == 0)

@@ -1,5 +1,5 @@
 # Compiler and flags
-CC := cc
+CC := gcc
 CFLAGS := -Wall -Wextra -Werror -I./includes -I./libft -I./minilibx-linux
 LDFLAGS := -L./libft -L./minilibx-linux -lft -lmlx -lXext -lX11 -lm
 
