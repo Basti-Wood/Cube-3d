@@ -1,7 +1,15 @@
-NO ./textures/north.xpm
-SO ./textures/south.xpm
-WE ./textures/west.xpm
-EA ./textures/east.xpm
+FLOOR ./textures/wood.xpm
+CEILING ./textures/colorstone.xpm
+WALL ./textures/redbrick.xpm
+DOOR ./textures/door.xpm
+BARREL ./textures/barrel.xpm
+PILLAR ./textures/pillar.xpm
+LIGHT ./textures/greenlight.xpm
+TREE1 ./textures/tree_0.xpm
+TREE2 ./textures/tree_1.xpm
+TREE3 ./textures/tree_2.xpm
+TREE4 ./textures/tree_3.xpm
+TREE5 ./textures/tree_4.xpm
 
 F 220,100,0
 C 225,30,0
